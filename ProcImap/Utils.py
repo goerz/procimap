@@ -54,6 +54,7 @@ class AddressListFile:
             else:
                 infile = open(filename)
                 self._data = infile.read().split("\n")
+                self._data = [x for x in self._data if x != '']
                 infile.close()
     def contains(self, lookupstring):
         """ Return True if there is a line in the represented file that is
