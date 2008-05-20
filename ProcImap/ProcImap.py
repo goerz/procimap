@@ -118,8 +118,7 @@ class AbstractProcImap:
                 raise ImplementationError, \
                       "preprocess did not return an ImapMessage"
             # delete if deleted
-            if ('\\Deleted' in header.get_imapflags()) \
-            or ((hasattr(header, 'delete')) and header.delete):
+            if ('\\Deleted' in header.get_imapflags()): 
                 log("Deleting Message")
                 self.mailbox.copy(uid, self.backupmailbox)
                 self.mailbox.discard(uid)
