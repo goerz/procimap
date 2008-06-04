@@ -26,9 +26,15 @@ from Utils import log
 import select
 from mailbox import Mailbox
 
+import ImapServer
 from ImapMailbox import ImapMailbox
 from ImapMessage import ImapMessage
 
+if ImapServer.STANDARD_IMAPLIB:
+    import imaplib
+else:
+    import imaplib2 as imaplib
+ 
 PROCESSED = 'procimap' # the imap flag used to indicate that a
                        # message has been processed.
 
@@ -94,9 +100,10 @@ class AbstractProcImap:
                         self._process_uids(unseen_msgs)
                         self.mailbox.expunge()
                     self.mailbox.server.idle(TIMEOUT)
-        except select.error:
-            log("select.error was caught")
-            # TODO: restart connection
+        except imaplib.IMAP4.abort, data:
+            log("In run(): caught exception: %s" % str(data))
+            log("TODO: restart")
+            # TODO: restart
             raise
 
     def _process_uids(self, uids):
