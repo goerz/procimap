@@ -115,9 +115,9 @@ class ImapMessage(mailbox.Message):
         self.set_imapflags(flagstring[1:-1].split())
     
     def delete(self):
-        """ Add the \Delete flag to the list of imap flags """
-        if not "\\Delete" in self._imapflags:
-            self._imapflags.append("\\Delete")
+        """ Add the \Deleted flag to the list of imap flags """
+        if not "\\Deleted" in self._imapflags:
+            self._imapflags.append("\\Deleted")
     
     def remove_imapflag(self, *flags):
         """ Remove flags from the list of imap flags. Do nothing if the 
