@@ -25,6 +25,7 @@ import sys
 from Utils import log
 import select
 from mailbox import Mailbox
+import time
 
 import ImapServer
 from ImapMailbox import ImapMailbox
@@ -87,24 +88,31 @@ class AbstractProcImap:
 
     def run(self):
         """ Run ProcImap. Refer to the manual for details """
-        try:
-            if self.run_once:
-                uids = self.mailbox.get_all_uids()
-                self._process_uids(uids)
-                self.mailbox.close()
-                sys.exit()
-            else:
-                while True:
+        if self.run_once:
+            uids = self.mailbox.get_all_uids()
+            self._process_uids(uids)
+            self.mailbox.close()
+            sys.exit()
+        else:
+            while True:
+                try:
                     unseen_msgs = self.mailbox.get_unseen_uids()
                     if len(unseen_msgs) > 0:
                         self._process_uids(unseen_msgs)
                         self.mailbox.expunge()
-                    self.mailbox.server.idle(TIMEOUT)
-        except imaplib.IMAP4.abort, data:
-            log("In run(): caught exception: %s" % str(data))
-            log("TODO: restart")
-            # TODO: restart
-            raise
+                    try:
+                        self.mailbox.server.idle(TIMEOUT)
+                    except:
+                        log("IDLE caused exception. Sleeping for %s seconds" \
+                                                                      % TIMEOUT)
+                        time.sleep(TIMEOUT)
+                except imaplib.IMAP4.abort, data:
+                    log("In run(): caught exception: %s" % str(data))
+                    self.mailbox.reconnect()
+                    log("Reconnected mailbox")
+                    # TODO: check if this could end in an infinite try-except
+                    # loop.  It might be a good idea to add rate limiting to
+                    # the reconnects
 
     def _process_uids(self, uids):
         """ Process a list of UIDs """

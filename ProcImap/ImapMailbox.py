@@ -173,6 +173,8 @@ class ImapMailbox(Mailbox):
                 else:
                     raise NoSuchMailboxError, "mailbox %s does not exist." \
                                             % self.name
+        finally:
+            self.server = ImapServerWrapper(self._server)
 
 
     def switch(self, name, create=False):
