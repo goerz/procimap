@@ -105,6 +105,14 @@ class ImapServer:
             self._flags['logged_in'] = True
             return self._server.login(self.username, self.password)
 
+    def reconnect(self):
+        """ Close and then reopen the connection to the server """
+        try:
+            self.disconnect()
+        except:
+            pass
+        self.connect()
+
     def idle(self, timeout=IDLE_TIMEOUT):
         """ Put server into IDLE mode until server notifies some change,
             or 'timeout' (secs) occurs (default: 29 minutes),

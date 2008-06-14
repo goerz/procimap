@@ -29,6 +29,7 @@ import email.header
 import email.utils
 import tempfile
 import os
+import time
 from email.generator import Generator
 from cStringIO import StringIO
 from mailbox import Mailbox
@@ -150,6 +151,29 @@ class ImapMailbox(Mailbox):
                                            % self.name
         self._cached_uid = None
         self._cached_text = None
+
+    def reconnect(self):
+        """ Renew the connection to the mailbox """
+        self._server.reconnect()
+        self._server.login()
+        try:
+            self._server.select(self.name)
+        except:
+            # for some reason I have to do the whole thing twice if the
+            # connection was really broken. I'm getting an exception the first
+            # time. Not completely sure what's going on.
+            self._server.reconnect()
+            self._server.login()
+            try:
+                self._server.select(self.name)
+            except NoSuchMailboxError:
+                if create:
+                    self._server.create(self.name)
+                    self._server.select(self.name)
+                else:
+                    raise NoSuchMailboxError, "mailbox %s does not exist." \
+                                            % self.name
+
 
     def switch(self, name, create=False):
         """ Switch to a different Mailbox on the same server """
