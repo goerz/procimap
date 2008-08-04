@@ -157,22 +157,23 @@ class ImapMailbox(Mailbox):
         self._server.reconnect()
         self._server.login()
         try:
-            self._server.select(self.name)
-        except:
-            # for some reason I have to do the whole thing twice if the
-            # connection was really broken. I'm getting an exception the first
-            # time. Not completely sure what's going on.
-            self._server.reconnect()
-            self._server.login()
             try:
                 self._server.select(self.name)
-            except NoSuchMailboxError:
-                if create:
-                    self._server.create(self.name)
+            except:
+                # for some reason I have to do the whole thing twice if the
+                # connection was really broken. I'm getting an exception the first
+                # time. Not completely sure what's going on.
+                self._server.reconnect()
+                self._server.login()
+                try:
                     self._server.select(self.name)
-                else:
-                    raise NoSuchMailboxError, "mailbox %s does not exist." \
-                                            % self.name
+                except NoSuchMailboxError:
+                    if create:
+                        self._server.create(self.name)
+                        self._server.select(self.name)
+                    else:
+                        raise NoSuchMailboxError, "mailbox %s does not exist." \
+                                                % self.name
         finally:
             self.server = ImapServerWrapper(self._server)
 
