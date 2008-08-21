@@ -106,6 +106,7 @@ class ImapMailbox(Mailbox):
 
         name             name of the mailbox
         server           ImapServer object
+        trash            Trash folder
     """
     def __init__(self, path, factory=ImapMessage, create=True):
         """ Initialize an ImapMailbox
@@ -151,6 +152,7 @@ class ImapMailbox(Mailbox):
                                            % self.name
         self._cached_uid = None
         self._cached_text = None
+        self.trash = None
 
     def reconnect(self):
         """ Renew the connection to the mailbox """
@@ -161,8 +163,8 @@ class ImapMailbox(Mailbox):
                 self._server.select(self.name)
             except:
                 # for some reason I have to do the whole thing twice if the
-                # connection was really broken. I'm getting an exception the first
-                # time. Not completely sure what's going on.
+                # connection was really broken. I'm getting an exception the
+                # first time. Not completely sure what's going on.
                 self._server.reconnect()
                 self._server.login()
                 try:
@@ -635,13 +637,18 @@ class ImapMailbox(Mailbox):
                 raise ImapNotOkError, "%s in move: %s" % (code, data)
 
     def discard(self, uid):
-        """ Add the \Deleted flag to the message with UID.
+        """ If trash folder is defined, move the message with UID to 
+            trash; else, just add the \Deleted flag to the message with UID.
             Do nothing if there if there is no message with that UID.
         """
-        self.add_imapflag(uid, "\\Deleted")
+        if self.trash is None:
+            self.add_imapflag(uid, "\\Deleted")
+        else:
+            print "Moving to %s" % self.trash
+            self.move(uid, self.trash)
 
     def remove(self, uid):
-        """ Add the \Deleted flag to the message with UID.
+        """ Discard the message with UID.
             If there is no message with that UID, raise a KeyError
         """
         if uid not in self.search("ALL"):
