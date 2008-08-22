@@ -28,6 +28,16 @@ import imaplib
 import mailbox
 import time
 
+INTTIME_FROM_MESSAGE = True # Some mailboxes do not support the notion of an
+    # internal time (e.g. mbox). If you convert a message coming from one of 
+    # these mailboxes into an ImapMessage, the internal time of the ImapMessage
+    # will be set to the time that is specified in the Date header of the
+    # original message, if the INTTIME_FROM_MESSAGE flag is set to True. If the
+    # flag is set to False, no internal time will be set for the ImapMessage,
+    # which usually means the internal time on the server will end up being the
+    # upload time. Note that his flag has no effect if the message that is
+    # being converted comes from a mailbox format that supports internal times
+
 class ImapMessage(mailbox.Message):
     """ Message with IMAP-specific properties. This class holds information 
         about an IMAP email message that.
@@ -69,12 +79,35 @@ class ImapMessage(mailbox.Message):
                 self.internaldate = time.localtime(message.get_date())
             elif isinstance(message, mailbox.mboxMessage):
                 self._imapflags = imapflags_from_mbox_message(message)
+                if INTTIME_FROM_MESSAGE:
+                    try:
+                        date = message['Date']
+                        internaldate = seconds_from_date(date)
+                        if internaldate is not None:
+                            self.internaldate = internaldate
+                    except KeyError:
+                        pass
             elif isinstance(message, mailbox.MHMessage):
                 self._imapflags = imapflags_from_mh_message(message)
+                if INTTIME_FROM_MESSAGE:
+                    try:
+                        self.internaldate_from_string(message['Date'])
+                    except KeyError:
+                        pass
             elif isinstance(message, mailbox.BabylMessage):
                 self._imapflags = imapflags_from_babyl_message(message)
+                if INTTIME_FROM_MESSAGE:
+                    try:
+                        self.internaldate_from_string(message['Date'])
+                    except KeyError:
+                        pass
             elif isinstance(message, mailbox.MMDFMessage):
                 self._imapflags = imapflags_from_mmdf_message(message)
+                if INTTIME_FROM_MESSAGE:
+                    try:
+                        self.internaldate_from_string(message['Date'])
+                    except KeyError:
+                        pass
 
     def _explain_to(self, message):
         """Copy IMAP-specific state to message insofar as possible."""
