@@ -745,7 +745,10 @@ class ImapMailbox(Mailbox):
                                       date_time, message_str)
         if code != 'OK':
             raise ImapNotOkError, "%s in add: %s" % (code, data)
-        return self.get_all_uids()[-1]
+        try:
+            return self.get_all_uids()[-1]
+        except IndexError:
+            return 0
 
 
     def add_imapflag(self, uid, *flags):
