@@ -46,7 +46,7 @@ class FactoryIsNotMailboxTypeError(Exception):
     pass
 
 class PathgeneratorNotCallableError(Exception):
-    """ Raised when you supplied a pathegenerator that is not callable """
+    """ Raised when you supplied a pathgenerator that is not callable """
     pass
 
 class MailboxOptionsNotCompleteError(Exception):
@@ -62,7 +62,7 @@ class MailboxFactory:
         in ConfigParser may be thrown if the config file is not well-formed.)
         Each section in the config file describes one mailbox.
 
-        An example of a valid config file is the following:
+        An example of a valid config file 'mailboxes.cfg' is the following:
 
             [Standard]
             type = IMAP
@@ -96,6 +96,8 @@ class MailboxFactory:
 
         MailboxFactory has capabilities to extend the set of known types by
         using the set_type method.
+
+        The MailboxFactory partly supports a read-only dictionary interface.
     """
     def __init__(self, configfilename):
         """ Initialize MailboxFactory files.
@@ -111,6 +113,7 @@ class MailboxFactory:
         self.set_type('imap', ImapMailbox, imap_pathgenerator)
         self._configparser = ConfigParser()
         self._configparser.read(configfilename)
+
     def get(self, name):
         """ Create the Mailbox object that is described in section 'name'
             in the config file. For example,
@@ -126,6 +129,39 @@ class MailboxFactory:
         path = pathgenerator(dict(self._configparser.items(name)))
         return(factory(path))
 
+    def __getitem__(self, name):
+        """ Shorthand for the get method.
+            For example,
+                >>> mailboxes = MailboxFactory("mailboxes.cfg")
+                >>> mb = mailboxes['Standard']
+        """
+        return self.get(name)
+
+
+    def get_server(self, name):
+        """ Return an ImapServer instance from the server data that is
+            described in section 'name'. The section must have the form of
+            an imap mailbox (as described above). A TypeError will be raised
+            if the section is not of type IMAP. The 'mailbox' key is ignored.
+
+            For example, you could create an ImapServer like this:
+
+                >>> mailboxes = MailboxFactory("mailboxes.cfg")
+                >>> server = mailboxes.get_server('StandardServer')
+        """
+        mailboxtype = self._configparser.get(name, 'type').lower()
+        if mailboxtype != 'imap':
+            raise TypeError, "You can only create a server from an IMAP mailbox"
+        factory, pathgenerator = self._types[mailboxtype]
+        path = pathgenerator(dict(self._configparser.items(name)))
+        return(path[0])
+
+    def __contains__(self, name):
+        """ Return True if there is a mailbox with the given name, 
+            False otherwise """
+        return (name in self._configparser.sections())
+
+
     def list(self):
         """ List all mailboxes defined in the config file """
         return self._configparser.sections()
@@ -137,7 +173,7 @@ class MailboxFactory:
     def set_type(self, typename, factory, pathgenerator):
         """ Make a new typename of Mailbox known. This allows you to
             handle new types of Mailbox objects beyond IMAP and the
-            mailboxes of the standard libarary.
+            mailboxes of the standard library.
 
             factory is the class that generates the Mailbox object and must
             be a subclass of mailbox.Mailbox
@@ -155,7 +191,7 @@ class MailboxFactory:
 
             In combination,
             factory(pathgenerator(dict_of_options_in_configfile_section))
-            should create a Mailbox object of the apropriate type.
+            should create a Mailbox object of the appropriate type.
         """
         if not issubclass(factory, mailbox.Mailbox):
             raise FactoryIsNotMailboxTypeError
