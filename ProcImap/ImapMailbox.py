@@ -101,12 +101,23 @@ class ImapMailbox(Mailbox):
         possible. Methods for changing a message in-place are not
         available for IMAP; the 'update' and '__setitem__' methods
         will raise a NotSupportedError.
+        By default deleting messages (discard/remove) just adds the 
+        \\Deleted flag to the message. Optionally, you can define a 
+        trash folder for any ImapMailbox. If set, "deleted" messages 
+        will be moved to the trash folder. Note that you must set the
+        trash folder to '[Gmail]/Trash' if you are using Gmail, as 
+        the Gmail IMAP server has a different interpretation of what
+        deletion means.
 
         The class specific attributes are:
 
         name             name of the mailbox
         server           ImapServer object
         trash            Trash folder
+        
+        The 'trash' attribute may a string, another instance 
+        of ImapMailbox, or an instance of mailbox.Mailbox.
+        If not set, it is None.
     """
     def __init__(self, path, factory=ImapMessage, create=True):
         """ Initialize an ImapMailbox
@@ -122,6 +133,9 @@ class ImapMailbox(Mailbox):
             Note that two instances of ImapMailbox must never
             share the same instance of server!
         """
+        #   TODO: concerning two mailboxes never sharing the same server: add a
+        #   lock to the ImapServer, and refuse to use the Server if the lock is
+        #   present.
         # not calling Mailbox.__init__(self) is on purpose:
         #  my definition of 'path' is incompatibel
         self._factory = factory
@@ -792,7 +806,7 @@ class ImapMailbox(Mailbox):
         self._server.logout()
 
     def expunge(self):
-        """ Expunge the mailbox"""
+        """ Expunge the mailbox (delete all messages marked for deletion)"""
         self._server.expunge()
 
 

@@ -20,7 +20,7 @@ import email.header
 
 mailboxes = MailboxFactory('/home/goerz/.procimap/mailboxes.cfg')
 mailbox = mailboxes.get("Physik")
-backupmailbox = mailboxes.get("Backup")
+mailbox.trash = mailboxes.get("Backup")
 
 logfile = "/home/goerz/.procimap/procimap.log"
 
@@ -257,7 +257,7 @@ class MyProcImap(AbstractProcImap):
 
 ################################## Run #########################################
 
-processor = MyProcImap(mailbox, backupmailbox)
+processor = MyProcImap(mailbox)
 processor.set_logfile(logfile)
 run_as_singelton()
 try:

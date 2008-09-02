@@ -10,10 +10,9 @@ from ProcImap.MailboxFactory import MailboxFactory
 
 mailboxes = MailboxFactory('/home/goerz/.procimap/mailboxes.cfg')
 mailbox = mailboxes.get("Physik")
-backupmailbox = None
 
 
-processor = AbstractProcImap(mailbox, None)
+processor = AbstractProcImap(mailbox)
 processor.set_processed()
 #processor.set_unprocessed()
 sys.exit(0)

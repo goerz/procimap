@@ -15,7 +15,7 @@ from email.Utils import make_msgid
 
 mailboxes = MailboxFactory('/home/goerz/.procimap/mailboxes.cfg')
 mailbox = mailboxes.get("Physik")
-backupmailbox = mailboxes.get("Backup")
+mailbox.trash = mailboxes.get("Backup")
 
 class IDCreator(AbstractProcImap):
 
@@ -36,7 +36,7 @@ class IDCreator(AbstractProcImap):
         return message
 
 
-idcreator = IDCreator(mailbox, backupmailbox)
+idcreator = IDCreator(mailbox)
 idcreator.run_once = True                    # run through all messages and exit.
 idcreator.no_processed_flag = True           # don't set the processed flag.
 idcreator.ignore_processed_flag = True       # process messages even if they

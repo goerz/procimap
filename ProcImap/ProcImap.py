@@ -55,16 +55,17 @@ class ImplementationError(Exception):
 
 class AbstractProcImap:
     """ Abstract Class ProcImap """
-    def __init__(self, mailbox, backupmailbox):
+    def __init__(self, mailbox):
         """ Initialize ProcImap
             mailbox must be an instance of ImapMailbox
         """
         if isinstance(mailbox, ImapMailbox):
             self.mailbox = mailbox
+            if mailbox.trash is None:
+                log("WARNING: There is no trash folder set for the mailbox." \
+                    + "No backups will be made! This is very unsafe!")
         else:
             raise TypeError, "mailbox must be an instance of ImapMailbox"
-        if isinstance(mailbox, Mailbox):
-            self.backupmailbox = backupmailbox
         self.run_once = False
         self.no_processed_flag = False
         self.ignore_processed_flag = False
@@ -88,6 +89,7 @@ class AbstractProcImap:
 
     def run(self):
         """ Run ProcImap. Refer to the manual for details """
+        # TODO: check if this could be done with threading
         if self.run_once:
             uids = self.mailbox.get_all_uids()
             self._process_uids(uids)
@@ -135,14 +137,12 @@ class AbstractProcImap:
             # delete if deleted
             if ('\\Deleted' in header.get_imapflags()): 
                 log("Deleting Message")
-                self.mailbox.copy(uid, self.backupmailbox)
                 self.mailbox.discard(uid)
                 continue
             # fullprocessing ?
             if hasattr(header, 'fullprocess') and header.fullprocess:
                 log("Full processing  of ID %s" % uid)
-                # backup and discard original
-                self.mailbox.copy(uid, self.backupmailbox)
+                # discard original
                 message = self.mailbox.get_message(uid)
                 self.mailbox.discard(uid)
                 # transfer non-standard attributes
@@ -166,6 +166,7 @@ class AbstractProcImap:
                     if isinstance(message.mailbox, Mailbox):
                         if message.mailbox != self.mailbox:
                             targetmailbox = message.mailbox
+                log("Putting message in target mailbox")
                 targetmailbox.add(message)
             else: # no full processing
                 # just copy flags and put in right mailbox
@@ -174,6 +175,7 @@ class AbstractProcImap:
                 self.mailbox.set_imapflags(uid, header.get_imapflags())
                 if hasattr(header, 'mailbox'):
                     if header.mailbox != self.mailbox:
+                        log("Moving message to target mailbox")
                         self.mailbox.move(uid, header.mailbox)
 
     def preprocess(self, header):
@@ -188,10 +190,9 @@ class AbstractProcImap:
             Modifications to the header object have the following
             consequences:
 
-            If you have added a non-standard attribute 'fullprocess' with
-            any value, the full message is backuped, downloaded and then
-            passed to fullprocess(message). Changes to header fields
-            are discarded.
+            If you have added a non-standard attribute 'fullprocess' with 
+            any value, the full message is downloaded and then passed to
+            fullprocess(message). Changes to header fields are discarded.
 
             If there is no attribute 'fullprocess', the imap flags set
             for the header object are transferred to the server. If the
@@ -242,8 +243,6 @@ class AbstractProcImap:
             You may change the 'message' object in any way at all. The
             changed 'message' object that is returned will be added to
             the target mailbox, the original message will be deleted.
-            A backup of the original message will be written to the
-            backup mailbox.
 
             If the non-standard attribute 'mailbox' is present in
             'message', the target mailbox will be the mailbox set in
