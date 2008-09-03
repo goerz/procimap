@@ -9,7 +9,7 @@ from ProcImap.ProcImap import AbstractProcImap
 from ProcImap.MailboxFactory import MailboxFactory
 
 mailboxes = MailboxFactory('/home/goerz/.procimap/mailboxes.cfg')
-mailbox = mailboxes.get("Physik")
+mailbox = mailboxes["Physik"]
 
 
 processor = AbstractProcImap(mailbox)

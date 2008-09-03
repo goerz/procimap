@@ -14,8 +14,8 @@ from email.Utils import make_msgid
 
 
 mailboxes = MailboxFactory('/home/goerz/.procimap/mailboxes.cfg')
-mailbox = mailboxes.get("Physik")
-mailbox.trash = mailboxes.get("Backup")
+mailbox = mailboxes["Physik"]
+mailbox.trash = mailboxes["Backup"]
 
 class IDCreator(AbstractProcImap):
 

@@ -4,13 +4,14 @@
     The IMAP attributes are stored in each message in special header fields"
 """
 from ProcImap.ImapMailbox import ImapMailbox
-from ProcImap.ImapServer import ImapServer
+from ProcImap.MailboxFactory import MailboxFactory
 from mailbox import mbox
 import sys
 
 # usage: backup_mailbox.py imapmailbox backupmbox
 
-server = ImapServer("mail.physik.fu-berlin.de", "goerz", "secret", ssl=True)
+mailboxes = MailboxFactory('/home/goerz/.procimap/mailboxes.cfg')
+server = mailboxes.get_server('Gmail')
 mailbox = ImapMailbox((server, sys.argv[1]))
 backuptarget = mbox(sys.argv[2])
 

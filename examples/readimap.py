@@ -7,7 +7,7 @@ import sys
 from ProcImap.MailboxFactory import MailboxFactory
 
 mailboxes = MailboxFactory('/home/goerz/.procimap/mailboxes.cfg')
-mailbox = mailboxes.get("Physik")
+mailbox = mailboxes["Physik"]
 
 
 def help():

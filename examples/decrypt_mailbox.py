@@ -9,7 +9,7 @@ from ProcImap.MailboxFactory import MailboxFactory
 
 
 mailboxes = MailboxFactory('/home/goerz/.procimap/mailboxes.cfg')
-encr_boxes = [mailboxes.get("Physik"), mailboxes.get("PhysikSent")]
+encr_boxes = [mailboxes["Physik"], mailboxes["PhysikSent"]]
 backupmailbox = mailboxes.get("Backup")
 
 decryptprogram = "/home/goerz/bin/eml_decrypt.pl -mbox -w"

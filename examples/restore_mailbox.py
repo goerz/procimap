@@ -3,14 +3,15 @@
     This example shows how to restore a backup created by backup_mailbox.py"
 """
 from ProcImap.ImapMailbox import ImapMailbox
-from ProcImap.ImapServer import ImapServer
+from ProcImap.MailboxFactory import MailboxFactory
 from ProcImap.ImapMessage import ImapMessage
 from mailbox import mbox
 import sys
 
 # usage: restore_mailbox.py backupmbox imapmailbox
 
-server = ImapServer("mail.physik.fu-berlin.de", "goerz", "secret", ssl=True)
+mailboxes = MailboxFactory('/home/goerz/.procimap/mailboxes.cfg')
+server = mailboxes.get_server('Gmail')
 mailbox = ImapMailbox((server, sys.argv[2]))
 backupsource = mbox(sys.argv[1], factory=ImapMessage)
 

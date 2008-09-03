@@ -19,8 +19,8 @@ import email.header
 ############################### Data ###########################################
 
 mailboxes = MailboxFactory('/home/goerz/.procimap/mailboxes.cfg')
-mailbox = mailboxes.get("Physik")
-mailbox.trash = mailboxes.get("Backup")
+mailbox = mailboxes["Physik"]
+mailbox.trash = mailboxes["Backup"]
 
 logfile = "/home/goerz/.procimap/procimap.log"
 
