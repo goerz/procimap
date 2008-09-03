@@ -54,6 +54,11 @@ class NoSuchUIDError(Exception):
     """ Raised if a message is requested with a non-existing UID """
     pass
 
+class ReadOnlyError(Exception):
+    """ Raised if you try to make a change to a mailbox that was opened 
+        read-only """
+    pass
+
 class NotSupportedError(Exception):
     """ Raised if a method is called that the Mailbox interface demands,
         but that cannot be surported in IMAP
@@ -83,65 +88,68 @@ class ImapMailbox(object, Mailbox):
 
         The class specific attributes are:
 
-        name             name of the mailbox
-        server           ImapServer object
+        name             name of the mailbox (readonly, see below)
+        server           ImapServer object (readonly, see below)
         trash            Trash folder
         readonly         True if mailbox is readonly, false otherwise
-                         (readonly is not functional at this time)
         
         The 'trash' attribute may a string, another instance 
         of ImapMailbox, or an instance of mailbox.Mailbox.
         If not set, it is None.
+
+        If the 'readonly' attribute is set, all subsequent calls that would
+        change the mailbox will raise a ReadOnlyError. Note that setting the
+        readonly attribute does not prevent you from making changes through 
+        the methods of the server attribute.
     """
-    # TODO: make readonly work
-    def __init__(self, path, factory=ImapMessage, readonly=False, create=True):
-        """ Initialize an ImapMailbox
-            path is a tuple with two elements, consisting of
-            1) an instance of ImapServer in any state
-            2) the name of a mailbox on the server as a string
-            If the mailbox does not exist, it is created unless
-            create is set to False, in which case NoSuchMailboxError
-            is raised.
-            The 'factory' parameter determines to which type the
-            messages in the mailbox should be converted.
+        def __init__(self, path, factory=ImapMessage, readonly=False, create=True):
+            """ Initialize an ImapMailbox
+                path is a tuple with two elements, consisting of
+                1) an instance of ImapServer in any state
+                2) the name of a mailbox on the server as a string
+                If the mailbox does not exist, it is created unless
+                create is set to False, in which case NoSuchMailboxError
+                is raised.
+                The 'factory' parameter determines to which type the
+                messages in the mailbox should be converted.
 
-            Note that two instances of ImapMailbox can never share the 
-            same instance of server. If you try to create an ImapMailbox
-            with an instance of ImapServer that you already used for
-            another mailbox, a ServerNotAvailableError will be thrown.
-        """
-        # not calling Mailbox.__init__(self) is on purpose:
-        #  my definition of 'path' is incompatibel
-        self._factory = factory
-        try:
-            (server, name) = path
-        except:
-            raise TypeError, "path must be a tuple, consisting of an "\
-                             + " instance of ImapServer and a string"
-        if isinstance(server, ImapServer):
-            if hasattr(server, 'locked') and server.locked:
-                raise ServerNotAvailableError, "This instance of ImapServer"\
-                                      + " is already in use for another mailbox"
-            self._server = server
-        else:
-            raise TypeError, "path must be a tuple, consisting of an "\
-                             + " instance of ImapServer and a string"
-        if not isinstance(name, str):
-            raise TypeError("path must be a tuple, consisting of an "\
-                            + " instance of ImapServer and a string")
-        self._server.select(name, create)
-        self._cached_uid = None
-        self._cached_mailbox = None
-        self._cached_text = None
-        self.trash = None
-        self.readonly = readonly
-        server.locked = True
+                Note that two instances of ImapMailbox can never share the 
+                same instance of server. If you try to create an ImapMailbox
+                with an instance of ImapServer that you already used for
+                another mailbox, a ServerNotAvailableError will be thrown.
+            """
+            # not calling Mailbox.__init__(self) is on purpose:
+            #  my definition of 'path' is incompatibel
+            self._factory = factory
+            try:
+                (server, name) = path
+            except:
+                raise TypeError, "path must be a tuple, consisting of an "\
+                                + " instance of ImapServer and a string"
+            if isinstance(server, ImapServer):
+                if hasattr(server, 'locked') and server.locked:
+                    raise ServerNotAvailableError, "This instance of ImapServer"\
+                                        + " is already in use for another mailbox"
+                self._server = server
+            else:
+                raise TypeError, "path must be a tuple, consisting of an "\
+                                + " instance of ImapServer and a string"
+            if not isinstance(name, str):
+                raise TypeError("path must be a tuple, consisting of an "\
+                                + " instance of ImapServer and a string")
+            self._server.select(name, create)
+            self._cached_uid = None
+            self._cached_mailbox = None
+            self._cached_text = None
+            self.trash = None
+            self.readonly = readonly
+            server.locked = True
 
-    name = property(lambda self: self._server.mailboxname, None, 
-                    doc="Name of the mailbox on the server")
+        name = property(lambda self: self._server.mailboxname, None, 
+                        doc="Name of the mailbox on the server")
 
-    server = property(lambda self: self._server, None,
-                      doc="Instance of the ImapServer that is being used")
+        server = property(lambda self: self._server, None,
+                doc="Instance of the ImapServer that is being used as a backend")
 
     def reconnect(self):
         """ Renew the connection to the mailbox """
@@ -159,7 +167,7 @@ class ImapMailbox(object, Mailbox):
             self._server.select(name) 
 
 
-    def switch(self, name, create=False):
+    def switch(self, name, readonly=False, create=False):
         """ Switch to a different Mailbox on the same server """
         self.flush()
         if not isinstance(name, str):
@@ -168,6 +176,7 @@ class ImapMailbox(object, Mailbox):
         self._server.select(name, create)
         self._cached_uid = None
         self._cached_text = None
+        self.readonly = readonly
 
     def search(self, criteria='ALL', charset=None ):
         """ Return a list of all the UIDs in the mailbox (as integers)
@@ -414,6 +423,8 @@ class ImapMailbox(object, Mailbox):
 
     def clear(self):
         """ Delete all messages from the mailbox and expunge"""
+        if self.readonly:
+            raise ReadOnlyError, "Tried to clear read-only mailbox"
         for uid in self.get_all_uids():
             self.discard(uid)
         self.expunge()
@@ -426,6 +437,8 @@ class ImapMailbox(object, Mailbox):
             instance of ImapMessage unless a custom message factory was
             specified when the Mailbox instance was initialized.
         """
+        if self.readonly:
+            raise ReadOnlyError, "Tried to pop read-only mailbox"
         try:
             message = self[uid]
             del self[uid]
@@ -445,6 +458,8 @@ class ImapMailbox(object, Mailbox):
             of ImapMessage unless a custom message factory was specified
             when the Mailbox instance was initialized.
         """
+        if self.readonly:
+            raise ReadOnlyError, "Tried to pop item from read-only mailbox"
         self.expunge()
         uids = self.search("ALL")
         if len(uids) > 0:
@@ -469,7 +484,8 @@ class ImapMailbox(object, Mailbox):
 
     def flush(self):
         """ Equivalent to expunge() """
-        self.expunge()
+        if not self.readonly:
+            self.expunge()
 
     def lock(self):
         """ Do nothing """
@@ -600,6 +616,8 @@ class ImapMailbox(object, Mailbox):
             of mailbox.Mailbox.
             Do nothing if there if there is no message with that UID.
         """
+        if self.readonly:
+            raise ReadOnlyError, "Tried to move message from read-only mailbox"
         self.copy(uid, targetmailbox)
         if (targetmailbox != self) and (targetmailbox != self.name):
             (code, data) = self._server.uid('store', uid, \
@@ -612,6 +630,8 @@ class ImapMailbox(object, Mailbox):
             trash; else, just add the \Deleted flag to the message with UID.
             Do nothing if there if there is no message with that UID.
         """
+        if self.readonly:
+            raise ReadOnlyError, "Tried to discard from read-only mailbox"
         if self.trash is None:
             self.add_imapflag(uid, "\\Deleted")
         else:
@@ -622,6 +642,8 @@ class ImapMailbox(object, Mailbox):
         """ Discard the message with UID.
             If there is no message with that UID, raise a KeyError
         """
+        if self.readonly:
+            raise ReadOnlyError, "Tried to remove from read-only mailbox"
         if uid not in self.search("ALL"):
             raise KeyError, "No UID %s" % uid
         self.discard(uid)
@@ -705,6 +727,8 @@ class ImapMailbox(object, Mailbox):
             Raise ImapNotOkError if a non-OK response is received from
             the server
         """
+        if self.readonly:
+            raise ReadOnlyError, "Tried to add to a read-only mailbox"
         message = ImapMessage(message)
         flags = message.flagstring()
         date_time = message.internaldatestring()
@@ -725,6 +749,9 @@ class ImapMailbox(object, Mailbox):
     def add_imapflag(self, uid, *flags):
         """ Add imap flag to message with UID.
         """
+        if self.readonly:
+            raise ReadOnlyError, \
+                       "Tried to add imap flag for message in read-only mailbox"
         for flag in flags:
             (code, data) = self._server.uid('store', uid, '+FLAGS', \
                                            "(%s)" % flag )
@@ -735,6 +762,9 @@ class ImapMailbox(object, Mailbox):
     def remove_imapflag(self, uid, *flags):
         """ Remove imap flags from message with UID
         """
+        if self.readonly:
+            raise ReadOnlyError, \
+                   "Tried to remove imap flag from message in read-only mailbox"
         for flag in flags:
             (code, data) = self._server.uid('store', uid, '-FLAGS', \
                                            "(%s)" % flag )
@@ -748,6 +778,9 @@ class ImapMailbox(object, Mailbox):
             If flags is a string, it is taken as the single flag
             to be set.
         """
+        if self.readonly:
+            raise ReadOnlyError, \
+                      "Tried to set imap flags for message in read-only mailbox"
         if isinstance(flags, str):
             flags = [flags]
         flagstring = "(%s)" % ' '.join(flags)
@@ -766,6 +799,8 @@ class ImapMailbox(object, Mailbox):
 
     def expunge(self):
         """ Expunge the mailbox (delete all messages marked for deletion)"""
+        if self.readonly:
+            raise ReadOnlyError, "Tried to expunge read-only mailbox"
         self._server.expunge()
 
 
