@@ -23,8 +23,6 @@
     of the mailbox.Mailbox interface.
 """
 
-# FIXME: make sure caching doesn't screw up when the mailbox is switched
-
 import imaplib
 import email.header
 import email.utils
@@ -133,6 +131,7 @@ class ImapMailbox(object, Mailbox):
                             + " instance of ImapServer and a string")
         self._server.select(name, create)
         self._cached_uid = None
+        self._cached_mailbox = None
         self._cached_text = None
         self.trash = None
         self.readonly = readonly
@@ -252,10 +251,11 @@ class ImapMailbox(object, Mailbox):
 
     def _cache_message(self, uid):
         """ Download the RFC822 text of the message with UID and put
-            in in the cache. Return the RFC822 text of the message.
+            in in the cache. Return the RFC822 text of the message. If the
+            message is already in the cache, it is returned directly.
             Raise KeyError if there if there is no message with that UID.
         """
-        if self._cached_uid != uid:
+        if (self._cached_uid != uid) or (self._cached_mailbox != self.name):
             (code, data) = self._server.uid('fetch', uid, "(RFC822)")
             if code != 'OK':
                 raise ImapNotOkError, "%s in fetch_message(%s)" % (code, uid)
@@ -267,6 +267,7 @@ class ImapMailbox(object, Mailbox):
             except TypeError:
                 raise KeyError, "No message %s in _cache_message" % uid
             self._cached_uid = uid
+            self._cached_mailbox = self.name
             self._cached_text = rfc822string
         return self._cached_text
 
