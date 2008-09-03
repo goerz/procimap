@@ -97,13 +97,20 @@ class ImapServer:
     def login(self):
         """ Identify the client using a plaintext password.
             The password will be quoted.
-            Connect to the server is not connected already
+            Connect to the server is not connected already. If any  problems 
+            occur during a login attempt, this method may cause a reconnect
+            to the server.
         """
         if not self._flags['connected']:
             self.connect()
         if not self._flags['logged_in']:
+            try:
+                result =  self._server.login(self.username, self.password)
+            except:
+                self.reconnect()
+                result =  self._server.login(self.username, self.password)
             self._flags['logged_in'] = True
-            return self._server.login(self.username, self.password)
+            return result
 
     def reconnect(self):
         """ Close and then reopen the connection to the server """
