@@ -69,6 +69,7 @@ class ImapServer:
             'logged_in' : False,    # authenticated?    login/logout
             'open' : False          # opened a mailbox? select/close
         }
+        self.mailboxname = None
         self.connect()
         self.login()
 
@@ -187,12 +188,15 @@ class ImapServer:
             removed from writable mailbox. This is the recommended
             command before "LOGOUT"."""
         self._flags['open'] = False
+        self.mailboxname = None
         return self._server.close()
 
     def select(self, mailbox = 'INBOX', readonly=False):
         """ Select a mailbox. Log in if not logged in already.
             Return number of messages in mailbox if successful.
             Raise NoSuchMailboxError if mailbox does not exist.
+            The name of the mailbox will be stored in the mailboxname 
+            attribute if selection was successful
         """
         if not self._flags['logged_in']:
             self.login()
@@ -201,6 +205,7 @@ class ImapServer:
         count = data[1][0]
         if code == 'OK':
             self._flags['open'] = True
+            self.mailboxname = mailbox
             return int(count)
         else:
             raise NoSuchMailboxError(count)
