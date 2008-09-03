@@ -70,6 +70,7 @@ class ImapServer:
             'open' : False          # opened a mailbox? select/close
         }
         self.mailboxname = None
+        self.readonly = False
         self.connect()
         self.login()
 
@@ -191,10 +192,13 @@ class ImapServer:
         self.mailboxname = None
         return self._server.close()
 
-    def select(self, mailbox = 'INBOX', readonly=False):
+    def select(self, mailbox = 'INBOX', readonly=False, create=False):
         """ Select a mailbox. Log in if not logged in already.
             Return number of messages in mailbox if successful.
-            Raise NoSuchMailboxError if mailbox does not exist.
+            If the mailbox does not exist, create it if 'create' is True,
+            else raise NoSuchMailboxError.
+            If 'readonly' is True, the server will reject any subsequent
+            attempts to make changes to the mailbox.
             The name of the mailbox will be stored in the mailboxname 
             attribute if selection was successful
         """
@@ -206,9 +210,15 @@ class ImapServer:
         if code == 'OK':
             self._flags['open'] = True
             self.mailboxname = mailbox
+            self.readonly = readonly
             return int(count)
         else:
-            raise NoSuchMailboxError(count)
+            if create:
+                self.create(mailbox)
+                self.select(mailbox, readonly, create=False)
+            else:
+                raise NoSuchMailboxError, "mailbox %s does not exist." \
+                                           % mailbox
 
     def list(self):
         """ List mailbox names """
