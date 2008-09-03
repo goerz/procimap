@@ -17,9 +17,9 @@ Public functions: Internaldate2Time
 __all__ = ("IMAP4", "IMAP4_SSL", "IMAP4_stream"
            "Internaldate2Time", "ParseFlags", "Time2Internaldate")
 
-__version__ = "2.3"
+__version__ = "2.4"
 __release__ = "2"
-__revision__ = "3"
+__revision__ = "4"
 __credits__ = """
 Authentication code contributed by Donn Cave <donn@u.washington.edu> June 1998.
 String method conversion by ESR, February 2001.
@@ -33,6 +33,8 @@ New socket open code from http://www.python.org/doc/lib/socket-example.html."""
 __author__ = "Piers Lauder <piers@janeelix.com>"
 
 import binascii, os, Queue, random, re, select, socket, sys, time, threading
+
+select_module = select
 
 #       Globals
 
@@ -1387,7 +1389,7 @@ class IMAP4(object):
         if __debug__: self._log(1, 'finished')
 
 
-    if hasattr(select, "poll"):
+    if hasattr(select_module, "poll"):
 
       def _reader(self):
 
@@ -1407,9 +1409,6 @@ class IMAP4(object):
 
         poll = select.poll()
 
-        # Care is needed here - as if this is a socket being consumed by SSL,
-        # then we need to drain the ssl buffer before re-trying a poll().
-
         poll.register(self.read_fd, select.POLLIN)
 
         while not self.Terminate:
@@ -1418,29 +1417,33 @@ class IMAP4(object):
             else:
                 timeout = None
             try:
-                for fd,state in poll.poll(timeout):
-                    if __debug__: self._log(5, 'poll => (%s, %s)' % (fd, state))
+                r = poll.poll(timeout)
+                if __debug__: self._log(5, 'poll => %s' % `r`)
+                if not r:
+                    continue                                # Timeout
 
-                    if state & select.POLLIN:
-                        data = self.read(32768)         # Drain ssl buffer if present
-                        start = 0
-                        dlen = len(data)
-                        if __debug__: self._log(5, 'rcvd %s' % dlen)
-                        if dlen == 0:
-                            time.sleep(0.1)
-                        while True:
-                            stop = data.find('\n', start)
-                            if stop < 0:
-                                line_part += data[start:]
-                                break
-                            stop += 1
-                            line_part, start, line = \
-                                '', stop, line_part + data[start:stop]
-                            if __debug__: self._log(4, '< %s' % line)
-                            self.inq.put(line)
+                fd,state = r[0]
 
-                    if state & ~(select.POLLIN):
-                        raise IOError(poll_error(state))
+                if state & select.POLLIN:
+                    data = self.read(32768)                 # Drain ssl buffer if present
+                    start = 0
+                    dlen = len(data)
+                    if __debug__: self._log(5, 'rcvd %s' % dlen)
+                    if dlen == 0:
+                        time.sleep(0.1)
+                    while True:
+                        stop = data.find('\n', start)
+                        if stop < 0:
+                            line_part += data[start:]
+                            break
+                        stop += 1
+                        line_part, start, line = \
+                            '', stop, line_part + data[start:stop]
+                        if __debug__: self._log(4, '< %s' % line)
+                        self.inq.put(line)
+
+                if state & ~(select.POLLIN):
+                    raise IOError(poll_error(state))
             except:
                 reason = 'socket error: %s - %s' % sys.exc_info()[:2]
                 if __debug__:
@@ -1467,9 +1470,6 @@ class IMAP4(object):
 
         line_part = ''
 
-        # Care is needed here - as if this is a socket being consumed by SSL,
-        # then we need to drain the ssl buffer before re-trying a select().
-
         while not self.Terminate:
             if self.state == LOGOUT:
                 timeout = 1
@@ -1478,10 +1478,10 @@ class IMAP4(object):
             try:
                 r,w,e = select.select([self.read_fd], [], [], timeout)
                 if __debug__: self._log(5, 'select => %s, %s, %s' % (r,w,e))
-                if not r:
+                if not r:                                   # Timeout
                     continue
 
-                data = self.read(32768)         # Drain ssl buffer if present
+                data = self.read(32768)                     # Drain ssl buffer if present
                 start = 0
                 dlen = len(data)
                 if __debug__: self._log(5, 'rcvd %s' % dlen)
