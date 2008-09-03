@@ -23,18 +23,18 @@
     of the mailbox.Mailbox interface.
 """
 
+# FIXME: make sure caching doesn't screw up when the mailbox is switched
 
 import imaplib
 import email.header
 import email.utils
 import tempfile
 import os
-import time
 from email.generator import Generator
 from cStringIO import StringIO
 from mailbox import Mailbox
 
-from ImapServer import ImapServer, NoSuchMailboxError
+from ImapServer import ImapServer
 from ImapMessage import ImapMessage
 
 
@@ -62,40 +62,14 @@ class NotSupportedError(Exception):
     """
     pass
 
-
-class ImapServerWrapper:
-    """ Wrapper around ImapServer, exposing all attributes,
-        but only a few "safe" methods:
-    """
-    def __init__(self, server):
-        if isinstance(server, ImapServer):
-            self._server = server
-        else:
-            raise TypeError("server must be an instance of ImapServer.")
-        for attribute in server.__dict__:
-            try:
-                self.__dict__[attribute] = server.__dict__[attribute]
-            except KeyError:
-                print "Can't import %s attribute into ImapServerWrapper" \
-                      % attribute
-
-        for method in ['create', 'list', 'lsub', 'subscribe',
-                       'unsubscribe', 'uid', 'idle']:
-            try:
-                self.__class__.__dict__[method] = \
-                                               server.__class__.__dict__[method]
-            except:
-                print "Can't import %s method into ImapServerWrapper" \
-                      % method
-
-    def __getattr__(self, name):
-        if name in self._server.__dict__:
-            return self._server.__dict__[name]
-        raise AttributeError("ImapServerWrapper instance has no attribute %s" \
-                              % name)
+class ServerNotAvailableError(Exception):
+    """ Raised if you try to open a ImapMailbox using an instance of ImapServer
+        that is already used for another ImapMailbox """
+    pass
 
 
-class ImapMailbox(Mailbox):
+
+class ImapMailbox(object, Mailbox):
     """ An abstract representation of a mailbox on an IMAP Server.
         This class implements the mailbox.Mailbox interface, insofar
         possible. Methods for changing a message in-place are not
@@ -114,12 +88,15 @@ class ImapMailbox(Mailbox):
         name             name of the mailbox
         server           ImapServer object
         trash            Trash folder
+        readonly         True if mailbox is readonly, false otherwise
+                         (readonly is not functional at this time)
         
         The 'trash' attribute may a string, another instance 
         of ImapMailbox, or an instance of mailbox.Mailbox.
         If not set, it is None.
     """
-    def __init__(self, path, factory=ImapMessage, create=True):
+    # TODO: make readonly work
+    def __init__(self, path, factory=ImapMessage, readonly=False, create=True):
         """ Initialize an ImapMailbox
             path is a tuple with two elements, consisting of
             1) an instance of ImapServer in any state
@@ -130,12 +107,11 @@ class ImapMailbox(Mailbox):
             The 'factory' parameter determines to which type the
             messages in the mailbox should be converted.
 
-            Note that two instances of ImapMailbox must never
-            share the same instance of server!
+            Note that two instances of ImapMailbox can never share the 
+            same instance of server. If you try to create an ImapMailbox
+            with an instance of ImapServer that you already used for
+            another mailbox, a ServerNotAvailableError will be thrown.
         """
-        #   TODO: concerning two mailboxes never sharing the same server: add a
-        #   lock to the ImapServer, and refuse to use the Server if the lock is
-        #   present.
         # not calling Mailbox.__init__(self) is on purpose:
         #  my definition of 'path' is incompatibel
         self._factory = factory
@@ -145,72 +121,52 @@ class ImapMailbox(Mailbox):
             raise TypeError, "path must be a tuple, consisting of an "\
                              + " instance of ImapServer and a string"
         if isinstance(server, ImapServer):
+            if hasattr(server, 'locked') and server.locked:
+                raise ServerNotAvailableError, "This instance of ImapServer"\
+                                      + " is already in use for another mailbox"
             self._server = server
-            self.server = ImapServerWrapper(server)
         else:
             raise TypeError, "path must be a tuple, consisting of an "\
                              + " instance of ImapServer and a string"
-        if isinstance(name, str):
-            self.name = name
-        else:
+        if not isinstance(name, str):
             raise TypeError("path must be a tuple, consisting of an "\
                             + " instance of ImapServer and a string")
-        try:
-            self._server.select(self.name)
-        except NoSuchMailboxError:
-            if create:
-                self._server.create(self.name)
-                self._server.select(self.name)
-            else:
-                raise NoSuchMailboxError, "mailbox %s does not exist." \
-                                           % self.name
+        self._server.select(name, create)
         self._cached_uid = None
         self._cached_text = None
         self.trash = None
+        self.readonly = readonly
+        server.locked = True
+
+    name = property(lambda self: self._server.mailboxname, None, 
+                    doc="Name of the mailbox on the server")
+
+    server = property(lambda self: self._server, None,
+                      doc="Instance of the ImapServer that is being used")
 
     def reconnect(self):
         """ Renew the connection to the mailbox """
+        name = self.name
         self._server.reconnect()
         self._server.login()
         try:
-            try:
-                self._server.select(self.name)
-            except:
-                # for some reason I have to do the whole thing twice if the
-                # connection was really broken. I'm getting an exception the
-                # first time. Not completely sure what's going on.
-                self._server.reconnect()
-                self._server.login()
-                try:
-                    self._server.select(self.name)
-                except NoSuchMailboxError:
-                    if create:
-                        self._server.create(self.name)
-                        self._server.select(self.name)
-                    else:
-                        raise NoSuchMailboxError, "mailbox %s does not exist." \
-                                                % self.name
-        finally:
-            self.server = ImapServerWrapper(self._server)
+            self._server.select(name)
+        except:
+            # for some reason I have to do the whole thing twice if the
+            # connection was really broken. I'm getting an exception the
+            # first time. Not completely sure what's going on.
+            self._server.reconnect()
+            self._server.login()
+            self._server.select(name) 
 
 
     def switch(self, name, create=False):
         """ Switch to a different Mailbox on the same server """
         self.flush()
-        if isinstance(name, str):
-            self.name = name
-        else:
+        if not isinstance(name, str):
             raise TypeError("name must be the name of a mailbox " \
                             + "as a string")
-        try:
-            self._server.select(self.name)
-        except NoSuchMailboxError:
-            if create:
-                self._server.create(self.name)
-                self._server.select(self.name)
-            else:
-                raise NoSuchMailboxError, "mailbox %s does not exist." \
-                                           % self.name
+        self._server.select(name, create)
         self._cached_uid = None
         self._cached_text = None
 
@@ -597,7 +553,7 @@ class ImapMailbox(Mailbox):
         """
         if not isinstance(other, ImapMailbox):
             return False
-        return (    (self._server == other._server) \
+        return (    (self._server == other.server) \
                 and (self.name == other.name) \
                )
 
@@ -617,7 +573,7 @@ class ImapMailbox(Mailbox):
             Do nothing if there if there is no message with that UID.
         """
         if isinstance(targetmailbox, ImapMailbox):
-            if targetmailbox._server == self._server:
+            if targetmailbox.server == self._server:
                 targetmailbox = targetmailbox.name # set as string
         if isinstance(targetmailbox, Mailbox):
             if self != targetmailbox:
@@ -691,7 +647,7 @@ class ImapMailbox(Mailbox):
 
     def keys(self):
         """ Return a list of all UIDs """
-        return self.search(None, "ALL")
+        return self.search("ALL")
 
     def itervalues(self):
         """ Return an iterator over all messages. The messages are
@@ -804,6 +760,8 @@ class ImapMailbox(Mailbox):
         self.flush()
         self._server.close()
         self._server.logout()
+        if hasattr(self._server, 'locked'):
+            del self._server.locked
 
     def expunge(self):
         """ Expunge the mailbox (delete all messages marked for deletion)"""
