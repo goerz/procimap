@@ -3,11 +3,11 @@
 from distutils.core import setup
 
 setup(name='ProcImap',
-      version='1.0',
-      description='Python IMAP Mail Processing Utility',
+      version='1.1',
+      description='Python IMAP Library and Mail Processing Utility',
       author='Michael Goerz',
       author_email='goerz@physik.fu-berlin.de',
-      url='http://www.physik.fu-berlin.de/~goerz',
+      url='http://code.google.com/p/procimap/',
       license='GPL',
       packages=['ProcImap']
      )
