@@ -56,12 +56,16 @@ class NoSuchMailboxError(Exception):
 class ImapServer:
     """A small lowlevel representation of an imap server """
 
-    def __init__(self, servername, username, password, ssl):
-        """ Initialize the IMAP Server, connect and log in. """
+    def __init__(self, servername, username, password, ssl=True, port=None):
+        """ Initialize the IMAP Server, connect and log in. 
+            If you leave the port unspecified, the default port will be used.
+            This is port 143 is ssl is disabled, and port 933 if ssl is 
+            enabled.
+        """
         self.servername = servername
         self.username = username
         self.password = password
-        self.port = None
+        self.port = port # if None, connect() will set this
         self.ssl = ssl
         self._server = None
         self._flags = {
@@ -72,6 +76,19 @@ class ImapServer:
         self.mailboxname = None
         self.connect()
         self.login()
+
+    def clone(self):
+        """ Return a new instance of ImapServer that points to the same server,
+            in a connected and authenticated state.
+
+                >>> server1 = ImapServer('localhost','user','secret')
+                >>> server2 = ImapServer('localhost','user','secret')
+            is equivalant to
+                >>> server1 = ImapServer('localhost','user','secret')
+                >>> server2 = server1.clone()
+        """
+        return ImapServer(self.servername, self.username, 
+                          self.password, self.ssl, self.port)
 
     def connect(self):
         """ Connect to servername """
