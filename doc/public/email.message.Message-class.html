@@ -1,0 +1,864 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>email.message.Message</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://code.google.com/p/procimap/">ProcImap&nbsp;v.1.1</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        Package&nbsp;email ::
+        Module&nbsp;message ::
+        Class&nbsp;Message
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="../private/email.message.Message-class.html">show&nbsp;private</a>&nbsp;|&nbsp;hide&nbsp;private]</font></td></tr>
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="email.message.Message-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class Message</h2>
+
+<dl><dt><b>Known Subclasses:</b></dt>
+<dd>
+    <a href="mailbox.Message-class.html"><code>Message</code></a></dd></dl>
+
+<hr/>
+
+<p>Basic message object.</p>
+<p>A message object is defined as something that has a bunch of RFC 2822 
+headers and a payload. It may optionally have an envelope header (a.k.a. 
+Unix-From or From_ header). If the message is a container (i.e. a 
+multipart or a message/rfc822), then the payload is a list of Message 
+objects, otherwise it is a string.</p>
+Message objects implement part of the `mapping' interface, which 
+assumes there is exactly one occurrance of the header per message. Some 
+headers do in fact appear multiple times (e.g. Received) and for those 
+headers, you must use the explicit API to set or get all the headers. Not 
+all of the mapping methods are implemented.
+<hr/>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><a name="__init__"></a><span class="summary-sig"><span class="summary-sig-name">__init__</span>(<span class=summary-sig-arg>self</span>)</span></code>
+</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><a name="__contains__"></a><span class="summary-sig"><span class="summary-sig-name">__contains__</span>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>)</span></code>
+</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#__delitem__" class="summary-sig-name"><code>__delitem__</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Delete all occurrences of a header, if present.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#__getitem__" class="summary-sig-name"><code>__getitem__</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Get a header value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#__len__" class="summary-sig-name"><code>__len__</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return the total number of headers, including duplicates.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#__setitem__" class="summary-sig-name"><code>__setitem__</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>val</span>)</span></code>
+<br />
+Set the value of a header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#__str__" class="summary-sig-name"><code>__str__</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return the entire formatted message as a string.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#add_header" class="summary-sig-name"><code>add_header</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>_name</span>,
+          <span class=summary-sig-arg>_value</span>,
+          <span class="summary-sig-kwarg">**_params</span>)</span></code>
+<br />
+Extended header setting.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#as_string" class="summary-sig-name"><code>as_string</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>unixfrom</span>)</span></code>
+<br />
+Return the entire formatted message as a string.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#attach" class="summary-sig-name"><code>attach</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>payload</span>)</span></code>
+<br />
+Add the given payload to the current payload.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#del_param" class="summary-sig-name"><code>del_param</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>param</span>,
+          <span class=summary-sig-arg>header</span>,
+          <span class=summary-sig-arg>requote</span>)</span></code>
+<br />
+Remove the given parameter completely from the Content-Type 
+header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get" class="summary-sig-name"><code>get</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>failobj</span>)</span></code>
+<br />
+Get a header value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_all" class="summary-sig-name"><code>get_all</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>failobj</span>)</span></code>
+<br />
+Return a list of all the values for the named field.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_boundary" class="summary-sig-name"><code>get_boundary</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>failobj</span>)</span></code>
+<br />
+Return the boundary associated with the payload if present.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_charset" class="summary-sig-name"><code>get_charset</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return the Charset instance associated with the message's payload.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_charsets" class="summary-sig-name"><code>get_charsets</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>failobj</span>)</span></code>
+<br />
+Return a list containing the charset(s) used in this message.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_content_charset" class="summary-sig-name"><code>get_content_charset</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>failobj</span>)</span></code>
+<br />
+Return the charset parameter of the Content-Type header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_content_maintype" class="summary-sig-name"><code>get_content_maintype</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return the message's main content type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_content_subtype" class="summary-sig-name"><code>get_content_subtype</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Returns the message's sub-content type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_content_type" class="summary-sig-name"><code>get_content_type</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return the message's content type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_default_type" class="summary-sig-name"><code>get_default_type</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return the `default' content type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_filename" class="summary-sig-name"><code>get_filename</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>failobj</span>)</span></code>
+<br />
+Return the filename associated with the payload if present.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_param" class="summary-sig-name"><code>get_param</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>param</span>,
+          <span class=summary-sig-arg>failobj</span>,
+          <span class=summary-sig-arg>header</span>,
+          <span class=summary-sig-arg>unquote</span>)</span></code>
+<br />
+Return the parameter value if found in the Content-Type header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_params" class="summary-sig-name"><code>get_params</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>failobj</span>,
+          <span class=summary-sig-arg>header</span>,
+          <span class=summary-sig-arg>unquote</span>)</span></code>
+<br />
+Return the message's Content-Type parameters, as a list.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_payload" class="summary-sig-name"><code>get_payload</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>i</span>,
+          <span class=summary-sig-arg>decode</span>)</span></code>
+<br />
+Return a reference to the payload.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><a name="get_unixfrom"></a><span class="summary-sig"><span class="summary-sig-name">get_unixfrom</span>(<span class=summary-sig-arg>self</span>)</span></code>
+</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#has_key" class="summary-sig-name"><code>has_key</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Return true if the message contains the header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#is_multipart" class="summary-sig-name"><code>is_multipart</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return True if the message consists of multiple parts.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#items" class="summary-sig-name"><code>items</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Get all the message's header fields and values.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#keys" class="summary-sig-name"><code>keys</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return a list of all the message's header field names.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#replace_header" class="summary-sig-name"><code>replace_header</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>_name</span>,
+          <span class=summary-sig-arg>_value</span>)</span></code>
+<br />
+Replace a header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_boundary" class="summary-sig-name"><code>set_boundary</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>boundary</span>)</span></code>
+<br />
+Set the boundary parameter in Content-Type to 'boundary'.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_charset" class="summary-sig-name"><code>set_charset</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>charset</span>)</span></code>
+<br />
+Set the charset of the payload to a given character set.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_default_type" class="summary-sig-name"><code>set_default_type</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>ctype</span>)</span></code>
+<br />
+Set the `default' content type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_param" class="summary-sig-name"><code>set_param</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>param</span>,
+          <span class=summary-sig-arg>value</span>,
+          <span class=summary-sig-arg>header</span>,
+          <span class=summary-sig-arg>requote</span>,
+          <span class=summary-sig-arg>charset</span>,
+          <span class=summary-sig-arg>language</span>)</span></code>
+<br />
+Set a parameter in the Content-Type header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_payload" class="summary-sig-name"><code>set_payload</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>payload</span>,
+          <span class=summary-sig-arg>charset</span>)</span></code>
+<br />
+Set the payload to the given value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_type" class="summary-sig-name"><code>set_type</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>type</span>,
+          <span class=summary-sig-arg>header</span>,
+          <span class=summary-sig-arg>requote</span>)</span></code>
+<br />
+Set the main type and subtype for the Content-Type header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><a name="set_unixfrom"></a><span class="summary-sig"><span class="summary-sig-name">set_unixfrom</span>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>unixfrom</span>)</span></code>
+</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#values" class="summary-sig-name"><code>values</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return a list of all the message's header values.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#walk" class="summary-sig-name"><code>walk</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Walk over the message tree, yielding each subpart.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="__delitem__"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">__delitem__</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>name</span>)</span>
+    <br /><i>(Index deletion operator)</i>
+  </h3>
+  <p>Delete all occurrences of a header, if present.</p>
+  Does not raise an exception if the header is missing.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="__getitem__"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">__getitem__</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>name</span>)</span>
+    <br /><i>(Indexing operator)</i>
+  </h3>
+  <p>Get a header value.</p>
+  <p>Return None if the header is missing instead of raising an 
+  exception.</p>
+  Note that if the header appeared multiple times, exactly which 
+  occurrance gets returned is undefined. Use get_all() to get all the 
+  values matching a header field name.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="__len__"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">__len__</span>(<span class=sig-arg>self</span>)</span>
+    <br /><i>(Length operator)</i>
+  </h3>
+  Return the total number of headers, including duplicates.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="__setitem__"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">__setitem__</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>name</span>,
+          <span class=sig-arg>val</span>)</span>
+    <br /><i>(Index assignment operator)</i>
+  </h3>
+  <p>Set the value of a header.</p>
+  Note: this does not overwrite an existing header with the same field 
+  name. Use __delitem__() first to delete any existing headers.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="__str__"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">__str__</span>(<span class=sig-arg>self</span>)</span>
+    <br /><i>(Informal representation operator)</i>
+  </h3>
+  Return the entire formatted message as a string. This includes the 
+  headers, body, and envelope header.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="add_header"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">add_header</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>_name</span>,
+          <span class=sig-arg>_value</span>,
+          <span class="sig-kwarg">**_params</span>)</span>
+  </h3>
+  <p>Extended header setting.</p>
+  <p>name is the header field to add. keyword arguments can be used to 
+  set additional parameters for the header field, with underscores 
+  converted to dashes. Normally the parameter will be added as 
+  key=&quot;value&quot; unless value is None, in which case only the key 
+  will be added.</p>
+  <p>Example:</p>
+  msg.add_header('content-disposition', 'attachment', 
+  filename='bud.gif')
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="as_string"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">as_string</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>unixfrom</span>=<span class=sig-default>False</span>)</span>
+  </h3>
+  <p>Return the entire formatted message as a string. Optional `unixfrom' 
+  when True, means include the Unix From_ envelope header.</p>
+  This is a convenience method and may not generate the message 
+  exactly as you intend because by default it mangles lines that begin 
+  with &quot;From &quot;. For more flexibility, use the flatten() method 
+  of a Generator instance.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="attach"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">attach</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>payload</span>)</span>
+  </h3>
+  <p>Add the given payload to the current payload.</p>
+  The current payload will always be a list of objects after this 
+  method is called. If you want to set the payload to a scalar object, 
+  use set_payload() instead.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="del_param"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">del_param</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>param</span>,
+          <span class=sig-arg>header</span>=<span class=sig-default>'content-type'</span>,
+          <span class=sig-arg>requote</span>=<span class=sig-default>True</span>)</span>
+  </h3>
+  <p>Remove the given parameter completely from the Content-Type 
+  header.</p>
+  The header will be re-written in place without the parameter or its 
+  value. All values will be quoted as necessary unless requote is False. 
+  Optional header specifies an alternative to the Content-Type 
+  header.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>name</span>,
+          <span class=sig-arg>failobj</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  <p>Get a header value.</p>
+  Like __getitem__() but return failobj instead of None when the field 
+  is missing.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_all"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_all</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>name</span>,
+          <span class=sig-arg>failobj</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  <p>Return a list of all the values for the named field.</p>
+  <p>These will be sorted in the order they appeared in the original 
+  message, and may contain duplicates. Any fields deleted and re-inserted 
+  are always appended to the header list.</p>
+  If no such fields exist, failobj is returned (defaults to None).
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_boundary"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_boundary</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>failobj</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  <p>Return the boundary associated with the payload if present.</p>
+  The boundary is extracted from the Content-Type header's `boundary' 
+  parameter, and it is unquoted.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_charset"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_charset</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  Return the Charset instance associated with the message's 
+  payload.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_charsets"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_charsets</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>failobj</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  <p>Return a list containing the charset(s) used in this message.</p>
+  <p>The returned list of items describes the Content-Type headers' 
+  charset parameter for this message and all the subparts in its 
+  payload.</p>
+  <p>Each item will either be a string (the value of the charset 
+  parameter in the Content-Type header of that part) or the value of the 
+  'failobj' parameter (defaults to None), if the part does not have a 
+  main MIME type of &quot;text&quot;, or the charset is not defined.</p>
+  The list will contain one string for each part of the message, plus 
+  one for the container message (i.e. self), so that a non-multipart 
+  message will still return a list of length 1.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_content_charset"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_content_charset</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>failobj</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  <p>Return the charset parameter of the Content-Type header.</p>
+  The returned string is always coerced to lower case. If there is no 
+  Content-Type header, or if that header has no charset parameter, 
+  failobj is returned.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_content_maintype"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_content_maintype</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  <p>Return the message's main content type.</p>
+  This is the `maintype' part of the string returned by 
+  get_content_type().
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_content_subtype"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_content_subtype</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  <p>Returns the message's sub-content type.</p>
+  This is the `subtype' part of the string returned by 
+  get_content_type().
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_content_type"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_content_type</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  <p>Return the message's content type.</p>
+  <p>The returned string is coerced to lower case of the form 
+  `maintype/subtype'. If there was no Content-Type header in the message, 
+  the default type as given by get_default_type() will be returned. Since 
+  according to RFC 2045, messages always have a default type this will 
+  always return a value.</p>
+  RFC 2045 defines a message's default type to be text/plain unless it 
+  appears inside a multipart/digest container, in which case it would be 
+  message/rfc822.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_default_type"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_default_type</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  <p>Return the `default' content type.</p>
+  Most messages have a default content type of text/plain, except for 
+  messages that are subparts of multipart/digest containers. Such 
+  subparts have a default content type of message/rfc822.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_filename"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_filename</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>failobj</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  <p>Return the filename associated with the payload if present.</p>
+  The filename is extracted from the Content-Disposition header's 
+  `filename' parameter, and it is unquoted. If that header is missing the 
+  `filename' parameter, this method falls back to looking for the `name' 
+  parameter.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_param"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_param</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>param</span>,
+          <span class=sig-arg>failobj</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>header</span>=<span class=sig-default>'content-type'</span>,
+          <span class=sig-arg>unquote</span>=<span class=sig-default>True</span>)</span>
+  </h3>
+<pre class="literalblock">
+Return the parameter value if found in the Content-Type header.
+
+Optional failobj is the object to return if there is no Content-Type
+header, or the Content-Type header has no such parameter.  Optional
+header is the header to search instead of Content-Type.
+
+Parameter keys are always compared case insensitively.  The return
+value can either be a string, or a 3-tuple if the parameter was RFC
+2231 encoded.  When it's a 3-tuple, the elements of the value are of
+the form (CHARSET, LANGUAGE, VALUE).  Note that both CHARSET and
+LANGUAGE can be None, in which case you should consider VALUE to be
+encoded in the us-ascii charset.  You can usually ignore LANGUAGE.
+
+Your application should be prepared to deal with 3-tuple return
+values, and can convert the parameter to a Unicode string like so:
+
+    param = msg.get_param('foo')
+    if isinstance(param, tuple):
+        param = unicode(param[2], param[0] or 'us-ascii')
+
+In any case, the parameter value (either the returned string, or the
+VALUE item in the 3-tuple) is always unquoted, unless unquote is set
+to False.
+</pre>
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_params"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_params</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>failobj</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>header</span>=<span class=sig-default>'content-type'</span>,
+          <span class=sig-arg>unquote</span>=<span class=sig-default>True</span>)</span>
+  </h3>
+  <p>Return the message's Content-Type parameters, as a list.</p>
+  <p>The elements of the returned list are 2-tuples of key/value pairs, 
+  as split on the `=' sign. The left hand side of the `=' is the key, 
+  while the right hand side is the value. If there is no `=' sign in the 
+  parameter the value is the empty string. The value is as described in 
+  the get_param() method.</p>
+  Optional failobj is the object to return if there is no Content-Type 
+  header. Optional header is the header to search instead of 
+  Content-Type. If unquote is True, the value is unquoted.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_payload"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_payload</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>i</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>decode</span>=<span class=sig-default>False</span>)</span>
+  </h3>
+  <p>Return a reference to the payload.</p>
+  <p>The payload will either be a list object or a string. If you mutate 
+  the list object, you modify the message's payload in place. Optional i 
+  returns that index into the payload.</p>
+  <p>Optional decode is a flag indicating whether the payload should be 
+  decoded or not, according to the Content-Transfer-Encoding header 
+  (default is False).</p>
+  <p>When True and the message is not a multipart, the payload will be 
+  decoded if this header's value is `quoted-printable' or `base64'. If 
+  some other encoding is used, or the header is missing, or if the 
+  payload has bogus data (i.e. bogus base64 or uuencoded data), the 
+  payload is returned as-is.</p>
+  If the message is a multipart and the decode flag is True, then None 
+  is returned.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="has_key"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">has_key</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>name</span>)</span>
+  </h3>
+  Return true if the message contains the header.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="is_multipart"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">is_multipart</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  Return True if the message consists of multiple parts.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="items"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">items</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  <p>Get all the message's header fields and values.</p>
+  These will be sorted in the order they appeared in the original 
+  message, or were added to the message, and may contain duplicates. Any 
+  fields deleted and re-inserted are always appended to the header 
+  list.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="keys"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">keys</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  <p>Return a list of all the message's header field names.</p>
+  These will be sorted in the order they appeared in the original 
+  message, or were added to the message, and may contain duplicates. Any 
+  fields deleted and re-inserted are always appended to the header 
+  list.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="replace_header"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">replace_header</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>_name</span>,
+          <span class=sig-arg>_value</span>)</span>
+  </h3>
+  <p>Replace a header.</p>
+  Replace the first matching header found in the message, retaining 
+  header order and case. If no matching header was found, a KeyError is 
+  raised.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="set_boundary"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">set_boundary</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>boundary</span>)</span>
+  </h3>
+  <p>Set the boundary parameter in Content-Type to 'boundary'.</p>
+  <p>This is subtly different than deleting the Content-Type header and 
+  adding a new one with a new boundary parameter via add_header(). The 
+  main difference is that using the set_boundary() method preserves the 
+  order of the Content-Type header in the original message.</p>
+  HeaderParseError is raised if the message has no Content-Type 
+  header.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="set_charset"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">set_charset</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>charset</span>)</span>
+  </h3>
+  <p>Set the charset of the payload to a given character set.</p>
+  <p>charset can be a Charset instance, a string naming a character set, 
+  or None. If it is a string it will be converted to a Charset instance. 
+  If charset is None, the charset parameter will be removed from the 
+  Content-Type field. Anything else will generate a TypeError.</p>
+  The message will be assumed to be of type text/* encoded with 
+  charset.input_charset. It will be converted to charset.output_charset 
+  and encoded properly, if needed, when generating the plain text 
+  representation of the message. MIME headers (MIME-Version, 
+  Content-Type, Content-Transfer-Encoding) will be added as needed.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="set_default_type"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">set_default_type</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>ctype</span>)</span>
+  </h3>
+  <p>Set the `default' content type.</p>
+  ctype should be either &quot;text/plain&quot; or 
+  &quot;message/rfc822&quot;, although this is not enforced. The default 
+  content type is not stored in the Content-Type header.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="set_param"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">set_param</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>param</span>,
+          <span class=sig-arg>value</span>,
+          <span class=sig-arg>header</span>=<span class=sig-default>'Content-Type'</span>,
+          <span class=sig-arg>requote</span>=<span class=sig-default>True</span>,
+          <span class=sig-arg>charset</span>=<span class=sig-default>None</span>,
+          <span class=sig-arg>language</span>=<span class=sig-default>''</span>)</span>
+  </h3>
+<pre class="literalblock">
+Set a parameter in the Content-Type header.
+
+If the parameter already exists in the header, its value will be
+replaced with the new value.
+
+If header is Content-Type and has not yet been defined for this
+message, it will be set to &quot;text/plain&quot; and the new parameter and
+value will be appended as per RFC 2045.
+
+An alternate header can specified in the header argument, and all
+parameters will be quoted as necessary unless requote is False.
+
+If charset is specified, the parameter will be encoded according to RFC
+2231.  Optional language specifies the RFC 2231 language, defaulting
+to the empty string.  Both charset and language should be strings.
+</pre>
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="set_payload"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">set_payload</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>payload</span>,
+          <span class=sig-arg>charset</span>=<span class=sig-default>None</span>)</span>
+  </h3>
+  <p>Set the payload to the given value.</p>
+  Optional charset sets the message's default character set. See 
+  set_charset() for details.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="set_type"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">set_type</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>type</span>,
+          <span class=sig-arg>header</span>=<span class=sig-default>'Content-Type'</span>,
+          <span class=sig-arg>requote</span>=<span class=sig-default>True</span>)</span>
+  </h3>
+  <p>Set the main type and subtype for the Content-Type header.</p>
+  <p>type must be a string in the form &quot;maintype/subtype&quot;, 
+  otherwise a ValueError is raised.</p>
+  <p>This method replaces the Content-Type header, keeping all the 
+  parameters in place. If requote is False, this leaves the existing 
+  header's quoting as is. Otherwise, the parameters will be quoted (the 
+  default).</p>
+  An alternative header can be specified in the header argument. When 
+  the Content-Type header is set, we'll always also add a MIME-Version 
+  header.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="values"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">values</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  <p>Return a list of all the message's header values.</p>
+  These will be sorted in the order they appeared in the original 
+  message, or were added to the message, and may contain duplicates. Any 
+  fields deleted and re-inserted are always appended to the header 
+  list.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="walk"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">walk</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  <p>Walk over the message tree, yielding each subpart.</p>
+  The walk is performed in depth-first order. This method is a 
+  generator.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://code.google.com/p/procimap/">ProcImap&nbsp;v.1.1</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Fri Sep  5 00:46:16 2008</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

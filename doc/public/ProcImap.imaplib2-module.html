@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ProcImap.imaplib2</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://code.google.com/p/procimap/">ProcImap&nbsp;v.1.1</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="ProcImap-module.html">Package&nbsp;ProcImap</a> ::
+        Module&nbsp;imaplib2
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[<a href="../private/ProcImap.imaplib2-module.html">show&nbsp;private</a>&nbsp;|&nbsp;hide&nbsp;private]</font></td></tr>
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="ProcImap.imaplib2-module.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF MODULE DESCRIPTION =========== -->
+<h2 class="module">Module ProcImap.imaplib2</h2>
+
+<pre class="literalblock">
+Threaded IMAP4 client.
+
+Based on RFC 2060 and original imaplib module.
+
+Public classes:   IMAP4
+                  IMAP4_SSL
+                  IMAP4_stream
+
+Public functions: Internaldate2Time
+                  ParseFlags
+                  Time2Internaldate
+</pre>
+<hr/>
+
+<!-- =========== START OF CLASSES =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Classes</th></tr>
+<tr><td width="15%">
+  <b><a href="ProcImap.imaplib2.IMAP4-class.html"><code>IMAP4</code></a></b></td>
+  <td>Threaded IMAP4 client class.</td></tr>
+<tr><td width="15%">
+  <b><a href="ProcImap.imaplib2.IMAP4_SSL-class.html"><code>IMAP4_SSL</code></a></b></td>
+  <td>IMAP4 client class over SSL connection
+
+Instantiate with:
+    IMAP4_SSL(host=None, port=None, keyfile=None, certfile=None, debug=None, debug_file=None)
+
+    host       - host's name (default: localhost);
+    port       - port number (default: standard IMAP4 SSL port);
+    keyfile    - PEM formatted file that contains your private key (default: None);
+    certfile   - PEM formatted certificate chain file (default: None);
+    debug      - debug level (default: 0 - no debug);
+    debug_file - debug stream (default: sys.stderr).</td></tr>
+</table><br />
+
+
+<!-- =========== START OF FUNCTION SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Function Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="ProcImap.imaplib2-module.html#ParseFlags" class="summary-sig-name"><code>ParseFlags</code></a>(<span class=summary-sig-arg>resp</span>)</span></code>
+<br />
+('flag', ...) = ParseFlags(line) Convert IMAP4 flags response to 
+python tuple.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="ProcImap.imaplib2-module.html#Time2Internaldate" class="summary-sig-name"><code>Time2Internaldate</code></a>(<span class=summary-sig-arg>date_time</span>)</span></code>
+<br />
+'&quot;DD-Mmm-YYYY HH:MM:SS +HHMM&quot;' = 
+Time2Internaldate(date_time) Convert 'date_time' to IMAP4 INTERNALDATE 
+representation.</td></tr>
+</table><br />
+
+
+<!-- =========== START OF FUNCTION DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Function Details</th></tr>
+</table>
+
+<a name="ParseFlags"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">ParseFlags</span>(<span class=sig-arg>resp</span>)</span>
+  </h3>
+  ('flag', ...) = ParseFlags(line) Convert IMAP4 flags response to 
+  python tuple.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="Time2Internaldate"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">Time2Internaldate</span>(<span class=sig-arg>date_time</span>)</span>
+  </h3>
+  '&quot;DD-Mmm-YYYY HH:MM:SS +HHMM&quot;' = 
+  Time2Internaldate(date_time) Convert 'date_time' to IMAP4 INTERNALDATE 
+  representation.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://code.google.com/p/procimap/">ProcImap&nbsp;v.1.1</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Fri Sep  5 00:46:16 2008</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>

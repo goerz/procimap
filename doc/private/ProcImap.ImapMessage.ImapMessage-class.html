@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ProcImap.ImapMessage.ImapMessage</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css"></link>
+</head>
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://code.google.com/p/procimap/">ProcImap&nbsp;v.1.1</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <font size="-1"><b class="breadcrumbs">
+        <a href="ProcImap-module.html">Package&nbsp;ProcImap</a> ::
+        <a href="ProcImap.ImapMessage-module.html">Module&nbsp;ImapMessage</a> ::
+        Class&nbsp;ImapMessage
+      </b></font></br>
+    </td>
+    <td><table cellpadding="0" cellspacing="0">
+      <tr><td align="right"><font size="-2">[show&nbsp;private&nbsp;|&nbsp;<a href="../public/ProcImap.ImapMessage.ImapMessage-class.html">hide&nbsp;private</a>]</font></td></tr>
+      <tr><td align="right"><font size="-2">[<a href="frames.html"target="_top">frames</a>&nbsp;|&nbsp;<a href="ProcImap.ImapMessage.ImapMessage-class.html" target="_top">no&nbsp;frames</a>]</font></td></tr>
+    </table></td>
+</tr></table>
+
+<!-- =========== START OF CLASS DESCRIPTION =========== -->
+<h2 class="class">Class ImapMessage</h2>
+
+<pre class="base-tree">
+<a href="email.message.Message-class.html"><code>Message</code></a> --+    
+          |    
+    <a href="mailbox.Message-class.html"><code>Message</code></a> --+
+              |
+             <b>ImapMessage</b>
+</pre><br />
+
+<hr/>
+
+<pre class="literalblock">
+Message with IMAP-specific properties. This class holds information 
+about an IMAP email message that.
+IMAP specific properties consist of IMAP flags, the internal
+date (date when received by the server), and possibly the message
+size.
+
+Class specific attributes are:
+
+internaldate    the date and time when the IMAP server received
+                the message (time tuple)
+size            number of bytes of the message, 0 if unknown
+</pre>
+<hr/>
+
+
+<!-- =========== START OF METHOD SUMMARY =========== -->
+<table class="summary" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="summary">
+  <th colspan="2">Method Summary</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="ProcImap.ImapMessage.ImapMessage-class.html#__init__" class="summary-sig-name"><code>__init__</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>message</span>)</span></code>
+<br />
+If message is omitted, create new instance in a default, empty 
+state.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="ProcImap.ImapMessage.ImapMessage-class.html#add_imapflag" class="summary-sig-name"><code>add_imapflag</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class="summary-sig-vararg">*flags</span>)</span></code>
+<br />
+Add a flag to the list of imap flags.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="ProcImap.ImapMessage.ImapMessage-class.html#delete" class="summary-sig-name"><code>delete</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Add the \Deleted flag to the list of imap flags</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="ProcImap.ImapMessage.ImapMessage-class.html#flags_from_string" class="summary-sig-name"><code>flags_from_string</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>flagstring</span>)</span></code>
+<br />
+Set the flags from a string as returned by self.flagstring()</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="ProcImap.ImapMessage.ImapMessage-class.html#flagstring" class="summary-sig-name"><code>flagstring</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return string for imap flags</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="ProcImap.ImapMessage.ImapMessage-class.html#get_imapflags" class="summary-sig-name"><code>get_imapflags</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return a list of imap flags</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="ProcImap.ImapMessage.ImapMessage-class.html#internaldate_from_string" class="summary-sig-name"><code>internaldate_from_string</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>internaldatestring</span>)</span></code>
+<br />
+Set the internaldate from a string as it is returned by 
+self.internaldatestring()</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="ProcImap.ImapMessage.ImapMessage-class.html#internaldatestring" class="summary-sig-name"><code>internaldatestring</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return string for internaldate.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="ProcImap.ImapMessage.ImapMessage-class.html#remove_imapflag" class="summary-sig-name"><code>remove_imapflag</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class="summary-sig-vararg">*flags</span>)</span></code>
+<br />
+Remove flags from the list of imap flags.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="ProcImap.ImapMessage.ImapMessage-class.html#set_imapflags" class="summary-sig-name"><code>set_imapflags</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>flags</span>)</span></code>
+<br />
+Set imap flags to flags</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="../private/ProcImap.ImapMessage.ImapMessage-class.html#_explain_to" class="summary-sig-name"><code>_explain_to</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>message</span>)</span></code>
+<br />
+Copy IMAP-specific state to message insofar as possible.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="../private/ProcImap.ImapMessage.ImapMessage-class.html#_get_explanation_from" class="summary-sig-name"><code>_get_explanation_from</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>message</span>)</span></code>
+<br />
+Copy specific state from message to self insofar as possible.</td></tr>
+<tr bgcolor="#e8f0f8" class="group">
+  <th colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;Inherited from Message</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="../private/mailbox.Message-class.html#_become_message" class="summary-sig-name"><code>_become_message</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>message</span>)</span></code>
+<br />
+Assume the non-format-specific state of message.</td></tr>
+<tr bgcolor="#e8f0f8" class="group">
+  <th colspan="2">&nbsp;&nbsp;&nbsp;&nbsp;Inherited from Message</th></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#__contains__" class="summary-sig-name"><code>__contains__</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>)</span></code>
+</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#__delitem__" class="summary-sig-name"><code>__delitem__</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Delete all occurrences of a header, if present.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#__getitem__" class="summary-sig-name"><code>__getitem__</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Get a header value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#__len__" class="summary-sig-name"><code>__len__</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return the total number of headers, including duplicates.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#__setitem__" class="summary-sig-name"><code>__setitem__</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>val</span>)</span></code>
+<br />
+Set the value of a header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#__str__" class="summary-sig-name"><code>__str__</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return the entire formatted message as a string.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#add_header" class="summary-sig-name"><code>add_header</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>_name</span>,
+          <span class=summary-sig-arg>_value</span>,
+          <span class="summary-sig-kwarg">**_params</span>)</span></code>
+<br />
+Extended header setting.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#as_string" class="summary-sig-name"><code>as_string</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>unixfrom</span>)</span></code>
+<br />
+Return the entire formatted message as a string.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#attach" class="summary-sig-name"><code>attach</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>payload</span>)</span></code>
+<br />
+Add the given payload to the current payload.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#del_param" class="summary-sig-name"><code>del_param</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>param</span>,
+          <span class=summary-sig-arg>header</span>,
+          <span class=summary-sig-arg>requote</span>)</span></code>
+<br />
+Remove the given parameter completely from the Content-Type 
+header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get" class="summary-sig-name"><code>get</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>failobj</span>)</span></code>
+<br />
+Get a header value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_all" class="summary-sig-name"><code>get_all</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>,
+          <span class=summary-sig-arg>failobj</span>)</span></code>
+<br />
+Return a list of all the values for the named field.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_boundary" class="summary-sig-name"><code>get_boundary</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>failobj</span>)</span></code>
+<br />
+Return the boundary associated with the payload if present.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_charset" class="summary-sig-name"><code>get_charset</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return the Charset instance associated with the message's payload.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_charsets" class="summary-sig-name"><code>get_charsets</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>failobj</span>)</span></code>
+<br />
+Return a list containing the charset(s) used in this message.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_content_charset" class="summary-sig-name"><code>get_content_charset</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>failobj</span>)</span></code>
+<br />
+Return the charset parameter of the Content-Type header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_content_maintype" class="summary-sig-name"><code>get_content_maintype</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return the message's main content type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_content_subtype" class="summary-sig-name"><code>get_content_subtype</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Returns the message's sub-content type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_content_type" class="summary-sig-name"><code>get_content_type</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return the message's content type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_default_type" class="summary-sig-name"><code>get_default_type</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return the `default' content type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_filename" class="summary-sig-name"><code>get_filename</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>failobj</span>)</span></code>
+<br />
+Return the filename associated with the payload if present.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_param" class="summary-sig-name"><code>get_param</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>param</span>,
+          <span class=summary-sig-arg>failobj</span>,
+          <span class=summary-sig-arg>header</span>,
+          <span class=summary-sig-arg>unquote</span>)</span></code>
+<br />
+Return the parameter value if found in the Content-Type header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_params" class="summary-sig-name"><code>get_params</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>failobj</span>,
+          <span class=summary-sig-arg>header</span>,
+          <span class=summary-sig-arg>unquote</span>)</span></code>
+<br />
+Return the message's Content-Type parameters, as a list.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_payload" class="summary-sig-name"><code>get_payload</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>i</span>,
+          <span class=summary-sig-arg>decode</span>)</span></code>
+<br />
+Return a reference to the payload.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#get_unixfrom" class="summary-sig-name"><code>get_unixfrom</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#has_key" class="summary-sig-name"><code>has_key</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>name</span>)</span></code>
+<br />
+Return true if the message contains the header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#is_multipart" class="summary-sig-name"><code>is_multipart</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return True if the message consists of multiple parts.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#items" class="summary-sig-name"><code>items</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Get all the message's header fields and values.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#keys" class="summary-sig-name"><code>keys</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return a list of all the message's header field names.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#replace_header" class="summary-sig-name"><code>replace_header</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>_name</span>,
+          <span class=summary-sig-arg>_value</span>)</span></code>
+<br />
+Replace a header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_boundary" class="summary-sig-name"><code>set_boundary</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>boundary</span>)</span></code>
+<br />
+Set the boundary parameter in Content-Type to 'boundary'.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_charset" class="summary-sig-name"><code>set_charset</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>charset</span>)</span></code>
+<br />
+Set the charset of the payload to a given character set.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_default_type" class="summary-sig-name"><code>set_default_type</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>ctype</span>)</span></code>
+<br />
+Set the `default' content type.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_param" class="summary-sig-name"><code>set_param</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>param</span>,
+          <span class=summary-sig-arg>value</span>,
+          <span class=summary-sig-arg>header</span>,
+          <span class=summary-sig-arg>requote</span>,
+          <span class=summary-sig-arg>charset</span>,
+          <span class=summary-sig-arg>language</span>)</span></code>
+<br />
+Set a parameter in the Content-Type header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_payload" class="summary-sig-name"><code>set_payload</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>payload</span>,
+          <span class=summary-sig-arg>charset</span>)</span></code>
+<br />
+Set the payload to the given value.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_type" class="summary-sig-name"><code>set_type</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>type</span>,
+          <span class=summary-sig-arg>header</span>,
+          <span class=summary-sig-arg>requote</span>)</span></code>
+<br />
+Set the main type and subtype for the Content-Type header.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#set_unixfrom" class="summary-sig-name"><code>set_unixfrom</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>unixfrom</span>)</span></code>
+</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#values" class="summary-sig-name"><code>values</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Return a list of all the message's header values.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="email.message.Message-class.html#walk" class="summary-sig-name"><code>walk</code></a>(<span class=summary-sig-arg>self</span>)</span></code>
+<br />
+Walk over the message tree, yielding each subpart.</td></tr>
+<tr><td align="right" valign="top" width="15%"><font size="-1">&nbsp;</font></td>
+  <td><code><span class="summary-sig"><a href="../private/email.message.Message-class.html#_get_params_preserve" class="summary-sig-name"><code>_get_params_preserve</code></a>(<span class=summary-sig-arg>self</span>,
+          <span class=summary-sig-arg>failobj</span>,
+          <span class=summary-sig-arg>header</span>)</span></code>
+</td></tr>
+</table><br />
+
+
+<!-- =========== START OF METHOD DETAILS =========== -->
+<table class="details" border="1" cellpadding="3" cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="details">
+  <th colspan="2">Method Details</th></tr>
+</table>
+
+<a name="__init__"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">__init__</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>message</span>=<span class=sig-default>None</span>)</span>
+    <br /><i>(Constructor)</i>
+  </h3>
+  If message is omitted, create new instance in a default, empty 
+  state. If message is an email.Message.Message instance, its contents 
+  are copied; furthermore, any format-specific information is converted 
+  insofar as possible if message is a Message instance. If message is a 
+  string or a file, it should contain an RFC 2822-compliant message, 
+  which is read and parsed. When a MaildirMessage instance is created 
+  based upon an mailbox.mboxMessage or mailbox.MMDFMessage instance, the 
+  Status: and X-Status: headers are omitted.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Overrides:</b></dt>
+      <dd><a href="mailbox.Message-class.html#__init__"><code>mailbox.Message.__init__</code></a></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="add_imapflag"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">add_imapflag</span>(<span class=sig-arg>self</span>,
+          <span class="sig-vararg">*flags</span>)</span>
+  </h3>
+  Add a flag to the list of imap flags. You cannot add 
+  &quot;\RECENT&quot; as a flag.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="delete"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">delete</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  Add the \Deleted flag to the list of imap flags
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="flags_from_string"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">flags_from_string</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>flagstring</span>)</span>
+  </h3>
+  Set the flags from a string as returned by self.flagstring()
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="flagstring"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">flagstring</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  Return string for imap flags
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="get_imapflags"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">get_imapflags</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  Return a list of imap flags
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="internaldate_from_string"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">internaldate_from_string</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>internaldatestring</span>)</span>
+  </h3>
+  Set the internaldate from a string as it is returned by 
+  self.internaldatestring()
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="internaldatestring"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">internaldatestring</span>(<span class=sig-arg>self</span>)</span>
+  </h3>
+  Return string for internaldate. Return None if internaldate is 
+  None.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="remove_imapflag"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">remove_imapflag</span>(<span class=sig-arg>self</span>,
+          <span class="sig-vararg">*flags</span>)</span>
+  </h3>
+  Remove flags from the list of imap flags. Do nothing if the flag 
+  does not exist. Remember that this is a local modification.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="set_imapflags"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">set_imapflags</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>flags</span>)</span>
+  </h3>
+  Set imap flags to flags
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+
+<a name="_explain_to"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">_explain_to</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>message</span>)</span>
+  </h3>
+  Copy IMAP-specific state to message insofar as possible.
+  <dl><dt></dt><dd>
+    <dl><dt><b>Overrides:</b></dt>
+      <dd><a href="../private/mailbox.Message-class.html#_explain_to"><code>mailbox.Message._explain_to</code></a></dd>
+    </dl>
+  </dd></dl>
+</td></tr></table>
+
+<a name="_get_explanation_from"></a>
+<table width="100%" class="func-details" bgcolor="#e0e0e0"><tr><td>
+  <h3><span class="sig"><span class="sig-name">_get_explanation_from</span>(<span class=sig-arg>self</span>,
+          <span class=sig-arg>message</span>)</span>
+  </h3>
+  Copy specific state from message to self insofar as possible.
+  <dl><dt></dt><dd>
+  </dd></dl>
+</td></tr></table>
+<br />
+
+
+<!-- =========== START OF NAVBAR =========== -->
+<table class="navbar" border="0" width="100%" cellpadding="0" bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="center">
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="trees.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="indices.html">Index</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar">&nbsp;&nbsp;&nbsp;<a class="navbar" href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+    <th class="navbar" align="right" width="100%">
+      <table border="0" cellpadding="0" cellspacing="0">
+      <tr><th class="navbar" align="center">
+        <p class="nomargin">
+          <a class="navbar" target="_top" href="http://code.google.com/p/procimap/">ProcImap&nbsp;v.1.1</a>
+      </p></th></tr></table>
+    </th>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tr>
+    <td align="left"><font size="-2">Generated by Epydoc 2.1 on Fri Sep  5 00:46:16 2008</font></td>
+    <td align="right"><a href="http://epydoc.sourceforge.net"
+                      ><font size="-2">http://epydoc.sf.net</font></a></td>
+  </tr>
+</table>
+</body>
+</html>
