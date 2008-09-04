@@ -71,6 +71,7 @@ class MailboxFactory:
             username = goerz
             password = secret
             ssl = True
+            port = 933
 
             [Sent]
             type = IMAP
@@ -78,21 +79,22 @@ class MailboxFactory:
             server = mail.physik.fu-berlin.de
             username = goerz
             password = secret
-            ssl = True
 
             [Backup]
             type = mbox
             path = /home/goerz/Mail/backup.mbox
 
-        The type of the mailbox is described by the 'type' options. The types
-        known by default are 'imap', 'mbox', 'maildir', 'MH', 'Babyl', and
-        'MMDF', all of which have corresponding subclasses of mailbox.Mailbox
-        (all except ImapMailbox are defined in the standard library). The type
-        specification is not case sensitive.
+        The type of the mailbox is described by the 'type' parameters. The
+        types known by default are 'imap', 'mbox', 'maildir', 'MH', 'Babyl',
+        and 'MMDF', all of which have corresponding subclasses of
+        mailbox.Mailbox (all except ImapMailbox are defined in the standard
+        library). The type specification is not case sensitive.
 
-        The remaining options in a specific section depend on the type. The
-        Mailbox classes from the standard library need only a path, IMAP
-        needs more.
+        The remaining parameters in a specific section depend on the type. The
+        Mailbox classes from the standard library need only a path; IMAP needs
+        type, mailbox, server, username, and password. The ssl and port
+        parameters are optional. ssl is enabled by default; the port, if
+        unspecified, is the standard port (933 for ssl, 433 otherwise).
 
         MailboxFactory has capabilities to extend the set of known types by
         using the set_type method.
@@ -207,16 +209,19 @@ def imap_pathgenerator(optionsdict):
         serveraddress = optionsdict['server']
         username = optionsdict['username']
         password = optionsdict['password']
-        ssl = optionsdict['ssl']
-        if ssl.lower() in ['1', 'true', 'yes']:
-            ssl = True
-        else:
-            ssl = False
-    except:
+        ssl = True
+        if optionsdict.has_key('ssl'):
+            if optionsdict['ssl'].lower() in ['0', 'false', 'no']:
+                ssl = False
+        port = None
+        if optionsdict.has_key('port'):
+            port = int(optionsdict['port'])
+    except KeyError:
         raise MailboxOptionsNotCompleteError, \
-              "IMAP Mailbox object needs the following options\n " \
-              + "'mailbox', 'server', 'username', 'password', 'ssl'"
-    server = ImapServer(serveraddress, username, password, ssl)
+              "IMAP Mailbox object needs the following parameters\n " \
+              + "'mailbox', 'server', 'username', 'password'.\n" \
+              + "The 'ssl' and 'port' parameters are optional."
+    server = ImapServer(serveraddress, username, password, ssl, port)
     return(tuple((server, name)))
 
 
@@ -224,6 +229,6 @@ def standard_pathgenerator(optionsdict):
     """ Extract 'path' from options """
     try:
         return optionsdict['path']
-    except:
+    except KeyError:
         raise MailboxOptionsNotCompleteError, \
-              "Standard Mailbox object need 'path' option"
+              "Standard Mailbox object needs 'path' parameter"
