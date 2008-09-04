@@ -102,54 +102,54 @@ class ImapMailbox(object, Mailbox):
         readonly attribute does not prevent you from making changes through 
         the methods of the server attribute.
     """
-        def __init__(self, path, factory=ImapMessage, readonly=False, create=True):
-            """ Initialize an ImapMailbox
-                path is a tuple with two elements, consisting of
-                1) an instance of ImapServer in any state
-                2) the name of a mailbox on the server as a string
-                If the mailbox does not exist, it is created unless
-                create is set to False, in which case NoSuchMailboxError
-                is raised.
-                The 'factory' parameter determines to which type the
-                messages in the mailbox should be converted.
+    def __init__(self, path, factory=ImapMessage, readonly=False, create=True):
+        """ Initialize an ImapMailbox
+            path is a tuple with two elements, consisting of
+            1) an instance of ImapServer in any state
+            2) the name of a mailbox on the server as a string
+            If the mailbox does not exist, it is created unless
+            create is set to False, in which case NoSuchMailboxError
+            is raised.
+            The 'factory' parameter determines to which type the
+            messages in the mailbox should be converted.
 
-                Note that two instances of ImapMailbox can never share the 
-                same instance of server. If you try to create an ImapMailbox
-                with an instance of ImapServer that you already used for
-                another mailbox, a ServerNotAvailableError will be thrown.
-            """
-            # not calling Mailbox.__init__(self) is on purpose:
-            #  my definition of 'path' is incompatibel
-            self._factory = factory
-            try:
-                (server, name) = path
-            except:
-                raise TypeError, "path must be a tuple, consisting of an "\
-                                + " instance of ImapServer and a string"
-            if isinstance(server, ImapServer):
-                if hasattr(server, 'locked') and server.locked:
-                    raise ServerNotAvailableError, "This instance of ImapServer"\
-                                        + " is already in use for another mailbox"
-                self._server = server
-            else:
-                raise TypeError, "path must be a tuple, consisting of an "\
-                                + " instance of ImapServer and a string"
-            if not isinstance(name, str):
-                raise TypeError("path must be a tuple, consisting of an "\
-                                + " instance of ImapServer and a string")
-            self._server.select(name, create)
-            self._cached_uid = None
-            self._cached_mailbox = None
-            self._cached_text = None
-            self.trash = None
-            self.readonly = readonly
-            server.locked = True
+            Note that two instances of ImapMailbox can never share the 
+            same instance of server. If you try to create an ImapMailbox
+            with an instance of ImapServer that you already used for
+            another mailbox, a ServerNotAvailableError will be thrown.
+        """
+        # not calling Mailbox.__init__(self) is on purpose:
+        #  my definition of 'path' is incompatibel
+        self._factory = factory
+        try:
+            (server, name) = path
+        except:
+            raise TypeError, "path must be a tuple, consisting of an "\
+                            + " instance of ImapServer and a string"
+        if isinstance(server, ImapServer):
+            if hasattr(server, 'locked') and server.locked:
+                raise ServerNotAvailableError, "This instance of ImapServer"\
+                                    + " is already in use for another mailbox"
+            self._server = server
+        else:
+            raise TypeError, "path must be a tuple, consisting of an "\
+                            + " instance of ImapServer and a string"
+        if not isinstance(name, str):
+            raise TypeError("path must be a tuple, consisting of an "\
+                            + " instance of ImapServer and a string")
+        self._server.select(name, create)
+        self._cached_uid = None
+        self._cached_mailbox = None
+        self._cached_text = None
+        self.trash = None
+        self.readonly = readonly
+        server.locked = True
 
-        name = property(lambda self: self._server.mailboxname, None, 
-                        doc="Name of the mailbox on the server")
+    name = property(lambda self: self._server.mailboxname, None, 
+                    doc="Name of the mailbox on the server")
 
-        server = property(lambda self: self._server, None,
-                doc="Instance of the ImapServer that is being used as a backend")
+    server = property(lambda self: self._server, None,
+            doc="Instance of the ImapServer that is being used as a backend")
 
     def reconnect(self):
         """ Renew the connection to the mailbox """
