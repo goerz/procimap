@@ -23,7 +23,6 @@
 
 import sys
 from Utils import log
-import select
 from mailbox import Mailbox
 import time
 
@@ -175,7 +174,8 @@ class AbstractProcImap:
                 self.mailbox.set_imapflags(uid, header.get_imapflags())
                 if hasattr(header, 'mailbox'):
                     if header.mailbox != self.mailbox:
-                        log("Moving message to target mailbox")
+                        log("Moving message to target mailbox %s" 
+                                                          % str(header.mailbox))
                         self.mailbox.move(uid, header.mailbox)
 
     def preprocess(self, header):
