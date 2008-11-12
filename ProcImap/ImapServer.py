@@ -24,7 +24,7 @@
     are not supported.
 """
 
-STANDARD_IMAPLIB = False    # this module can use the multithreaded imaplib2
+STANDARD_IMAPLIB = True    # this module can use the multithreaded imaplib2
                             # replacement of the standard imaplib module.
                             # If you find imaplib2 to cause problems, you can
                             # switch to to the standard library module

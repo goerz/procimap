@@ -38,7 +38,7 @@ else:
 PROCESSED = 'procimap' # the imap flag used to indicate that a
                        # message has been processed.
 
-TIMEOUT = 120 # max seconds to idle. The idle commands sometimes messes up
+TIMEOUT = 60  # max seconds to idle. The idle commands sometimes messes up
               # and doesn't register a new email, so I'm setting this
               # timeout to a rather low value of only two minutes.
 
@@ -96,6 +96,7 @@ class AbstractProcImap:
             sys.exit()
         else:
             while True:
+                log("Check")
                 try:
                     unseen_msgs = self.mailbox.get_unseen_uids()
                     if len(unseen_msgs) > 0:
