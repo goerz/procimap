@@ -29,8 +29,8 @@
 import mailbox
 from ConfigParser import ConfigParser
 
-from ImapServer import ImapServer
-from ImapMailbox import ImapMailbox
+from ProcImap.ImapServer import ImapServer
+from ProcImap.ImapMailbox import ImapMailbox
 
 class UnknownMailboxTypeError(Exception):
     """ Raised when there is a mailbox type in the config file that is

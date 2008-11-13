@@ -82,7 +82,7 @@ class ImapMessage(mailbox.Message):
                 if INTTIME_FROM_MESSAGE:
                     try:
                         date = message['Date']
-                        internaldate = seconds_from_date(date)
+                        internaldate = seconds_from_date(date) # FIXME: what's this?
                         if internaldate is not None:
                             self.internaldate = internaldate
                     except KeyError:

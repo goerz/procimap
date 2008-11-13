@@ -18,17 +18,18 @@
 #    59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             #
 ############################################################################
 
-# TODO: provide a method that purges the backup from emails that are older than a
-# certain number of days
+""" This module contains general functions for processing mail locally
+    e.g. for filtering and classification.
+"""
 
 import re
 import subprocess
-import email
-import time
+import tempfile
+import os
 from email.generator import Generator
 from cStringIO import StringIO
 
-from ImapMessage import ImapMessage
+from ProcImap.ImapMessage import ImapMessage
 
 class AddressListFile:
     """ This class wraps around a file containing emailadresses.
@@ -248,7 +249,7 @@ def unknown_to_ascii(inputstring):
         Adapted from
         http://aspn.activestate.com/ASPN/Cookbook/Python/Recipe/251871
     """
-    xlate ={
+    xlate = {
     # unicode string                                  : (replacement, weight)
     u'\N{ACUTE ACCENT}'                               : ( "", 0),
     u'\N{BROKEN BAR}'                                 : ( '|', 0),
@@ -399,7 +400,12 @@ def unknown_to_ascii(inputstring):
             result += str(character)
     return result
 
+def put_through_pager(displaystring, pager='less'):
+    """ Put displaystring through the 'less' pager """
+    (temp_fd, tempname) = tempfile.mkstemp(".mail")
+    temp_fh = os.fdopen(temp_fd, "w")
+    temp_fh.write(displaystring)
+    temp_fh.close()
+    os.system("%s %s" % (pager, tempname))
+    os.unlink(tempname)
 
-def log(text):
-    """ print text with a the date prepended """
-    print(time.asctime() + ":  " + text)

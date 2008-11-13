@@ -18,7 +18,7 @@
 #    59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             #
 ############################################################################
 
-""" This module contains functions that make it easier to work with Gmail 
+""" This module contains functions that make it easier to work with Gmail.
     Identity is established by message-id and size
 """
 
