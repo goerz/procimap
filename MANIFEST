@@ -15,7 +15,10 @@ ProcImap/ImapMailbox.py
 ProcImap/ImapMessage.py
 ProcImap/ImapServer.py
 ProcImap/__init__.py
-ProcImap/MailboxFactory.py
-ProcImap/ProcImap.py
-ProcImap/Utils.py
+ProcImap/Utils/
+ProcImap/Utils/__init__.py
+ProcImap/Utils/Gmail.py
+ProcImap/Utils/MailboxFactory.py
+ProcImap/Utils/Processing.py
+ProcImap/Utils/Server.py
 setup.py
