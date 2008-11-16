@@ -4,7 +4,8 @@
 """
 import sys
 
-from ProcImap.MailboxFactory import MailboxFactory
+from ProcImap.Utils.MailboxFactory import MailboxFactory
+from ProcImap.Utils.Server import summary, display
 
 mailboxes = MailboxFactory('/home/goerz/.procimap/mailboxes.cfg')
 mailbox = mailboxes["Physik"]
@@ -32,7 +33,7 @@ else:
 
     # display selector
     print ""
-    mailbox.summary(unseen, printuid=False)
+    summary(mailbox, unseen, printuid=False)
     print "\nEnter 'h' for help\n"
     while True:
         # ask for input
@@ -52,6 +53,6 @@ else:
             else:
                 wanted_index = int(answer) - 1
                 wanted_uid = unseen[wanted_index]
-                mailbox.display(wanted_uid)
+                display(mailbox, wanted_uid)
         except Exception, data:
             print "Illegal input: %s" % data
