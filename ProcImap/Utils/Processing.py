@@ -409,3 +409,14 @@ def put_through_pager(displaystring, pager='less'):
     os.system("%s %s" % (pager, tempname))
     os.unlink(tempname)
 
+def references_from_header(header):
+    """ Extract the message ids from the "References" and "In-Reply-To" 
+        Headers.
+    """
+    id_pattern = re.compile('<\S+@\S+>')
+    result = set()
+    for id in id_pattern.findall(header['References']):
+        result.add(id)
+    for id in id_pattern.findall(header['In-Reply-To']):
+        result.add(id)
+    return list(result)
