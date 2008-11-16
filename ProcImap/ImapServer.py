@@ -43,6 +43,7 @@ else:
     import imaplib2 as imaplib
 
 import time
+import re
 
 
 class ClosedMailboxError(Exception):
@@ -234,10 +235,23 @@ class ImapServer:
                                            % mailbox
 
     def list(self):
-        """ List mailbox names """
+        """ Return list mailbox names, or None if the server does
+            not send an 'OK' reply.
+        """
         if not self._flags['logged_in']:
             raise ClosedMailboxError, "called list before logging in"
-        return self._server.list()
+        mailbox_pattern = re.compile(
+            r'\(\\HasNoChildren\) "/" "(?P<mailboxname>.+)"')
+        code, mailboxlist = self._server.list()
+        result = []
+        if code == 'OK':
+            for raw_mailbox in mailboxlist:
+                mailbox_match = mailbox_pattern.match(raw_mailbox)
+                if mailbox_match:
+                    result.append(mailbox_match.group('mailboxname'))
+        else:
+            return None
+        return result
 
     def lsub(self):
         """ List subscribed mailbox names """
