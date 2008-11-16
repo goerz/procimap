@@ -27,9 +27,10 @@ import imaplib
 from email.generator import Generator
 from cStringIO import StringIO
 from mailbox import Mailbox
+from mailbox import Message
 
-from ImapServer import ImapServer
-from ImapMessage import ImapMessage
+from ProcImap.ImapServer import ImapServer
+from ProcImap.ImapMessage import ImapMessage
 
 
 FIX_BUGGY_IMAP_FROMLINE = False # I used this for the standard IMAP server
@@ -424,6 +425,26 @@ class ImapMailbox(object, Mailbox):
             return result
         return self._factory(result)
 
+    def get_fields(self, uid, fields):
+        """ Return an mailbox.Message object containing only the requested
+            header fields of the message with UID.
+            The fields parameter is a string ofheader fields seperated by
+            spaces, e.g. 'From SUBJECT date'
+            Raise KeyError if there if there is no message with that UID.
+        """
+        (code, data) = self._server.uid('fetch', uid, 
+                                        "(BODY.PEEK[HEADER.FIELDS (%s)])" 
+                                        % fields)
+        if code != 'OK':
+            raise ImapNotOkError, "%s in fetch_header(%s)" % (code, uid)
+        try:
+            rfc822string = data[0][1]
+        except TypeError:
+            raise KeyError, "No UID %s in get_fields" % uid
+        result = Message(rfc822string)
+        return result
+
+     
     def get_size(self, uid):
         """ Get the number of bytes contained in the message with UID """
         try:
