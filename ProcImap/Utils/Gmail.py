@@ -22,7 +22,7 @@
     Identity is established by message-id and size
 """
 from ProcImap.Utils.Processing import references_from_header
-
+from ProcImap.ImapMailbox import ImapMailbox
 
 class GmailCache:
     """ Class for keeping track of all the messages and their 
@@ -32,9 +32,15 @@ class GmailCache:
         """ Initialize cache for the given server """
         self.server = server
         self.cache = []
+        self.mailboxes = server.list()
+        self._mb = ImapMailbox((server, 'INBOX'))
     def initialize(self):
         """ Discard all cached data, analyze and cache the gmail account"""
-        pass
+        for mailbox in self.mailboxes:
+            self._mb.switch(mailbox)
+            all_uids = self._mb.get_all_uids()
+            # TODO continue here
+
     def update(self):
         """ Update the cache """
         pass
@@ -49,6 +55,7 @@ def is_gmail_box(mailbox):
     """ Return True if the mailbox is on a Gmail server, False otherwise """
     # TODO: write this, and use it in the other procedures
     return True
+
 
 def delete(mailbox, uid):
     """ Delete the message with uid in the mailbox by moving it to the Trash,
@@ -125,7 +132,7 @@ def get_thread(mailbox, uid):
             # there should only be one uid, unless there are duplicate ids
             thread_uids.add(uid)
         # for open ids, we only need to look into the "future"; the "past"
-        # is guaranteed to be known already
+        # is guaranteed to be known already FIXME: THIS IS INCORRECT
         referencing_uids = mailbox.search(
             "OR (HEADER references %s) (HEADER in-reply-to %s)" 
             % (open_id, open_id))
