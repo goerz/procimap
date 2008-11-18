@@ -24,38 +24,165 @@
 from ProcImap.Utils.Processing import references_from_header
 from ProcImap.ImapMailbox import ImapMailbox
 
+import hashlib
+import cPickle
+import re
+
 class GmailCache:
     """ Class for keeping track of all the messages and their 
         relationships on a Gmail account 
     """
-    def __init__(self, server):
+    def __init__(self, server, autosave=None):
         """ Initialize cache for the given server """
-        self.server = server
-        self.cache = []
-        self.mailboxes = server.list()
         self._mb = ImapMailbox((server, 'INBOX'))
-    def initialize(self):
-        """ Discard all cached data, analyze and cache the gmail account"""
-        for mailbox in self.mailboxes:
-            self._mb.switch(mailbox)
-            all_uids = self._mb.get_all_uids()
-            # TODO continue here
+        self.hash_ids = {}
+        self.local_uids = {}
+        self.mailboxnames = self._mb.server.list()
+        self._attempts = 0
+        self.autosave = autosave
 
-    def update(self):
+    def initialize(self, ignore=None):
+        """ Discard all cached data, analyze and cache the gmail account"""
+        if ignore is None:
+            ignore = ['[Gmail]/Trash]', '[Gmail]/Spam']
+        self.hash_ids = {} # sha244hash of header + size => {info ...}
+        self.local_uids = {} # mailboxname.uid => hash_id
+        self.message_ids = {} # message-id => set([hash_id...])
+        self.update(ignore=ignore)
+    
+    def update(self, ignore=None):
         """ Update the cache """
-        pass
-    def save(self):
+        if ignore is None:
+            ignore = ['[Gmail]/Trash]', '[Gmail]/Spam']
+        self._attempts = 0
+        luid_pattern = re.compile(r'(.*)\.[0-9]+')
+        try:
+            self._mb = ImapMailbox((self._mb.server.clone(), 'INBOX'))
+            self.mailboxnames = self._mb.server.list()
+            for mailboxname in self.mailboxnames:
+                if mailboxname in ignore:
+                    continue
+                print ("Processing Mailbox %s" % mailboxname)
+                self._mb.switch(mailboxname)
+                uids_on_server = self._mb.get_all_uids()
+
+                # delete mails that were deleted on the server from the cache
+                print ("  Removing mails that were deleted on the server ...")
+                local_uids_to_delete = []
+                local_mailbox_uids = [luid for luid in self.local_uids.keys() 
+                                      if (luid_pattern.match(luid).group(1)
+                                      == mailboxname)]
+                local_mailbox_uids.sort(key = lambda x: int(x.split('.')[-1]))
+                local_uid_iterator = iter(local_mailbox_uids)
+                try:
+                    for uid_on_server in uids_on_server:
+                        local_uid = local_uid_iterator.next()
+                        while not local_uid.endswith(str(uid_on_server)):
+                            local_uids_to_delete.append(local_uid)
+                            local_uid = local_uid_iterator.next()
+                except StopIteration:
+                    pass
+                for local_uid in local_uids_to_delete:
+                    print "    Removing %s from cache" % local_uid
+                    hash_id = self.local_uids[local_uid]['hash_id']
+                    new_local_uids_for_hash_id = []
+                    for local_uid_for_hash_id in self.hash_ids[hash_id]:
+                        if not local_uid_for_hash_id == local_uid:
+                            new_local_uids_for_hash_id.append(
+                                                          local_uid_for_hash_id)
+                    if len(new_local_uids_for_hash_id) == 0:
+                        del self.hash_ids[hash_id]
+                    else:
+                        self.hash_ids[hash_id] = new_local_uids_for_hash_id
+                    del self.local_uids[local_uid]
+                print ("  Done.")
+
+                # process new mails 
+                print ("  Processing existing/new mails on server")
+                for uid in uids_on_server:
+                    local_uid = "%s.%s" % (mailboxname, uid)
+                    print "    Processing %s" % local_uid
+                    if self.local_uids.has_key(local_uid):
+                        continue
+                    header = self._mb.get_header(uid)
+                    sha244hash = hashlib.sha224(header.as_string()).hexdigest()
+                    size = self._mb.get_size(uid)
+                    hash_id = "%s.%s" % (sha244hash, size)
+                    message_id = header['message-id']
+                    references = references_from_header(header)
+                    if message_id is None:
+                        print("%s has no message-id!" % local_uid)
+                        print("You are strongly advised to give each message "
+                              "a unique message-id")
+                    else:
+                        if self.message_ids.has_key(message_id):
+                            self.message_ids[message_id].add(hash_id)
+                            if len(self.message_ids[message_id]) > 1:
+                                print("WARNING: You have different messages "
+                                      "with the same message-id. This is "
+                                      "pretty bad. Try to fix your message-ids")
+                            else:
+                                self.message_ids[message_id] = set([hash_id])
+                    if self.hash_ids.has_key(hash_id):
+                        self.hash_ids[hash_id].append(local_uid)
+                    else:
+                        self.hash_ids[hash_id] = [local_uid]
+                    self.local_uids[local_uid] = { 'references' : references,
+                                                   'hash_id'    : hash_id }
+                self._autosave()
+                print("  Done.")
+        except Exception, data:
+            # reconnect
+            self._autosave()
+            self._attempts += 1
+            print "Exception occured: %s (attempt %s). Reconnect." \
+                % (data, self._attempts)
+            if self._attempts > 500:
+                self._attempts = 0
+                raise
+            self._mb = ImapMailbox((self._mb.server.clone(), 'INBOX'))
+            self.update()
+        self._attempts = 0
+
+    def save(self, picklefile):
         """ Pickle the cache """
-        pass
-    def load(self):
+        data = { 'hash_ids' : self.hash_ids,
+                 'local_uids' : self.local_uids,
+                 'message_ids' : self.message_ids}
+        output = open(picklefile, 'wb')
+        cPickle.dump(data, output, protocol=2)
+        output.close()
+
+    def _autosave(self):
+        if self.autosave is not None:
+            print "Auto-save to %s" % self.autosave
+            self.save(self.autosave)
+
+    def load(self, picklefile):
         """ Load pickled cache """
-        pass
+        input = open(picklefile, 'rb')
+        data = cPickle.load(input)
+        input.close()
+        self.hash_ids = data['hash_ids']
+        self.local_uids = data['local_uids']
+        self.message_ids = data['message_ids']
 
 def is_gmail_box(mailbox):
     """ Return True if the mailbox is on a Gmail server, False otherwise """
     # TODO: write this, and use it in the other procedures
     return True
 
+def get_hash_id(mailbox, uid):
+    """ Get the hash_id of the message with the given uid in the mailbox.
+        mailbox has to be an instance of ImapMailbox
+
+        The hash_id is computed as the sha224 hash of the message's
+        header, appended with a dot and the size of the message in
+        bytes.
+    """
+    sha244hash = hashlib.sha224(mailbox.get_header(uid).as_string()).hexdigest()
+    size = mailbox.get_size(uid)
+    return "%s.%s" % (sha244hash, size)
 
 def delete(mailbox, uid):
     """ Delete the message with uid in the mailbox by moving it to the Trash,
