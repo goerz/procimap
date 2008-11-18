@@ -415,8 +415,12 @@ def references_from_header(header):
     """
     id_pattern = re.compile('<\S+@\S+>')
     result = set()
-    for id in id_pattern.findall(header['References']):
-        result.add(id)
-    for id in id_pattern.findall(header['In-Reply-To']):
-        result.add(id)
+    references = header['References']
+    if references is not None:
+        for id in id_pattern.findall(references):
+            result.add(id)
+    reply_to = header['In-Reply-To']
+    if reply_to is not None:
+        for id in id_pattern.findall(reply_to):
+            result.add(id)
     return list(result)
