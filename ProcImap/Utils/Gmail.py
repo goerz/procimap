@@ -99,11 +99,17 @@ class GmailCache:
 
                 # process new mails 
                 print ("  Processing existing/new mails on server")
+                iteration = 0
                 for uid in uids_on_server:
                     local_uid = "%s.%s" % (mailboxname, uid)
                     print "    Processing %s" % local_uid
                     if self.local_uids.has_key(local_uid):
                         continue
+                    iteration += 1
+                    if iteration == 1000:
+                        # Autosave every 1000 new mails
+                        iteration = 0
+                        self._autosave()
                     header = self._mb.get_header(uid)
                     sha244hash = hashlib.sha224(header.as_string()).hexdigest()
                     size = self._mb.get_size(uid)
