@@ -32,6 +32,8 @@ class GmailCache:
     """ Class for keeping track of all the messages and their 
         relationships on a Gmail account 
     """
+    local_uid_pattern = re.compile(r'(?P<mailbox>.*)\.(?P<uid>[0-9]+)')
+
     def __init__(self, server, autosave=None):
         """ Initialize cache for the given server """
         self._mb = ImapMailbox((server, 'INBOX'))
@@ -43,14 +45,11 @@ class GmailCache:
         self._attempts = 0
         self.autosave = autosave
 
-    def initialize(self, ignore=None):
-        """ Discard all cached data, analyze and cache the gmail account"""
-        if ignore is None:
-            ignore = ['[Gmail]/Trash]', '[Gmail]/Spam']
+    def clear(self):
+        """ Discard all cached data """
         self.hash_ids    = {}
         self.local_uids  = {}
         self.message_ids = {}
-        self.update(ignore=ignore)
     
     def update(self, ignore=None):
         """ Update the cache """
@@ -175,9 +174,9 @@ class GmailCache:
             ['[Gmail]/All Mail.4', '[Gmail]/All Mail.10', 
              '[Gmail]/All Mail.12']
         """
-        luid_pattern = re.compile(r'(.*)\.[0-9]+')
         result = [luid for luid in self.local_uids.keys() 
-                  if (luid_pattern.match(luid).group(1) == mailboxname)]
+                  if (GmailCache.local_uid_pattern.match(luid).group('mailbox')
+                       == mailboxname)]
         result.sort(key = lambda x: int(x.split('.')[-1]))
         return result
 
@@ -211,8 +210,7 @@ class GmailCache:
 
 def is_gmail_box(mailbox):
     """ Return True if the mailbox is on a Gmail server, False otherwise """
-    # TODO: write this, and use it in the other procedures
-    return True
+    return mailbox.server.servername == 'imap.gmail.com'
 
 def get_hash_id(mailbox, uid):
     """ Get the hash_id of the message with the given uid in the mailbox.
