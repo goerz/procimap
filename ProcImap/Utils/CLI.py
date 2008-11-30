@@ -30,6 +30,8 @@
     place for a variety of tools.
 """
 
+from ProcImap.Utils.MailboxFactory import MailboxFactory
+
 from optparse import OptionParser, IndentedHelpFormatter
 import os
 
@@ -44,6 +46,15 @@ class ProcImapOptParser(OptionParser):
         given, neither explicitely nor implicitely through the envirnoment
         variable, ProcImapOptParser will shoot down the program it's
         running in with an error message.
+
+        You can use ProcImapOptParser in this manner:
+
+        >>> opt = ProcImapOptParser()
+        >>> (options, args) = opt.parse_args(args=sys.argv)
+
+        if sys.argv included e.g. '-p mailboxes.cfg', options.profile will
+        NOT be the string 'mailboxes.cfg', but instead will be an instance 
+        of MailboxFactory, generated from the file mailboxes.cfg.
 
         ProcImapOptParser also has a modified default formatter that 
         allows explicit linebreaks (for paragraphs) in help-generating
@@ -101,5 +112,10 @@ class ProcImapOptParser(OptionParser):
         if self.values.profile is None:
             self.exit(status=1, msg="You did not provide a profile, and the "
                       "PROC_IMAP_PROFILE environment variable is not set.\n")
+        else:
+            try:
+                self.values.profile = MailboxFactory(self.values.profile)
+            except:
+                raise
         return result
 
