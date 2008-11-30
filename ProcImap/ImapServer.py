@@ -55,7 +55,15 @@ class NoSuchMailboxError(Exception):
     pass
 
 class ImapServer:
-    """A small lowlevel representation of an imap server """
+    """ A small lowlevel representation of an imap server 
+    
+        Public attributes are:
+        servername      address of the server
+        username        authentication username
+        password        authentication password
+        port            server port
+        mailboxname     currently active mailbox on the server
+    """
 
     def __init__(self, servername, username, password, ssl=True, port=None):
         """ Initialize the IMAP Server, connect and log in. 
