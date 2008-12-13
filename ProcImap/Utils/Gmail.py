@@ -67,7 +67,6 @@ class GmailCache:
         if ignore is None:
             ignore = ['[Gmail]/Trash]', '[Gmail]/Spam']
         try:
-
             self._mb = ImapMailbox((self._mb.server.clone(), 'INBOX'))
             self.mailboxnames = self._mb.server.list()
             for mailboxname in self.mailboxnames:
@@ -76,133 +75,11 @@ class GmailCache:
                 print ("Processing Mailbox %s" % mailboxname)
                 self._mb.switch(mailboxname)
                 uids_on_server = self._mb.get_all_uids()
-
-                # delete mails that were deleted on the server from the cache
-
-                print ("  Removing mails that were deleted on the server ...")
-                # find local_uids in the current mailbox which are in the
-                # cache but not on the server anymore
-                local_uids_to_delete = [] 
-                local_mailbox_uids = self.local_mailbox_uids(mailboxname)
-                local_mailbox_uids.sort(key = lambda x: int(x.split('.')[-1]))
-                local_uid_iterator = iter(local_mailbox_uids)
-                try:
-                    for uid_on_server in uids_on_server:
-                        local_uid = local_uid_iterator.next()
-                        while not local_uid.endswith(str(uid_on_server)):
-                            local_uids_to_delete.append(local_uid)
-                            local_uid = local_uid_iterator.next()
-                except StopIteration:
-                    pass
-                # For all the mails found above, remove the data from
-                # self.local_uids, self.hash_uids, and self.message_ids
-                for local_uid in local_uids_to_delete:
-                    print "    Removing %s from cache" % local_uid
-                    hash_id = self.local_uids[local_uid]
-                    message_id = self.hash_ids[hash_id]['message_id']
-                    del self.local_uids[local_uid]
-                    self.hash_ids[hash_id]['local_uids'].remove(local_uid)
-                    if len(self.hash_ids[hash_id]['local_uids']) == 0:
-                        references = self.hash_ids[hash_id]['references']
-                        del self.hash_ids[hash_id]
-                        self.message_ids[message_id].remove(hash_id)
-                        if len(self.message_ids[message_id]) == 0:
-                            del self.message_ids[message_id]
-                            if len(references) > 0:
-                                self.unknown_references[message_id] = references
-                print ("  Done.")
-
-                # process new mails 
-
-                print ("  Processing existing/new mails on server")
-                iteration = 0
-
-                for uid in uids_on_server:
-
-                    local_uid = "%s.%s" % (mailboxname, uid)
-
-                    print "    Processing %s" % local_uid
-                    if self.local_uids.has_key(local_uid):
-                        # skip mails that are already in the cache
-                        continue
-                    iteration += 1
-                    if iteration == 1000:
-                        # Autosave every 1000 new mails
-                        iteration = 0
-                        self._autosave()
-
-                    header = self._mb.get_header(uid)
-                    sha244hash = hashlib.sha224(header.as_string()).hexdigest()
-                    size = self._mb.get_size(uid)
-                    hash_id = "%s.%s" % (sha244hash, size)
-                    message_id = header['message-id']
-
-                    # put into self.message_ids
-                    if message_id is None:
-                        print("%s has no message-id!" % local_uid)
-                        print("You are strongly advised to give each message "
-                              "a unique message-id")
-                    else:
-                        if self.message_ids.has_key(message_id):
-                            self.message_ids[message_id].add(hash_id)
-                            if len(self.message_ids[message_id]) > 1:
-                                print("WARNING: You have different messages "
-                                      "with the same message-id. This is "
-                                      "pretty bad. Try to fix your message-ids")
-                        else:
-                            self.message_ids[message_id] = set([hash_id])
-
-                    # put into self.hash_ids
-                    if self.hash_ids.has_key(hash_id):
-                        self.hash_ids[hash_id]['local_uids'].append(local_uid)
-                    else:
-                        references = references_from_header(header)
-                        if message_id in self.unknown_references.keys():
-                            references += self.unknown_references[message_id]
-                        self.hash_ids[hash_id] = { 'local_uids' : [local_uid],
-                                                   'message_id' : message_id,
-                                                   'references' : references }
-                        # make sure that all messages in the same thread get
-                        # their references to the full set
-                        full_references = set()
-                        for reference in references:
-                            try:
-                                hash_id = self.message_ids[reference].pop()
-                                self.message_ids[reference].add(hash_id)
-                            except KeyError:
-                                # the email that is being referenced is not on
-                                # the server
-                                self.unknown_references[reference] \
-                                = [message_id]
-                                continue
-                            full_references.update(
-                                self.hash_ids[hash_id]['references'])
-                            break
-                        full_references.update(references)
-                        if len(full_references) > 0:
-                            full_references.add(hash_id)
-                        full_references = list(full_references)
-                        for reference in full_references:
-                            try:
-                                for refhash_id in self.message_ids[reference]:
-                                    try:
-                                        self.hash_ids[refhash_id]['references']\
-                                        = full_references
-                                    except KeyError:
-                                        pass
-                            except KeyError:
-                                self.unknown_references[reference] \
-                                = full_references
-
-                    # put into self.local_uids
-                    self.local_uids[local_uid] = hash_id
-
+                self._remove_deleted_data(mailboxname, uids_on_server)
+                self._add_new_data(mailboxname, uids_on_server)
                 self._autosave()
                 print("  Done.")
-
         except Exception, data:
-
-            raise # DEBUG
             # reconnect
             self._autosave()
             self._attempts += 1
@@ -214,6 +91,135 @@ class GmailCache:
             self._mb = ImapMailbox((self._mb.server.clone(), 'INBOX'))
             self.update()
         self._attempts = 0
+
+    def _remove_deleted_data(self, mailboxname, uids_on_server):
+        """ 
+        Given a list of uids on the server in the specified mailbox,
+        remove the data of mails that do not occur in the uids_on_server
+        list
+        """
+        print ("  Removing mails that were deleted on the server ...")
+        # find local_uids in the current mailbox which are in the
+        # cache but not on the server anymore
+        local_uids_to_delete = [] 
+        local_mailbox_uids = self.local_mailbox_uids(mailboxname)
+        local_mailbox_uids.sort(key = lambda x: int(x.split('.')[-1]))
+        local_uid_iterator = iter(local_mailbox_uids)
+        try:
+            for uid_on_server in uids_on_server:
+                local_uid = local_uid_iterator.next()
+                while not local_uid.endswith(str(uid_on_server)):
+                    local_uids_to_delete.append(local_uid)
+                    local_uid = local_uid_iterator.next()
+        except StopIteration:
+            pass
+        # For all the mails found above, remove the data from
+        # self.local_uids, self.hash_uids, and self.message_ids
+        for local_uid in local_uids_to_delete:
+            print "    Removing %s from cache" % local_uid
+            hash_id = self.local_uids[local_uid]
+            message_id = self.hash_ids[hash_id]['message_id']
+            del self.local_uids[local_uid]
+            self.hash_ids[hash_id]['local_uids'].remove(local_uid)
+            if len(self.hash_ids[hash_id]['local_uids']) == 0:
+                references = self.hash_ids[hash_id]['references']
+                del self.hash_ids[hash_id]
+                self.message_ids[message_id].remove(hash_id)
+                if len(self.message_ids[message_id]) == 0:
+                    del self.message_ids[message_id]
+                    if len(references) > 0:
+                        self.unknown_references[message_id] = references
+        print ("  Done.")
+
+    def _add_new_data(self, mailboxname, uids_on_server):
+        """
+        Given a list of uids on the server in the specified mailbox,
+        incorporate the data from all the mails specified in the 
+        uids_on_server list.
+        """
+        self._mb.switch(mailboxname)
+        print ("  Processing existing/new mails on server")
+        iteration = 0
+
+        for uid in uids_on_server:
+
+            local_uid = "%s.%s" % (mailboxname, uid)
+
+            print "    Processing %s" % local_uid
+            if self.local_uids.has_key(local_uid):
+                # skip mails that are already in the cache
+                continue
+            iteration += 1
+            if iteration == 1000:
+                # Autosave every 1000 new mails
+                iteration = 0
+                self._autosave()
+
+            header = self._mb.get_header(uid)
+            sha244hash = hashlib.sha224(header.as_string()).hexdigest()
+            size = self._mb.get_size(uid)
+            hash_id = "%s.%s" % (sha244hash, size)
+            message_id = header['message-id']
+
+            # put into self.message_ids
+            if message_id is None:
+                print("%s has no message-id!" % local_uid)
+                print("You are strongly advised to give each message "
+                        "a unique message-id")
+            else:
+                if self.message_ids.has_key(message_id):
+                    self.message_ids[message_id].add(hash_id)
+                    if len(self.message_ids[message_id]) > 1:
+                        print("WARNING: You have different messages "
+                                "with the same message-id. This is "
+                                "pretty bad. Try to fix your message-ids")
+                else:
+                    self.message_ids[message_id] = set([hash_id])
+
+            # put into self.hash_ids
+            if self.hash_ids.has_key(hash_id):
+                self.hash_ids[hash_id]['local_uids'].append(local_uid)
+            else:
+                references = references_from_header(header)
+                if message_id in self.unknown_references.keys():
+                    references += self.unknown_references[message_id]
+                self.hash_ids[hash_id] = { 'local_uids' : [local_uid],
+                                            'message_id' : message_id,
+                                            'references' : references }
+                # make sure that all messages in the same thread get
+                # their references to the full set
+                full_references = set()
+                for reference in references:
+                    try:
+                        hash_id = self.message_ids[reference].pop()
+                        self.message_ids[reference].add(hash_id)
+                    except KeyError:
+                        # the email that is being referenced is not on
+                        # the server
+                        self.unknown_references[reference] \
+                        = [message_id]
+                        continue
+                    full_references.update(
+                        self.hash_ids[hash_id]['references'])
+                    break
+                full_references.update(references)
+                if len(full_references) > 0:
+                    full_references.add(hash_id)
+                full_references = list(full_references)
+                for reference in full_references:
+                    try:
+                        for refhash_id in self.message_ids[reference]:
+                            try:
+                                self.hash_ids[refhash_id]['references']\
+                                = full_references
+                            except KeyError:
+                                pass
+                    except KeyError:
+                        self.unknown_references[reference] \
+                        = full_references
+
+            # put into self.local_uids
+            self.local_uids[local_uid] = hash_id
 
     def local_mailbox_uids(self, mailboxname):
         """ Return a sorted list of all the keys stored in self.local_uids
