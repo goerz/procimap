@@ -46,10 +46,12 @@ class GmailCache:
     def __init__(self, server, autosave=None):
         """ Initialize cache for the given server """
         self._mb = ImapMailbox((server, 'INBOX'))
-        self.hash_ids    = {} # sha244hash.size => {...}
-                              # {[local_uids], message_id, [references]}
-        self.local_uids  = {} # mailboxname.UID => sha244hash.size
-        self.message_ids = {} # message-id      => set([sha244hash.size, ..])
+        # sha244hash.size => {[local_uids], message_id, [references]}
+        self.data_for_hash_id    = {} 
+        # mailboxname.UID => sha244hash.size
+        self.hash_id_from_local_uid  = {} 
+        # message-id => set([sha244hash.size, ..])
+        self.hash_ids_for_message_id = {} 
         self.unknown_references = {}
         self.update_results = {}
         self.mailboxnames = self._mb.server.list()
@@ -58,9 +60,9 @@ class GmailCache:
 
     def clear(self):
         """ Discard all cached data """
-        self.hash_ids    = {}
-        self.local_uids  = {}
-        self.message_ids = {}
+        self.data_for_hash_id    = {}
+        self.hash_id_from_local_uid  = {}
+        self.hash_ids_for_message_id = {}
     
     def update(self, ignore=None):
         """ Update the cache """
@@ -114,19 +116,20 @@ class GmailCache:
         except StopIteration:
             pass
         # For all the mails found above, remove the data from
-        # self.local_uids, self.hash_uids, and self.message_ids
+        # self.hash_id_from_local_uid, self.hash_uids, and 
+        # self.hash_ids_for_message_id
         for local_uid in local_uids_to_delete:
             print "    Removing %s from cache" % local_uid
-            hash_id = self.local_uids[local_uid]
-            message_id = self.hash_ids[hash_id]['message_id']
-            del self.local_uids[local_uid]
-            self.hash_ids[hash_id]['local_uids'].remove(local_uid)
-            if len(self.hash_ids[hash_id]['local_uids']) == 0:
-                references = self.hash_ids[hash_id]['references']
-                del self.hash_ids[hash_id]
-                self.message_ids[message_id].remove(hash_id)
-                if len(self.message_ids[message_id]) == 0:
-                    del self.message_ids[message_id]
+            hash_id = self.hash_id_from_local_uid[local_uid]
+            message_id = self.data_for_hash_id[hash_id]['message_id']
+            del self.hash_id_from_local_uid[local_uid]
+            self.data_for_hash_id[hash_id]['local_uids'].remove(local_uid)
+            if len(self.data_for_hash_id[hash_id]['local_uids']) == 0:
+                references = self.data_for_hash_id[hash_id]['references']
+                del self.data_for_hash_id[hash_id]
+                self.hash_ids_for_message_id[message_id].remove(hash_id)
+                if len(self.hash_ids_for_message_id[message_id]) == 0:
+                    del self.hash_ids_for_message_id[message_id]
                     if len(references) > 0:
                         self.unknown_references[message_id] = references
         print ("  Done.")
@@ -146,7 +149,7 @@ class GmailCache:
             local_uid = "%s.%s" % (mailboxname, uid)
 
             print "    Processing %s" % local_uid
-            if self.local_uids.has_key(local_uid):
+            if self.hash_id_from_local_uid.has_key(local_uid):
                 # skip mails that are already in the cache
                 continue
             iteration += 1
@@ -161,29 +164,29 @@ class GmailCache:
             hash_id = "%s.%s" % (sha244hash, size)
             message_id = header['message-id']
 
-            # put into self.message_ids
+            # put into self.hash_ids_for_message_id
             if message_id is None:
                 print("%s has no message-id!" % local_uid)
                 print("You are strongly advised to give each message "
                         "a unique message-id")
             else:
-                if self.message_ids.has_key(message_id):
-                    self.message_ids[message_id].add(hash_id)
-                    if len(self.message_ids[message_id]) > 1:
+                if self.hash_ids_for_message_id.has_key(message_id):
+                    self.hash_ids_for_message_id[message_id].add(hash_id)
+                    if len(self.hash_ids_for_message_id[message_id]) > 1:
                         print("WARNING: You have different messages "
                                 "with the same message-id. This is "
                                 "pretty bad. Try to fix your message-ids")
                 else:
-                    self.message_ids[message_id] = set([hash_id])
+                    self.hash_ids_for_message_id[message_id] = set([hash_id])
 
-            # put into self.hash_ids
-            if self.hash_ids.has_key(hash_id):
-                self.hash_ids[hash_id]['local_uids'].append(local_uid)
+            # put into self.data_for_hash_id
+            if self.data_for_hash_id.has_key(hash_id):
+                self.data_for_hash_id[hash_id]['local_uids'].append(local_uid)
             else:
                 references = references_from_header(header)
                 if message_id in self.unknown_references.keys():
                     references += self.unknown_references[message_id]
-                self.hash_ids[hash_id] = { 'local_uids' : [local_uid],
+                self.data_for_hash_id[hash_id] = { 'local_uids' : [local_uid],
                                             'message_id' : message_id,
                                             'references' : references }
                 # make sure that all messages in the same thread get
@@ -191,8 +194,8 @@ class GmailCache:
                 full_references = set()
                 for reference in references:
                     try:
-                        hash_id = self.message_ids[reference].pop()
-                        self.message_ids[reference].add(hash_id)
+                        hash_id = self.hash_ids_for_message_id[reference].pop()
+                        self.hash_ids_for_message_id[reference].add(hash_id)
                     except KeyError:
                         # the email that is being referenced is not on
                         # the server
@@ -200,7 +203,7 @@ class GmailCache:
                         = [message_id]
                         continue
                     full_references.update(
-                        self.hash_ids[hash_id]['references'])
+                        self.data_for_hash_id[hash_id]['references'])
                     break
                 full_references.update(references)
                 if len(full_references) > 0:
@@ -208,29 +211,31 @@ class GmailCache:
                 full_references = list(full_references)
                 for reference in full_references:
                     try:
-                        for refhash_id in self.message_ids[reference]:
+                        for refhash_id \
+                        in self.hash_ids_for_message_id[reference]:
                             try:
-                                self.hash_ids[refhash_id]['references']\
-                                = full_references
+                                self.data_for_hash_id[refhash_id][
+                                'references'] = full_references
                             except KeyError:
                                 pass
                     except KeyError:
                         self.unknown_references[reference] \
                         = full_references
 
-            # put into self.local_uids
-            self.local_uids[local_uid] = hash_id
+            # put into self.hash_id_from_local_uid
+            self.hash_id_from_local_uid[local_uid] = hash_id
 
     def local_mailbox_uids(self, mailboxname):
-        """ Return a sorted list of all the keys stored in self.local_uids
-            that belong to the mailbox with mailboxname. E.g. a call
-            to local_mailbox_uids('[Gmail]/All Mail') might return
+        """ Return a sorted list of all the keys stored in
+            self.hash_id_from_local_uid that belong to the mailbox with
+            mailboxname. E.g. a call to local_mailbox_uids('[Gmail]/All Mail')
+            might return
             ['[Gmail]/All Mail.4', '[Gmail]/All Mail.10', 
              '[Gmail]/All Mail.12']
             if there are three message messages in that mailbox, with the
             UIDs 4, 10, and 12.
         """
-        result = [luid for luid in self.local_uids.keys() 
+        result = [luid for luid in self.hash_id_from_local_uid.keys() 
                   if (GmailCache.local_uid_pattern.match(luid).group('mailbox')
                        == mailboxname)]
         result.sort(key = lambda x: int(x.split('.')[-1]))
@@ -238,9 +243,9 @@ class GmailCache:
 
     def save(self, picklefile):
         """ Pickle the cache """
-        data = { 'hash_ids' : self.hash_ids,
-                 'local_uids' : self.local_uids,
-                 'message_ids' : self.message_ids}
+        data = { 'data_for_hash_id' : self.data_for_hash_id,
+                 'hash_id_from_local_uid' : self.hash_id_from_local_uid,
+                 'hash_ids_for_message_id' : self.hash_ids_for_message_id}
         output = open(picklefile, 'wb')
         cPickle.dump(data, output, protocol=2)
         output.close()
@@ -257,9 +262,9 @@ class GmailCache:
             input = open(picklefile, 'rb')
             data = cPickle.load(input)
             input.close()
-            self.hash_ids = data['hash_ids']
-            self.local_uids = data['local_uids']
-            self.message_ids = data['message_ids']
+            self.data_for_hash_id = data['data_for_hash_id']
+            self.hash_id_from_local_uid = data['hash_id_from_local_uid']
+            self.hash_ids_for_message_id = data['hash_ids_for_message_id']
         except (IOError, EOFError), exc_message:
             print("Could not read data from %s: %s" % (picklefile, exc_message))
             print("No cached data read")
@@ -269,7 +274,9 @@ class GmailCache:
             with the given local_uid is in.
         """
         result = set()
-        for luid in self.hash_ids[ self.local_uids[local_uid] ]['local_uids']:
+        for luid in self.data_for_hash_id[ 
+            self.hash_id_from_local_uid[local_uid] 
+        ]['local_uids']:
             result.add(
                 GmailCache.local_uid_pattern.match(luid).group('mailbox'))
         return list(result)
