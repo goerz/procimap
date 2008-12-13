@@ -27,6 +27,14 @@ from ProcImap.ImapMailbox import ImapMailbox
 import hashlib
 import cPickle
 import re
+import mailbox as Mailbox # I'm already using 'mailbox' as a variable name
+
+
+class DeleteFromTrashError(Exception):
+    """ Raised if a message cannot be removed from the Gmail Trash folder 
+        for some reason 
+    """
+    pass
 
 class GmailCache:
     """ Class for keeping track of all the messages and their 
@@ -173,6 +181,8 @@ class GmailCache:
             to local_mailbox_uids('[Gmail]/All Mail') might return
             ['[Gmail]/All Mail.4', '[Gmail]/All Mail.10', 
              '[Gmail]/All Mail.12']
+            if there are three message messages in that mailbox, with the
+            UIDs 4, 10, and 12.
         """
         result = [luid for luid in self.local_uids.keys() 
                   if (GmailCache.local_uid_pattern.match(luid).group('mailbox')
@@ -206,10 +216,12 @@ class GmailCache:
         except (IOError, EOFError), exc_message:
             print("Could not read data from %s: %s" % (picklefile, exc_message))
             print("No cached data read")
-           
+
 
 def is_gmail_box(mailbox):
     """ Return True if the mailbox is on a Gmail server, False otherwise """
+    if not isinstance(mailbox, ImapMailbox):
+        return False
     return mailbox.server.servername == 'imap.gmail.com'
 
 def get_hash_id(mailbox, uid):
@@ -224,17 +236,39 @@ def get_hash_id(mailbox, uid):
     size = mailbox.get_size(uid)
     return "%s.%s" % (sha244hash, size)
 
-def delete(mailbox, uid):
+def delete(mailbox, uid, backup=None):
     """ Delete the message with uid in the mailbox by moving it to the Trash,
     and then deleting it from there.  This removes all copies of the mail from
     other mailboxes on the Gmail server as well.
+
+    If you supply the backup option, it must be an opject of type 
+    mailbox.Mailbox that is not an ImapMailbox on a gmail server as well. A
+    local mbox file is recommended here. If these conditions are not met, a
+    TypeError or ValueError will be raised. The email is stored in the backup
+    mailbox before being deleted.
+
+    If there is a message in your Trash folder with the same message-id 
+    and size as the message to be deleted, a DeleteFromTrashError will be
+    thrown.
 
     Return 0 if mail was removed successfully
     Return 1 if mail was not moved to the Trash folder
     Return 2 if mail was moved to Trash folder, but not removed from there
     """
-    header = mailbox.get_header(uid)
-    messageid = header['message-id']
+    if backup is not None:
+        if not isinstance(backup, Mailbox.Mailbox):
+            raise TypeError, "backup must be of type mailbox.Mailbox."
+        if is_gmail_box(backup):
+            raise ValueError, "backup must not be on a gmail server."
+        message = mailbox[uid]
+        messageid = message['message-id']
+        backup.lock()
+        backup.add(message)
+        backup.flush()
+        backup.unlock()
+    else:
+        header = mailbox.get_header(uid)
+        messageid = header['message-id']
     size = mailbox.get_size(uid)
     mailboxname = mailbox.name
     try:
@@ -245,9 +279,12 @@ def delete(mailbox, uid):
     try:
         mailbox.switch('[Gmail]/Trash')
         to_delete = mailbox.search("HEADER message-id %s" % messageid)
+        to_delete = [m for m in to_delete if mailbox.get_size(m) == size]
+        if len(to_delete) > 1:
+            raise  DeleteFromTrashError, "Ambigous delete-request on Trash." \
+                " Please empty the trash manually."
         for message in to_delete:
-            if mailbox.get_size(message) == size:
-                mailbox.set_imapflags(message, '\\Deleted')
+            mailbox.set_imapflags(message, '\\Deleted')
     except:
         return 2
     mailbox.flush() 
