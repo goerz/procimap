@@ -41,6 +41,7 @@ class GmailCache:
         relationships on a Gmail account 
     """
     local_uid_pattern = re.compile(r'(?P<mailbox>.*)\.(?P<uid>[0-9]+)')
+    messageid_pattern = re.compile(r'<(?P<left>[^@]+)@(?P<right>[^@+])>')
 
     def __init__(self, server, autosave=None):
         """ Initialize cache for the given server """
@@ -49,6 +50,8 @@ class GmailCache:
                               # {[local_uids], message_id, [references]}
         self.local_uids  = {} # mailboxname.UID => sha244hash.size
         self.message_ids = {} # message-id      => set([sha244hash.size, ..])
+        self.unknown_references = {}
+        self.update_results = {}
         self.mailboxnames = self._mb.server.list()
         self._attempts = 0
         self.autosave = autosave
@@ -63,7 +66,6 @@ class GmailCache:
         """ Update the cache """
         if ignore is None:
             ignore = ['[Gmail]/Trash]', '[Gmail]/Spam']
-        self._attempts = 0
         try:
 
             self._mb = ImapMailbox((self._mb.server.clone(), 'INBOX'))
@@ -96,15 +98,18 @@ class GmailCache:
                 # self.local_uids, self.hash_uids, and self.message_ids
                 for local_uid in local_uids_to_delete:
                     print "    Removing %s from cache" % local_uid
-                    hash_id = self.local_uids[local_uid]['hash_id']
-                    message_id = self.hash_ids[hash_id]['message-id']
+                    hash_id = self.local_uids[local_uid]
+                    message_id = self.hash_ids[hash_id]['message_id']
                     del self.local_uids[local_uid]
                     self.hash_ids[hash_id]['local_uids'].remove(local_uid)
                     if len(self.hash_ids[hash_id]['local_uids']) == 0:
+                        references = self.hash_ids[hash_id]['references']
                         del self.hash_ids[hash_id]
                         self.message_ids[message_id].remove(hash_id)
                         if len(self.message_ids[message_id]) == 0:
                             del self.message_ids[message_id]
+                            if len(references) > 0:
+                                self.unknown_references[message_id] = references
                 print ("  Done.")
 
                 # process new mails 
@@ -152,9 +157,43 @@ class GmailCache:
                         self.hash_ids[hash_id]['local_uids'].append(local_uid)
                     else:
                         references = references_from_header(header)
+                        if message_id in self.unknown_references.keys():
+                            references += self.unknown_references[message_id]
                         self.hash_ids[hash_id] = { 'local_uids' : [local_uid],
                                                    'message_id' : message_id,
                                                    'references' : references }
+                        # make sure that all messages in the same thread get
+                        # their references to the full set
+                        full_references = set()
+                        for reference in references:
+                            try:
+                                hash_id = self.message_ids[reference].pop()
+                                self.message_ids[reference].add(hash_id)
+                            except KeyError:
+                                # the email that is being referenced is not on
+                                # the server
+                                self.unknown_references[reference] \
+                                = [message_id]
+                                continue
+                            full_references.update(
+                                self.hash_ids[hash_id]['references'])
+                            break
+                        full_references.update(references)
+                        if len(full_references) > 0:
+                            full_references.add(hash_id)
+                        full_references = list(full_references)
+                        for reference in full_references:
+                            try:
+                                for refhash_id in self.message_ids[reference]:
+                                    try:
+                                        self.hash_ids[refhash_id]['references']\
+                                        = full_references
+                                    except KeyError:
+                                        pass
+                            except KeyError:
+                                self.unknown_references[reference] \
+                                = full_references
+
                     # put into self.local_uids
                     self.local_uids[local_uid] = hash_id
 
@@ -163,6 +202,7 @@ class GmailCache:
 
         except Exception, data:
 
+            raise # DEBUG
             # reconnect
             self._autosave()
             self._attempts += 1
@@ -200,6 +240,7 @@ class GmailCache:
         output.close()
 
     def _autosave(self):
+        """ Save self to the file who's filename is given in self.autosave """
         if self.autosave is not None:
             print "Auto-save to %s" % self.autosave
             self.save(self.autosave)
@@ -270,6 +311,8 @@ class GmailCache:
             ['INBOX.120, INBOX.121]
         """
         pass
+        #key_
+#GmailCache.local_uid_pattern.match(luid).group('mailbox')
 
 
 def is_gmail_box(mailbox):
