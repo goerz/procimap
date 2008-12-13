@@ -217,6 +217,60 @@ class GmailCache:
             print("Could not read data from %s: %s" % (picklefile, exc_message))
             print("No cached data read")
 
+    def get_labels(self, local_uid):
+        """ Return the list of labels (i.e. list of mailboxes) that the message
+            with the given local_uid is in.
+        """
+        result = set()
+        for luid in self.hash_ids[ self.local_uids[local_uid] ]['local_uids']:
+            result.add(
+                GmailCache.local_uid_pattern.match(luid).group('mailbox'))
+        return list(result)
+
+    def get_thread(self, key, mailbox=None):
+        """ Return the message thread (based on Message-IDs) associated with
+            the message described by the given key.
+
+            The 'key' variable may either be a local_uid or a Message-ID. 
+
+            If it is a local_uid, the result will be a list of local_uids in
+            the same mailbox if no 'mailbox' is specified, or a list of
+            local_uids in the mailbox specified as 'mailbox'. Note that the
+            resulting list may not actually reflect the full thread, as it will
+            not contain messages that are in other mailboxes. To get the full
+            thread, you should set 'mailbox' to '[Gmail]/All Mail'.
+
+            If 'key' is a Message-ID and 'mailbox' is not specified, the result
+            will be a list of Message-IDs that belong to the same thread.
+            If 'key' is a Message-ID and 'mailbox' is set to the name of
+            an mailbox, a list of local_uids of messages belonging to the thread
+            and residing in the specified mailbox will be returned.
+
+            For example, suppose there are three messages in your Gmail account
+            forming a thread: A first one in your Inbox (local_uid: INBOX.120)
+            with Message-ID '<abc1@foobar>', a second one in your Sent folder
+            (local_uid: [Gmail]/Sent.100) with Message-ID '<abc2@foobar>' and a
+            third one in your Inbox (local_uid: INBOX.121) with Message-ID
+            '<abc3@foobar>. Of course, these messages also apper in your 
+            'All Mail' folder with the local_uid '[Gmail]/All Mail.500',
+            '[Gmail]/All Mail.501', and '[Gmail]/All Mail.502' the following
+            example calls would apply:
+
+            >>> c.get_thread('INBOX.120')
+            ['INBOX.120, INBOX.121]
+
+            >>> c.get_thread('INBOX.120', mailbox='[Gmail]/All Mail')
+            ['[Gmail]/All Mail.500', '[Gmail]/All Mail.501', 
+             '[Gmail]/All Mail.502']
+
+            >>> c.get_thread('<abc1@foobar>')
+            ['<abc1@foobar>', '<abc2@foobar>', '<abc3@foobar>']
+
+            >>> c.get_thread('<abc2@foobar>', mailbox='INBOX')
+            ['INBOX.120, INBOX.121]
+        """
+        pass
+
 
 def is_gmail_box(mailbox):
     """ Return True if the mailbox is on a Gmail server, False otherwise """
