@@ -122,16 +122,28 @@ class GmailCache:
             print "    Removing %s from cache" % local_uid
             hash_id = self.hash_id_for_local_uid[local_uid]
             message_id = self.data_for_hash_id[hash_id]['message_id']
+            # We first break the link between the local_uid and 
+            # the hash_id
             del self.hash_id_for_local_uid[local_uid]
             self.data_for_hash_id[hash_id]['local_uids'].remove(local_uid)
+            # If there were several copies of the same mail in different
+            # mailboxes, and we deleted only one instance of the message,
+            # we don't have to do anything else. If, however, this was the
+            # last instantiation of the message, we need to remove all the data
+            # associated with it.
             if len(self.data_for_hash_id[hash_id]['local_uids']) == 0:
                 references = self.data_for_hash_id[hash_id]['references']
                 del self.data_for_hash_id[hash_id]
+                # Remove the connection between the message_id and the hash_id
                 self.hash_ids_for_message_id[message_id].remove(hash_id)
                 if len(self.hash_ids_for_message_id[message_id]) == 0:
                     del self.hash_ids_for_message_id[message_id]
-                    if len(references) > 0:
-                        self.unknown_references[message_id] = references
+                # take care of the references as well: if the deleted message
+                # wasn't in any thread, we don't have to do anything, but if
+                # it was part of a thread, we still have to keep that
+                # information
+                if len(references) > 1:
+                    self.unknown_references[message_id] = references
         print ("  Done.")
 
     def _add_new_data(self, mailboxname, uids_on_server):
