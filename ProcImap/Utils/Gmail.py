@@ -368,12 +368,12 @@ def get_hash_id(mailbox, uid):
     size = mailbox.get_size(uid)
     return "%s.%s" % (sha244hash, size)
 
-def delete(mailbox, uid, backup=None):
+def delete(mailbox, uid, backupbox=None):
     """ Delete the message with uid in the mailbox by moving it to the Trash,
     and then deleting it from there.  This removes all copies of the mail from
     other mailboxes on the Gmail server as well.
 
-    If you supply the backup option, it must be an opject of type 
+    If you supply the backupbox option, it must be an opject of type 
     mailbox.Mailbox that is not an ImapMailbox on a gmail server as well. A
     local mbox file is recommended here. If these conditions are not met, a
     TypeError or ValueError will be raised. The email is stored in the backup
@@ -387,17 +387,17 @@ def delete(mailbox, uid, backup=None):
     Return 1 if mail was not moved to the Trash folder
     Return 2 if mail was moved to Trash folder, but not removed from there
     """
-    if backup is not None:
-        if not isinstance(backup, Mailbox.Mailbox):
-            raise TypeError, "backup must be of type mailbox.Mailbox."
-        if is_gmail_box(backup):
+    if backupbox is not None:
+        if not isinstance(backupbox, Mailbox.Mailbox):
+            raise TypeError, "backupbox must be of type mailbox.Mailbox."
+        if is_gmail_box(backupbox):
             raise ValueError, "backup must not be on a gmail server."
         message = mailbox[uid]
         messageid = message['message-id']
-        backup.lock()
-        backup.add(message)
-        backup.flush()
-        backup.unlock()
+        backupbox.lock()
+        backupbox.add(message)
+        backupbox.flush()
+        backupbox.unlock()
     else:
         header = mailbox.get_header(uid)
         messageid = header['message-id']
@@ -422,6 +422,52 @@ def delete(mailbox, uid, backup=None):
     mailbox.flush() 
     mailbox.switch(mailboxname)
     return 0
+
+
+def backup(cache, target, uids=None):
+    """ backup the cached Gmail account to a target mailbox 
+
+        cache must be an instance of GmailCache, account must be an instance of
+        mailbox.Mailbox that is not an ImapMailbox on a gmail server as well. A
+        local mbox file is recommended here. The target mailbox should be empty
+
+        All the emails stored on the Gmail account are appended to the target
+        mailbox, the headers of each mail has an 'X-ProcImap-GmailLabels'
+        header field added, which contains a list of all the mailboxes that
+        have a copy of this mail
+
+        Return a list of uid's of emails that failed to copy. These uid's are
+        valid in the '[Gmail]/All Mail' mailbox on the server.
+
+        If the optional 'uids' argument is given, it has to be a list of uid's.
+        Only the uid's in that list are backed up. The uid's must be valid in
+        the '[Gmail]/All Mail' mailbox. This is intended for completing a
+        previous backup.
+    """
+    # TODO: write this
+    pass
+
+
+def restore(source, gmailserver, ids=None):
+    """ restore previously backed up emails to the gmailserver.
+
+        source must be an instance of of mailbox.Mailbox that is not an
+        ImapMailbox on a gmail server as well. It must point to a mailbox that
+        was previously the 'target' in the backup procedure. All mails found in
+        the source mailbox will be copied to the '[Gmail]/All Mail' mailbox on
+        the gmailserver. If the mails contain a 'X-ProcImap-GmailLabels' header
+        field, that field will be removed and the message will be copied to the
+        mailboxes specified in the field.
+
+        Return a list of ids from the source that failed to copy to the
+        gmailserver.
+
+        If the optional 'ids' argument is given, it has to be a list of id's
+        valid in the source mailbox. Only the specified id's will be copied to
+        the gmailserver. This is intented for completing a previous restore.
+    """
+    # TODO: write this
+    pass
 
 
 def get_thread(mailbox, uid):
