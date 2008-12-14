@@ -192,44 +192,46 @@ class GmailCache:
         hash_id, and message_id, and that has the specified header.
         """
         if self.data_for_hash_id.has_key(hash_id):
+            # The mail is the same one as we encountered before in another
+            # mailbox, so all we have to do is to register it as an alias.
             self.data_for_hash_id[hash_id]['local_uids'].append(local_uid)
         else:
-            references = references_from_header(header)
+            # If the mail is new, we have to add all the data.
+            # First, we find out about the thread (i.e. the refences)
+            refs_in_mail = references_from_header(header)
+            thread = [message_id]
+            # We start with the thread of the new message that's already
+            # in the system, either because the new message_id is in the
+            # unknown_references, or because a mail referenced in the new
+            # message is alreay pointing to a thread.
             if message_id in self.unknown_references.keys():
-                references += self.unknown_references[message_id]
+                thread += self.unknown_references[message_id]
+                # Since we're dealing with the message right now, it's no
+                # longer unknown
+                del self.unknown_references[message_id] 
+            else:
+                for ref in refs_in_mail:
+                    if self.hash_ids_for_message_id.has_key(ref):
+                        known_hash_id = self.hash_ids_for_message_id[ref].pop()
+                        self.hash_ids_for_message_id[ref].add(known_hash_id)
+                        thread += \
+                            self.data_for_hash_id[known_hash_id]['references']
+                        break
+            # Now that we have the existing thread (or an empty one), we extend
+            # it with the references found in the new message.
+            thread = list(set(thread).union(set(refs_in_mail)))
+            # Lastly, we add the new thread to every message that's part of the
+            # new thread, both  to known and unknown
             self.data_for_hash_id[hash_id] = { 
                 'local_uids' : [local_uid],
                 'message_id' : message_id,
-                'references' : references }
-            # make sure that all messages in the same thread get
-            # their references to the full set
-            full_references = set()
-            for reference in references:
-                try:
-                    hash_id = self.hash_ids_for_message_id[reference].pop()
-                    self.hash_ids_for_message_id[reference].add(hash_id)
-                except KeyError:
-                    # the email that is being referenced is not on
-                    # the server
-                    self.unknown_references[reference] = [message_id]
-                    continue
-                full_references.update(
-                    self.data_for_hash_id[hash_id]['references'])
-                break
-            full_references.update(references)
-            if len(full_references) > 0:
-                full_references.add(hash_id)
-            full_references = list(full_references)
-            for reference in full_references:
-                try:
-                    for refhash_id in self.hash_ids_for_message_id[reference]:
-                        try:
-                            self.data_for_hash_id[refhash_id][
-                            'references'] = full_references
-                        except KeyError:
-                            pass
-                except KeyError:
-                    self.unknown_references[reference] = full_references
+                'references' : thread }
+            for ref in thread:
+                if self.hash_ids_for_message_id.has_key(ref):
+                    for hash_id in self.hash_ids_for_message_id[ref]:
+                        self.data_for_hash_id[hash_id]['references'] = thread
+                else:
+                    self.unknown_references[ref] = thread
 
     def local_mailbox_uids(self, mailboxname):
         """ Return a sorted list of all the keys stored in
@@ -251,7 +253,8 @@ class GmailCache:
         """ Pickle the cache """
         data = { 'data_for_hash_id' : self.data_for_hash_id,
                  'hash_id_for_local_uid' : self.hash_id_for_local_uid,
-                 'hash_ids_for_message_id' : self.hash_ids_for_message_id}
+                 'hash_ids_for_message_id' : self.hash_ids_for_message_id,
+                 'unknown_references' : self.unknown_references}
         output = open(picklefile, 'wb')
         cPickle.dump(data, output, protocol=2)
         output.close()
@@ -271,6 +274,7 @@ class GmailCache:
             self.data_for_hash_id = data['data_for_hash_id']
             self.hash_id_for_local_uid = data['hash_id_for_local_uid']
             self.hash_ids_for_message_id = data['hash_ids_for_message_id']
+            self.unknown_references = data['unknown_references']
         except (IOError, EOFError), exc_message:
             print("Could not read data from %s: %s" % (picklefile, exc_message))
             print("No cached data read")
