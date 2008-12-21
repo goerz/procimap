@@ -28,6 +28,11 @@ import hashlib
 import cPickle
 import re
 import mailbox as Mailbox # I'm already using 'mailbox' as a variable name
+import email
+
+ATTEMPTS = 10  # number of times the connection to the server will be renewed
+               # if an exception occurs before the program gives up and passes
+               # the exception on.
 
 
 class DeleteFromTrashError(Exception):
@@ -71,6 +76,7 @@ class GmailCache:
         try:
             self._mb = ImapMailbox((self._mb.server.clone(), 'INBOX'))
             self.mailboxnames = self._mb.server.list()
+            # TODO: handle delete mailboxes
             for mailboxname in self.mailboxnames:
                 if mailboxname in ignore:
                     continue
@@ -87,12 +93,13 @@ class GmailCache:
             self._attempts += 1
             print "Exception occured: %s (attempt %s). Reconnect." \
                 % (data, self._attempts)
-            if self._attempts > 500:
+            if self._attempts > ATTEMPTS:
                 self._attempts = 0
                 raise
             self._mb = ImapMailbox((self._mb.server.clone(), 'INBOX'))
             self.update()
         self._attempts = 0
+        self._mb.close()
 
     def _remove_deleted_data(self, mailboxname, uids_on_server):
         """ 
@@ -345,10 +352,73 @@ class GmailCache:
             >>> c.get_thread('<abc2@foobar>', mailbox='INBOX')
             ['INBOX.120, INBOX.121]
         """
-        pass
-        #key_
-#GmailCache.local_uid_pattern.match(luid).group('mailbox')
+        raise NotImplementedError
 
+    def backup(self, target, uids=None, update=True):
+        """ backup the selfd Gmail account to a target mailbox 
+
+            self must be an instance of Gmailself, target must be a string
+            pointing to a local mbox file.
+
+            All the emails stored on the Gmail account are appended to the
+            target mailbox, the headers of each mail has
+            'X-ProcImap-GmailLabel' header fields added, which contains a list
+            of all the mailboxes that have a copy of this mail. Additionally,
+            there will be an 'X-ProcImap-GmailUID' header field that contains
+            the message's original UID in '[Gmail] All Mail'.
+
+            Return a list of uid's of emails that failed to copy. These uid's
+            are valid in the '[Gmail]/All Mail' mailbox on the server.
+
+            If the optional 'uids' argument is given, it has to be a list of
+            uid's.  Only the uid's in that list are backed up. The uid's must
+            be valid in the '[Gmail]/All Mail' mailbox. This is intended for
+            completing a previous backup.
+
+            Before backup, the cache will be updated, unless you specify 
+            'update' as False.
+        """
+        if not isinstance(target, basestring):
+            raise TypeError, "target must be a string"
+        if update:
+            self.update()
+        self._mb = ImapMailbox((self._mb.server.clone(), '[Gmail]/All Mail'))
+        mailbox_uids = self._mb.get_all_uids()
+        # TODO: incremental backup: check what's in the targetmbox already
+        for uid in mailbox_uids:
+            if uids is not None:
+                if uid not in uids:
+                    continue
+            targetmbox = Mailbox.mbox(target)
+            targetmbox.lock()
+            try:
+                print "Backing up UID %s" % uid # DEBUG
+                size = self._mb.get_size(uid) # DEBUG
+                print "  size = %s" % size # DEBUG
+                message = self._mb[uid]
+                print "  loaded" # DEBUG
+                labels = self.get_labels("[Gmail]/All Mail.%s" % uid)
+                for label in labels:
+                    try:
+                        message.add_header('X-ProcImap-GmailLabel', 
+                            str(email.header.make_header([(label, 'ascii')])))
+                    except UnicodeDecodeError:
+                        message.add_header('X-ProcImap-GmailLabel', 
+                            str(email.header.make_header([(label, 'utf-8')])))
+                targetmbox.add(message)
+                print "  Backed up UID %s" % uid
+            except:
+                if uids is None:
+                    new_uids = [u for u in mailbox_uids if u >= uid ]
+                else:
+                    new_uids = [u for u in mailbox_uids if u >= uid 
+                                and u in uids]
+                targetmbox.unlock()
+                targetmbox.close()
+                return new_uids
+            targetmbox.unlock()
+            targetmbox.close()
+        return []
 
 def is_gmail_box(mailbox):
     """ Return True if the mailbox is on a Gmail server, False otherwise """
@@ -424,30 +494,6 @@ def delete(mailbox, uid, backupbox=None):
     return 0
 
 
-def backup(cache, target, uids=None):
-    """ backup the cached Gmail account to a target mailbox 
-
-        cache must be an instance of GmailCache, account must be an instance of
-        mailbox.Mailbox that is not an ImapMailbox on a gmail server as well. A
-        local mbox file is recommended here. The target mailbox should be empty
-
-        All the emails stored on the Gmail account are appended to the target
-        mailbox, the headers of each mail has an 'X-ProcImap-GmailLabels'
-        header field added, which contains a list of all the mailboxes that
-        have a copy of this mail
-
-        Return a list of uid's of emails that failed to copy. These uid's are
-        valid in the '[Gmail]/All Mail' mailbox on the server.
-
-        If the optional 'uids' argument is given, it has to be a list of uid's.
-        Only the uid's in that list are backed up. The uid's must be valid in
-        the '[Gmail]/All Mail' mailbox. This is intended for completing a
-        previous backup.
-    """
-    # TODO: write this
-    pass
-
-
 def restore(source, gmailserver, ids=None):
     """ restore previously backed up emails to the gmailserver.
 
@@ -467,7 +513,13 @@ def restore(source, gmailserver, ids=None):
         the gmailserver. This is intented for completing a previous restore.
     """
     # TODO: write this
-    pass
+    raise NotImplementedError
+    # put message in "All Mails"
+    # try to relocate the message in the server
+    # if located successfully:
+    #   copy to all mailboxes, on server
+    # else:
+    #   actively upload to all mailboxes
 
 
 def get_thread(mailbox, uid):
@@ -533,4 +585,4 @@ def get_labels(mailbox, uid):
         with uid. As in general, message identity is established by the
         message id and the message size
     """
-    pass
+    raise NotImplementedError
