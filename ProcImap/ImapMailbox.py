@@ -260,16 +260,49 @@ class ImapMailbox(object, Mailbox):
             Raise KeyError if there if there is no message with that UID.
         """
         if (self._cached_uid != uid) or (self._cached_mailbox != self.name):
-            (code, data) = self._server.uid('fetch', uid, "(RFC822)")
-            if code != 'OK':
-                raise ImapNotOkError, "%s in fetch_message(%s)" % (code, uid)
             try:
-                rfc822string = data[0][1]
-                if FIX_BUGGY_IMAP_FROMLINE:
-                    if rfc822string.startswith(">From "):
-                        rfc822string = rfc822string[rfc822string.find("\n")+1:]
-            except TypeError:
-                raise KeyError, "No message %s in _cache_message" % uid
+                (code, data) = self._server.uid('fetch', uid, "(RFC822)")
+                if code != 'OK':
+                    raise ImapNotOkError, "%s in fetch_message(%s)" \
+                                                                   % (code, uid)
+                try:
+                    rfc822string = data[0][1]
+                except TypeError:
+                    raise KeyError, "No message %s in _cache_message" % uid
+            except MemoryError:
+                # this happens sometimes for unknown reasons. Try do download
+                # in chunks instead
+                self.reconnect()
+                size = self.get_size(uid)
+                octets_read = 0
+                chunksize = 204800
+                chunks = []
+                while octets_read < size:
+                    attempts = 0
+                    while True:
+                        try:
+                            (code, data) = self._server.uid('fetch', uid, 
+                                    "(BODY[]<%s.%s>)" % (octets_read, chunksize))
+                            if code != 'OK':
+                                raise ImapNotOkError, "%s in fetch_message(%s)" \
+                                                                    % (code, uid)
+                            break
+                        except:
+                            self.reconnect()
+                            attempts += 1
+                            continue
+                        if attempts > 10:
+                            break
+                        chunksize = chunksize / (attempts + 1)
+                    try:
+                        chunks.append(data[0][1])
+                    except TypeError:
+                        raise KeyError, "No message %s in _cache_message" % uid
+                    octets_read += chunksize
+                rfc822string = ''.join(chunks)
+            if FIX_BUGGY_IMAP_FROMLINE:
+                if rfc822string.startswith(">From "):
+                    rfc822string = rfc822string[rfc822string.find("\n")+1:]
             self._cached_uid = uid
             self._cached_mailbox = self.name
             self._cached_text = rfc822string
