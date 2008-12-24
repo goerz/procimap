@@ -29,6 +29,7 @@ import cPickle
 import re
 import mailbox as Mailbox # I'm already using 'mailbox' as a variable name
 import email
+import sys
 
 ATTEMPTS = 10  # number of times the connection to the server will be renewed
                # if an exception occurs before the program gives up and passes
@@ -69,27 +70,27 @@ class GmailCache:
         self.hash_id_for_local_uid  = {}
         self.hash_ids_for_message_id = {}
     
-    def update(self, ignore=None):
+    def update(self, ignore=None, silent=False):
         """ Update the cache """
         if ignore is None:
             ignore = ['[Gmail]/Trash]', '[Gmail]/Spam']
         try:
             self._mb = ImapMailbox((self._mb.server.clone(), 'INBOX'))
             self.mailboxnames = self._mb.server.list()
-            # TODO: handle delete mailboxes
+            # TODO: handle deleted mailboxes
             for mailboxname in self.mailboxnames:
                 if mailboxname in ignore:
                     continue
-                print ("Processing Mailbox %s" % mailboxname)
+                if not silent: print ("Processing Mailbox %s" % mailboxname)
                 self._mb.switch(mailboxname)
                 uids_on_server = self._mb.get_all_uids()
-                self._remove_deleted_data(mailboxname, uids_on_server)
-                self._add_new_data(mailboxname, uids_on_server)
-                self._autosave()
-                print("  Done.")
+                self._remove_deleted_data(mailboxname, uids_on_server, silent)
+                self._add_new_data(mailboxname, uids_on_server, silent)
+                self._autosave(silent)
+                if not silent: print("  Done.")
         except Exception, data:
             # reconnect
-            self._autosave()
+            self._autosave(silent)
             self._attempts += 1
             print "Exception occured: %s (attempt %s). Reconnect." \
                 % (data, self._attempts)
@@ -97,17 +98,18 @@ class GmailCache:
                 self._attempts = 0
                 raise
             self._mb = ImapMailbox((self._mb.server.clone(), 'INBOX'))
-            self.update()
+            self.update(ignore, silent)
         self._attempts = 0
         self._mb.close()
 
-    def _remove_deleted_data(self, mailboxname, uids_on_server):
+    def _remove_deleted_data(self, mailboxname, uids_on_server, silent=False):
         """ 
         Given a list of uids on the server in the specified mailbox,
         remove the data of mails that do not occur in the uids_on_server
         list
         """
-        print ("  Removing mails that were deleted on the server ...")
+        if not silent: 
+            print ("  Removing mails that were deleted on the server ...")
         # find local_uids in the current mailbox which are in the
         # cache but not on the server anymore
         local_uids_to_delete = [] 
@@ -126,7 +128,7 @@ class GmailCache:
         # self.hash_id_for_local_uid, self.hash_uids, and 
         # self.hash_ids_for_message_id
         for local_uid in local_uids_to_delete:
-            print "    Removing %s from cache" % local_uid
+            if not silent: print "    Removing %s from cache" % local_uid
             hash_id = self.hash_id_for_local_uid[local_uid]
             message_id = self.data_for_hash_id[hash_id]['message_id']
             # We first break the link between the local_uid and 
@@ -151,23 +153,23 @@ class GmailCache:
                 # information
                 if len(references) > 1:
                     self.unknown_references[message_id] = references
-        print ("  Done.")
+        if not silent: print ("  Done.")
 
-    def _add_new_data(self, mailboxname, uids_on_server):
+    def _add_new_data(self, mailboxname, uids_on_server, silent=False):
         """
         Given a list of uids on the server in the specified mailbox,
         incorporate the data from all the mails specified in the 
         uids_on_server list.
         """
         self._mb.switch(mailboxname)
-        print ("  Processing existing/new mails on server")
+        if not silent: print ("  Processing existing/new mails on server")
         iteration = 0
 
         for uid in uids_on_server:
 
             local_uid = "%s.%s" % (mailboxname, uid)
 
-            print "    Processing %s" % local_uid
+            if not silent: print "    Processing %s" % local_uid
             if self.hash_id_for_local_uid.has_key(local_uid):
                 # skip mails that are already in the cache
                 continue
@@ -175,7 +177,7 @@ class GmailCache:
             if iteration == 1000:
                 # Autosave every 1000 new mails
                 iteration = 0
-                self._autosave()
+                self._autosave(silent)
 
             header = self._mb.get_header(uid)
             sha244hash = hashlib.sha224(header.as_string()).hexdigest()
@@ -185,9 +187,9 @@ class GmailCache:
 
             # put into self.hash_ids_for_message_id
             if message_id is None:
-                print("%s has no message-id!" % local_uid)
-                print("You are strongly advised to give each message "
-                        "a unique message-id")
+                if not silent: print("%s has no message-id!" % local_uid)
+                if not silent: print("You are strongly advised to give"
+                        "each message a unique message-id")
             else:
                 if self.hash_ids_for_message_id.has_key(message_id):
                     self.hash_ids_for_message_id[message_id].add(hash_id)
@@ -278,13 +280,13 @@ class GmailCache:
         cPickle.dump(data, output, protocol=2)
         output.close()
 
-    def _autosave(self):
+    def _autosave(self, silent=False):
         """ Save self to the file who's filename is given in self.autosave """
         if self.autosave is not None:
-            print "Auto-save to %s" % self.autosave
+            if not silent: print "Auto-save to %s" % self.autosave
             self.save(self.autosave)
 
-    def load(self, picklefile):
+    def load(self, picklefile, silent=False):
         """ Load pickled cache """
         try:
             input = open(picklefile, 'rb')
@@ -295,8 +297,10 @@ class GmailCache:
             self.hash_ids_for_message_id = data['hash_ids_for_message_id']
             self.unknown_references = data['unknown_references']
         except (IOError, EOFError), exc_message:
-            print("Could not read data from %s: %s" % (picklefile, exc_message))
-            print("No cached data read")
+            if not silent: 
+                print("Could not read data from %s: %s"
+                       % (picklefile, exc_message))
+            if not silent: print("No cached data read")
 
     def get_labels(self, local_uid):
         """ Return the list of labels (i.e. list of mailboxes) that the message
@@ -354,7 +358,7 @@ class GmailCache:
         """
         raise NotImplementedError
 
-    def backup(self, target, uids=None, update=True):
+    def backup(self, target, uids=None, update=True, silent=False):
         """ backup the selfd Gmail account to a target mailbox 
 
             self must be an instance of Gmailself, target must be a string
@@ -377,48 +381,79 @@ class GmailCache:
 
             Before backup, the cache will be updated, unless you specify 
             'update' as False.
+
+            If 'silent' is set to True, no status messages will be printed out.
         """
         if not isinstance(target, basestring):
             raise TypeError, "target must be a string"
         if update:
-            self.update()
+            self.update(silent=silent)
         self._mb = ImapMailbox((self._mb.server.clone(), '[Gmail]/All Mail'))
+        failures = []
+        self._attempts += 1
         mailbox_uids = self._mb.get_all_uids()
-        # TODO: incremental backup: check what's in the targetmbox already
+        targetmbox = Mailbox.mbox(target)
+        targetmbox.lock()
+        # check what's in the targetmbox already (for incremental backup)
+        if not silent: print "Checking for existing mails in target mailbox"
+        uids_in_target = []
+        for message in targetmbox:
+            uid = message['X-ProcImap-GmailUID']
+            try:
+                uids_in_target.append(int(uid))
+            except ValueError:
+                pass
+        if not silent: print "Done"
+        if not silent: print "Processing mails on server"
         for uid in mailbox_uids:
             if uids is not None:
                 if uid not in uids:
                     continue
-            targetmbox = Mailbox.mbox(target)
-            targetmbox.lock()
-            try:
-                print "Backing up UID %s" % uid # DEBUG
-                size = self._mb.get_size(uid) # DEBUG
-                print "  size = %s" % size # DEBUG
-                message = self._mb[uid]
-                print "  loaded" # DEBUG
-                labels = self.get_labels("[Gmail]/All Mail.%s" % uid)
-                for label in labels:
-                    try:
-                        message.add_header('X-ProcImap-GmailLabel', 
-                            str(email.header.make_header([(label, 'ascii')])))
-                    except UnicodeDecodeError:
-                        message.add_header('X-ProcImap-GmailLabel', 
-                            str(email.header.make_header([(label, 'utf-8')])))
-                targetmbox.add(message)
-                print "  Backed up UID %s" % uid
-            except:
-                if uids is None:
-                    new_uids = [u for u in mailbox_uids if u >= uid ]
-                else:
-                    new_uids = [u for u in mailbox_uids if u >= uid 
-                                and u in uids]
-                targetmbox.unlock()
-                targetmbox.close()
-                return new_uids
-            targetmbox.unlock()
-            targetmbox.close()
-        return []
+            if uid in uids_in_target:
+                if not silent: 
+                    print "Skipping UID %s (already in target)" % uid
+                continue
+            self._attempts = 0
+            while True: # retry on exceptions 
+                try:
+                    message = self._mb[uid]
+                    message.add_header('X-ProcImap-GmailUID', "%s" % uid)
+                    labels = self.get_labels("[Gmail]/All Mail.%s" % uid)
+                    for label in labels:
+                        try:
+                            message.add_header('X-ProcImap-GmailLabel', 
+                                str(email.header.make_header(
+                                    [(label, 'ascii')])))
+                        except UnicodeDecodeError:
+                            message.add_header('X-ProcImap-GmailLabel', 
+                                str(email.header.make_header(
+                                    [(label, 'utf-8')])))
+                    targetmbox.add(message)
+                    targetmbox.flush()
+                    if not silent: print "Backed up UID %s" % uid
+                    break
+                except Exception, data:
+                    # reconnect
+                    self._attempts += 1
+                    if not silent: 
+                        print "Exception occured: %s (attempt %s). Reconnect." \
+                            % (data, self._attempts)
+                    self._mb = ImapMailbox((self._mb.server.clone(), 
+                                            '[Gmail]/All Mail'))
+                    targetmbox.unlock()
+                    targetmbox.close()
+                    targetmbox = Mailbox.mbox(target)
+                    targetmbox.lock()
+                    if self._attempts > ATTEMPTS:
+                        failures.append(uid)
+                        self._attempts = 0
+                        if not silent: print ("Giving up on UID %s " % uid 
+                               + "and continuing with next message")
+                        break
+        targetmbox.unlock()
+        targetmbox.close()
+        self._attempts = 0
+        return failures
 
 def is_gmail_box(mailbox):
     """ Return True if the mailbox is on a Gmail server, False otherwise """
