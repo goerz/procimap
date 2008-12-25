@@ -399,11 +399,11 @@ class GmailCache:
         uids_in_target = []
         for message in targetmbox:
             uid = message['X-ProcImap-GmailUID']
+            if not silent: print "    uid %s is in target mailbox" % uid
             try:
                 uids_in_target.append(int(uid))
             except ValueError:
                 pass
-        if not silent: print "Done"
         if not silent: print "Processing mails on server"
         for uid in mailbox_uids:
             if uids is not None:
@@ -429,7 +429,6 @@ class GmailCache:
                                 str(email.header.make_header(
                                     [(label, 'utf-8')])))
                     targetmbox.add(message)
-                    targetmbox.flush()
                     if not silent: print "Backed up UID %s" % uid
                     break
                 except Exception, data:
