@@ -282,10 +282,10 @@ class ImapMailbox(object, Mailbox):
                     while True:
                         try:
                             (code, data) = self._server.uid('fetch', uid, 
-                                    "(BODY[]<%s.%s>)" % (octets_read, chunksize))
+                                  "(BODY[]<%s.%s>)" % (octets_read, chunksize))
                             if code != 'OK':
-                                raise ImapNotOkError, "%s in fetch_message(%s)" \
-                                                                    % (code, uid)
+                                raise ImapNotOkError, "%s in fetch_message(%s)"\
+                                                                   % (code, uid)
                             break
                         except:
                             self.reconnect()
@@ -543,76 +543,116 @@ class ImapMailbox(object, Mailbox):
         """
         return (not (self == other))
 
-    def copy(self, uid, targetmailbox):
-        """ Copy the message with UID to the targetmailbox.
+    def copy(self, uid, targetmailbox, exact=False):
+        """ Copy the message with UID to the targetmailbox and try to return
+            the key that was assigned to the copied message in the
+            targetmailbox.  If targetmailbox is an ImapMailbox, this is
+            the target-UID.
             targetmailbox can be a string (the name of a mailbox on the
             same imap server), any of mailbox.Mailbox. Note that not all
             imap flags will be preserved if the targetmailbox is not on
             an ImapMailbox. Copying is efficient (i.e. the message is not
             downloaded) if the targetmailbox is on the same server.
-            Do nothing if there if there is no message with that UID.
+            Do nothing and return None if there if there is no message with
+            that UID.
+            Unless 'exact' is set to True, the return value will be None if
+            the targetmailbox is an ImapMailbox. This is because finding out
+            the new UID of the copied message on an IMAP server is non-trivial.
+            Giving 'exact' as True means that additional work will be done to
+            find the accurate result. This operation can be relatively
+            expensive. If targetmailbox is not an ImapMailbox, the value of
+            'exact' is irrelevant, and the return value will always be
+            accurate.
         """
+        result = None
         if isinstance(targetmailbox, ImapMailbox):
             if targetmailbox.server == self._server:
                 targetmailbox = targetmailbox.name # set as string
         if isinstance(targetmailbox, Mailbox):
             if self != targetmailbox:
                 targetmailbox.lock()
-                targetmailbox.add(self[uid])
-                targetmailbox.flush()
+                result = targetmailbox.add(self[uid])
+                if isinstance(targetmailbox, ImapMailbox):
+                    result = None
+                    targetmailbox.flush()
+                    if exact:
+                        pass
+                        # TODO: get more exact result
                 targetmailbox.unlock()
         elif isinstance(targetmailbox, str):
             if targetmailbox != self.name:
                 (code, data) = self._server.uid('copy', uid, targetmailbox)
                 if code != 'OK':
                     raise ImapNotOkError, "%s in copy: %s" % (code, data)
+                if exact:
+                    pass
+                    # TODO: get more exact result
+
+            else:
+                return uid
         else:
             raise TypeError, "targetmailbox in copy is of unknown type."
+        return result
 
 
 
-    def move(self, uid, targetmailbox):
-        """ Copy the message with UID to the targetmailbox and delete it
-            in the original mailbox
-            targetmailbox can be a string (the name of a mailbox on the
-            same imap server), an instance of ImapMailbox, or an instance
-            of mailbox.Mailbox.
-            Do nothing if there if there is no message with that UID.
+    def move(self, uid, targetmailbox, exact=False):
+        """ Copy the message with UID to the targetmailbox, delete it in the
+            original mailbox, and try to return the key that was assigned to
+            the copied message in the targetmailbox. 
+            The discussions of the copy method concerning 'targetmailbox' and
+            'exact' apply here as well.
+            Do nothing and return None if there if there is no message with that UID.
         """
+        result = None
         if self.readonly:
             raise ReadOnlyError, "Tried to move message from read-only mailbox"
-        self.copy(uid, targetmailbox)
         if (targetmailbox != self) and (targetmailbox != self.name):
+            result = self.copy(uid, targetmailbox, exact)
             (code, data) = self._server.uid('store', uid, \
                                            '+FLAGS', "(\\Deleted)")
             if code != 'OK':
                 raise ImapNotOkError, "%s in move: %s" % (code, data)
+        else:
+            return uid
+        return result
 
-    def discard(self, uid):
+
+    def discard(self, uid, exact=False):
         """ If trash folder is defined, move the message with UID to 
-            trash; else, just add the \Deleted flag to the message with UID.
-            Do nothing if there if there is no message with that UID.
+            trash and try to return the key assigned to the message in the
+            trash; else, just add the \Deleted flag to the message with UID and
+            return None.
+            If a trash folder is defined, this method is equivalent to
+            self.move(uid, self.trash). The discussions of the move/copy method
+            apply.
+            Do nothing and return None if there if there is no message with
+            that UID.
         """
+        result = None
         if self.readonly:
             raise ReadOnlyError, "Tried to discard from read-only mailbox"
         if self.trash is None:
             self.add_imapflag(uid, "\\Deleted")
         else:
             print "Moving to %s" % self.trash
-            self.move(uid, self.trash)
+            return self.move(uid, self.trash, exact)
+        return result
 
-    def remove(self, uid):
+    def remove(self, uid, exact=False):
         """ Discard the message with UID.
             If there is no message with that UID, raise a KeyError
+            This is exactly equivalent to self.discard(uid), except for
+            the KeyError exception.
         """
         if self.readonly:
             raise ReadOnlyError, "Tried to remove from read-only mailbox"
         if uid not in self.search("ALL"):
             raise KeyError, "No UID %s" % uid
-        self.discard(uid)
+        return self.discard(uid, exact)
 
     def __delitem__(self, uid):
-        """ Add the \Deleted flag to the message with UID.
+        """ Discard the message with UID.
             If there is no message with that UID, raise a KeyError
         """
         self.remove(uid)

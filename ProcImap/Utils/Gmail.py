@@ -384,6 +384,7 @@ class GmailCache:
 
             If 'silent' is set to True, no status messages will be printed out.
         """
+        # TODO: allow mdir format as alternative to mbox
         if not isinstance(target, basestring):
             raise TypeError, "target must be a string"
         if update:
@@ -573,6 +574,7 @@ def get_thread(mailbox, uid):
         get complete threads unless you keep all your messages in one
         imap folder.
     """
+    raise NotImplementedError # this code is too buggy to be used at this point
     thread_uids = set()
     open_ids = set() # id's with unprocessed references
     closed_ids = set() # id's with all references processed
@@ -616,7 +618,6 @@ def get_thread(mailbox, uid):
 
 def get_labels(mailbox, uid):
     """ Return the list of mailboxes on the server that contain the message
-        with uid. As in general, message identity is established by the
-        message id and the message size
+        with uid.
     """
     raise NotImplementedError
