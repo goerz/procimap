@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ProcImap.imaplib2</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://github.com/goerz/procimap">ProcImap v.2.0</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="ProcImap-module.html">Package&nbsp;ProcImap</a> ::
+        Module&nbsp;imaplib2
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="ProcImap.imaplib2-module.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== MODULE DESCRIPTION ==================== -->
+<h1 class="epydoc">Module imaplib2</h1><p class="nomargin-top"><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html">source&nbsp;code</a></span></p>
+<pre class="literalblock">
+Threaded IMAP4 client.
+
+Based on RFC 2060 and original imaplib module.
+
+Public classes:   IMAP4
+                  IMAP4_SSL
+                  IMAP4_stream
+
+Public functions: Internaldate2Time
+                  ParseFlags
+                  Time2Internaldate
+
+</pre>
+
+<hr />
+<div class="fields">      <p><strong>Version:</strong>
+        2.4
+      </p>
+      <p><strong>Author:</strong>
+        Piers Lauder &lt;piers@janeelix.com&gt;
+      </p>
+</div><!-- ==================== CLASSES ==================== -->
+<a name="section-Classes"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Classes"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2.Request-class.html" class="summary-name" onclick="show_private();">Request</a><br />
+      Private class to represent a request awaiting response.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2.IMAP4-class.html" class="summary-name">IMAP4</a><br />
+      Threaded IMAP4 client class.
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2.IMAP4_SSL-class.html" class="summary-name">IMAP4_SSL</a><br />
+      IMAP4 client class over SSL connection
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2.IMAP4_stream-class.html" class="summary-name" onclick="show_private();">IMAP4_stream</a><br />
+      IMAP4 client class over a stream
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2._Authenticator-class.html" class="summary-name" onclick="show_private();">_Authenticator</a><br />
+      Private class to provide en/de-coding for base64 authentication 
+        conversation.
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2._IdleCont-class.html" class="summary-name" onclick="show_private();">_IdleCont</a><br />
+      When process is called, server is in IDLE state and will send 
+        asynchronous changes.
+    </td>
+  </tr>
+</table>
+<!-- ==================== FUNCTIONS ==================== -->
+<a name="section-Functions"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Functions</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Functions"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Int2AP"></a><span class="summary-sig-name">Int2AP</span>(<span class="summary-sig-arg">num</span>)</span><br />
+      string = Int2AP(num) Return 'num' converted to a string using 
+      characters from the set 'A'..'P'</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#Int2AP">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Internaldate2Time"></a><span class="summary-sig-name">Internaldate2Time</span>(<span class="summary-sig-arg">resp</span>)</span><br />
+      time_tuple = Internaldate2Time(resp) Convert IMAP4 INTERNALDATE to 
+      UT.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#Internaldate2Time">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Internaldate2tuple"></a><span class="summary-sig-name">Internaldate2tuple</span>(<span class="summary-sig-arg">resp</span>)</span><br />
+      time_tuple = Internaldate2Time(resp) Convert IMAP4 INTERNALDATE to 
+      UT.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#Internaldate2Time">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="Time2Internaldate"></a><span class="summary-sig-name">Time2Internaldate</span>(<span class="summary-sig-arg">date_time</span>)</span><br />
+      '&quot;DD-Mmm-YYYY HH:MM:SS +HHMM&quot;' = 
+      Time2Internaldate(date_time) Convert 'date_time' to IMAP4 
+      INTERNALDATE representation.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#Time2Internaldate">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="ParseFlags"></a><span class="summary-sig-name">ParseFlags</span>(<span class="summary-sig-arg">resp</span>)</span><br />
+      ('flag', ...) = ParseFlags(line) Convert IMAP4 flags response to 
+      python tuple.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#ParseFlags">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+</table>
+<!-- ==================== VARIABLES ==================== -->
+<a name="section-Variables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Variables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__release__"></a><span class="summary-name">__release__</span> = <code title="'2'"><code class="variable-quote">'</code><code class="variable-string">2</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="__revision__"></a><span class="summary-name">__revision__</span> = <code title="'4'"><code class="variable-quote">'</code><code class="variable-string">4</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2-module.html#__credits__" class="summary-name" onclick="show_private();">__credits__</a> = <code title="'''
+Authentication code contributed by Donn Cave &lt;donn@u.washington.edu&gt; J\
+une 1998.
+String method conversion by ESR, February 2001.
+GET/SETACL contributed by Anthony Baxter &lt;anthony@interlink.com.au&gt; Ap\
+ril 2001.
+IMAP4_SSL contributed by Tino Lange &lt;Tino.Lange@isg.de&gt; March 2002.
+GET/SETQUOTA contributed by Andreas Zeidler &lt;az@kreativkombinat.de&gt; Ju\
+..."><code class="variable-quote">'</code><code class="variable-string">\nAuthentication code contributed by Donn Cave </code><code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="CRLF"></a><span class="summary-name">CRLF</span> = <code title="'''\r
+'''"><code class="variable-quote">'</code><code class="variable-string">\r\n</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="Debug"></a><span class="summary-name">Debug</span> = <code title="None">None</code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="IMAP4_PORT"></a><span class="summary-name">IMAP4_PORT</span> = <code title="143">143</code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="IMAP4_SSL_PORT"></a><span class="summary-name">IMAP4_SSL_PORT</span> = <code title="993">993</code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="IDLE_TIMEOUT_RESPONSE"></a><span class="summary-name">IDLE_TIMEOUT_RESPONSE</span> = <code title="'* IDLE TIMEOUT'"><code class="variable-quote">'</code><code class="variable-string">* IDLE TIMEOUT</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="IDLE_TIMEOUT"></a><span class="summary-name">IDLE_TIMEOUT</span> = <code title="1740">1740</code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="AllowedVersions"></a><span class="summary-name">AllowedVersions</span> = <code title="('IMAP4REV1', 'IMAP4')"><code class="variable-group">(</code><code class="variable-quote">'</code><code class="variable-string">IMAP4REV1</code><code class="variable-quote">'</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">IMAP4</code><code class="variable-quote">'</code><code class="variable-group">)</code></code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="CMD_VAL_STATES"></a><span class="summary-name">CMD_VAL_STATES</span> = <code title="0">0</code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="CMD_VAL_ASYNC"></a><span class="summary-name">CMD_VAL_ASYNC</span> = <code title="1">1</code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2-module.html#Commands" class="summary-name" onclick="show_private();">Commands</a> = <code title="{'APPEND': (('AUTH', 'SELECTED'), False),
+ 'AUTHENTICATE': (('NONAUTH'), False),
+ 'CAPABILITY': (('NONAUTH', 'AUTH', 'SELECTED'), True),
+ 'CHECK': (('SELECTED'), True),
+ 'CLOSE': (('SELECTED'), False),
+ 'COPY': (('SELECTED'), True),
+ 'CREATE': (('AUTH', 'SELECTED'), True),
+ 'DELETE': (('AUTH', 'SELECTED'), True),
+..."><code class="variable-group">{</code><code class="variable-quote">'</code><code class="variable-string">APPEND</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">(</code><code class="variable-group">(</code><code class="variable-quote">'</code><code class="variable-string">AUTH</code><code class="variable-quote">'</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">SELECTED</code><code class="variable-quote">'</code><code class="variable-group">)</code><code class="variable-op">, </code>False<code class="variable-group">)</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">AUTHENTI</code><code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2-module.html#Mon2num" class="summary-name" onclick="show_private();">Mon2num</a> = <code title="{'Apr': 4,
+ 'Aug': 8,
+ 'Dec': 12,
+ 'Feb': 2,
+ 'Jan': 1,
+ 'Jul': 7,
+ 'Jun': 6,
+ 'Mar': 3,
+..."><code class="variable-group">{</code><code class="variable-quote">'</code><code class="variable-string">Apr</code><code class="variable-quote">'</code><code class="variable-op">: </code>4<code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">Aug</code><code class="variable-quote">'</code><code class="variable-op">: </code>8<code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">Dec</code><code class="variable-quote">'</code><code class="variable-op">: </code>12<code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">Feb</code><code class="variable-quote">'</code><code class="variable-op">: </code>2<code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">Jan</code><code class="variable-quote">'</code><code class="variable-op">: </code>1<code class="variable-op">, </code><code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2-module.html#InternalDate" class="summary-name" onclick="show_private();">InternalDate</a> = <code title="re.compile(r'.*INTERNALDATE &quot;(?P&lt;day&gt;[ 0123][0-9])-(?P&lt;mon&gt;[A-Z][a-z][\
+a-z])-(?P&lt;year&gt;[0-9][0-9][0-9][0-9]) (?P&lt;hour&gt;[0-9][0-9]):(?P&lt;min&gt;[0-9\
+][0-9]):(?P&lt;sec&gt;[0-9][0-9]) (?P&lt;zonen&gt;[-\+])(?P&lt;zoneh&gt;[0-9][0-9])(?P&lt;z\
+onem&gt;[0-9][0-9])&quot;')">re.compile(r'.<code class="re-op">*</code>INTERNALDATE &quot;<code class="re-group">(?P&lt;</code><code class="re-ref">day</code><code class="re-group">&gt;</code><code class="re-group">[</code> 0123<code class="re-group">]</code><code class="re-group">[</code>0<code class="re-op">-</code><code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="FLAGS_cre"></a><span class="summary-name">FLAGS_cre</span> = <code title="re.compile(r'.*FLAGS \((?P&lt;flags&gt;[^\)]*)\)')">re.compile(r'.<code class="re-op">*</code>FLAGS \(<code class="re-group">(?P&lt;</code><code class="re-ref">flags</code><code class="re-group">&gt;</code><code class="re-group">[^</code>\)<code class="re-group">]</code><code class="re-op">*</code><code class="re-group">)</code>\)')</code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="AUTH"></a><span class="summary-name">AUTH</span> = <code title="'AUTH'"><code class="variable-quote">'</code><code class="variable-string">AUTH</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="LOGOUT"></a><span class="summary-name">LOGOUT</span> = <code title="'LOGOUT'"><code class="variable-quote">'</code><code class="variable-string">LOGOUT</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="NONAUTH"></a><span class="summary-name">NONAUTH</span> = <code title="'NONAUTH'"><code class="variable-quote">'</code><code class="variable-string">NONAUTH</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="SELECTED"></a><span class="summary-name">SELECTED</span> = <code title="'SELECTED'"><code class="variable-quote">'</code><code class="variable-string">SELECTED</code><code class="variable-quote">'</code></code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== VARIABLES DETAILS ==================== -->
+<a name="section-VariablesDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Variables Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-VariablesDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__credits__"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">__credits__</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+<code class="variable-quote">'''</code><code class="variable-string"></code>
+<code class="variable-string">Authentication code contributed by Donn Cave &lt;donn@u.washington.edu&gt; J</code><span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+<code class="variable-string">une 1998.</code>
+<code class="variable-string">String method conversion by ESR, February 2001.</code>
+<code class="variable-string">GET/SETACL contributed by Anthony Baxter &lt;anthony@interlink.com.au&gt; Ap</code><span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+<code class="variable-string">ril 2001.</code>
+<code class="variable-string">IMAP4_SSL contributed by Tino Lange &lt;Tino.Lange@isg.de&gt; March 2002.</code>
+<code class="variable-string">GET/SETQUOTA contributed by Andreas Zeidler &lt;az@kreativkombinat.de&gt; Ju</code><span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+<code class="variable-ellipsis">...</code>
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="Commands"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">Commands</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+<code class="variable-group">{</code><code class="variable-quote">'</code><code class="variable-string">APPEND</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">(</code><code class="variable-group">(</code><code class="variable-quote">'</code><code class="variable-string">AUTH</code><code class="variable-quote">'</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">SELECTED</code><code class="variable-quote">'</code><code class="variable-group">)</code><code class="variable-op">, </code>False<code class="variable-group">)</code><code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">AUTHENTICATE</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">(</code><code class="variable-group">(</code><code class="variable-quote">'</code><code class="variable-string">NONAUTH</code><code class="variable-quote">'</code><code class="variable-group">)</code><code class="variable-op">, </code>False<code class="variable-group">)</code><code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">CAPABILITY</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">(</code><code class="variable-group">(</code><code class="variable-quote">'</code><code class="variable-string">NONAUTH</code><code class="variable-quote">'</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">AUTH</code><code class="variable-quote">'</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">SELECTED</code><code class="variable-quote">'</code><code class="variable-group">)</code><code class="variable-op">, </code>True<code class="variable-group">)</code><code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">CHECK</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">(</code><code class="variable-group">(</code><code class="variable-quote">'</code><code class="variable-string">SELECTED</code><code class="variable-quote">'</code><code class="variable-group">)</code><code class="variable-op">, </code>True<code class="variable-group">)</code><code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">CLOSE</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">(</code><code class="variable-group">(</code><code class="variable-quote">'</code><code class="variable-string">SELECTED</code><code class="variable-quote">'</code><code class="variable-group">)</code><code class="variable-op">, </code>False<code class="variable-group">)</code><code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">COPY</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">(</code><code class="variable-group">(</code><code class="variable-quote">'</code><code class="variable-string">SELECTED</code><code class="variable-quote">'</code><code class="variable-group">)</code><code class="variable-op">, </code>True<code class="variable-group">)</code><code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">CREATE</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">(</code><code class="variable-group">(</code><code class="variable-quote">'</code><code class="variable-string">AUTH</code><code class="variable-quote">'</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">SELECTED</code><code class="variable-quote">'</code><code class="variable-group">)</code><code class="variable-op">, </code>True<code class="variable-group">)</code><code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">DELETE</code><code class="variable-quote">'</code><code class="variable-op">: </code><code class="variable-group">(</code><code class="variable-group">(</code><code class="variable-quote">'</code><code class="variable-string">AUTH</code><code class="variable-quote">'</code><code class="variable-op">, </code><code class="variable-quote">'</code><code class="variable-string">SELECTED</code><code class="variable-quote">'</code><code class="variable-group">)</code><code class="variable-op">, </code>True<code class="variable-group">)</code><code class="variable-op">,</code>
+<code class="variable-ellipsis">...</code>
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="Mon2num"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">Mon2num</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+<code class="variable-group">{</code><code class="variable-quote">'</code><code class="variable-string">Apr</code><code class="variable-quote">'</code><code class="variable-op">: </code>4<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">Aug</code><code class="variable-quote">'</code><code class="variable-op">: </code>8<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">Dec</code><code class="variable-quote">'</code><code class="variable-op">: </code>12<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">Feb</code><code class="variable-quote">'</code><code class="variable-op">: </code>2<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">Jan</code><code class="variable-quote">'</code><code class="variable-op">: </code>1<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">Jul</code><code class="variable-quote">'</code><code class="variable-op">: </code>7<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">Jun</code><code class="variable-quote">'</code><code class="variable-op">: </code>6<code class="variable-op">,</code>
+ <code class="variable-quote">'</code><code class="variable-string">Mar</code><code class="variable-quote">'</code><code class="variable-op">: </code>3<code class="variable-op">,</code>
+<code class="variable-ellipsis">...</code>
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="InternalDate"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">InternalDate</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+re.compile(r'.<code class="re-op">*</code>INTERNALDATE &quot;<code class="re-group">(?P&lt;</code><code class="re-ref">day</code><code class="re-group">&gt;</code><code class="re-group">[</code> 0123<code class="re-group">]</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">)</code>-<code class="re-group">(?P&lt;</code><code class="re-ref">mon</code><code class="re-group">&gt;</code><code class="re-group">[</code>A<code class="re-op">-</code>Z<code class="re-group">]</code><code class="re-group">[</code>a<code class="re-op">-</code>z<code class="re-group">]</code><code class="re-group">[</code><span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+a<code class="re-op">-</code>z<code class="re-group">]</code><code class="re-group">)</code>-<code class="re-group">(?P&lt;</code><code class="re-ref">year</code><code class="re-group">&gt;</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">)</code> <code class="re-group">(?P&lt;</code><code class="re-ref">hour</code><code class="re-group">&gt;</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">)</code>:<code class="re-group">(?P&lt;</code><code class="re-ref">min</code><code class="re-group">&gt;</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group"></code><span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+<code class="re-group">]</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">)</code>:<code class="re-group">(?P&lt;</code><code class="re-ref">sec</code><code class="re-group">&gt;</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">)</code> <code class="re-group">(?P&lt;</code><code class="re-ref">zonen</code><code class="re-group">&gt;</code><code class="re-group">[</code>-\+<code class="re-group">]</code><code class="re-group">)</code><code class="re-group">(?P&lt;</code><code class="re-ref">zoneh</code><code class="re-group">&gt;</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">)</code><code class="re-group">(?P&lt;</code><code class="re-ref">z</code><span class="variable-linewrap"><img src="crarr.png" alt="\" /></span>
+<code class="re-ref">onem</code><code class="re-group">&gt;</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">[</code>0<code class="re-op">-</code>9<code class="re-group">]</code><code class="re-group">)</code>&quot;')
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://github.com/goerz/procimap">ProcImap v.2.0</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Fri Aug  6 18:48:54 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

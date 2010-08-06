@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ProcImap</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th bgcolor="#70b0f0" class="navbar-select"
+          >&nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://github.com/goerz/procimap">ProcImap v.2.0</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        Package&nbsp;ProcImap
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="ProcImap-module.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PACKAGE DESCRIPTION ==================== -->
+<h1 class="epydoc">Package ProcImap</h1><p class="nomargin-top"><span class="codelink"><a href="ProcImap-pysrc.html">source&nbsp;code</a></span></p>
+<p>The ProcImap package provides an API for the IMAP protocol, 
+  subclassing from the &quot;mailbox&quot; and &quot;email&quot; packages 
+  provided by the Python standard library.</p>
+  <p>This allows to handle messages stored in an IMAP mailbox in much the 
+  same way as e.g. messages stored in an mbox or maildir format (with some 
+  limitations). This abstract interface is  much nicer than having to work 
+  with the standard library's imaplib module, which is only a very thin 
+  wrapper around the IMAP protocol itself.</p>
+  <p>In addition, ProcImap contains a number of &quot;utility&quot; 
+  functions and classes, targeted for automatic processing/filtering of 
+  email messages, interactive work on an an IMAP server from inside 
+  ipython, and writing consistent command line tools operating on IMAP 
+  mailboxes.</p>
+  <p>The original intent of the ProcImap package was to provide a framework
+  inspired by the traditional procmail (http://www.procmail.org) tool, 
+  allowing to filter and organize incoming email messages (hence the name).
+  However, in the course of development the focus has shifted to creating 
+  an abstract API for working with IMAP messages, while processing incoming
+  mail has become of secondary interest.</p>
+  <p>Nonetheless, you can easily use ProcImap to assist in writing simple 
+  scripts that process incoming mails on your standard IMAP server. You 
+  should be advised however that many of the techniques that work fine on a
+  standard IMAP mailbox do not work so well when trying to apply them to a 
+  Gmail account. While technically Gmail fulfills all specifications of the
+  IMAP protocol, the philosophy behind the system is rather incompatible 
+  (look for my &quot;Accessing Gmail through Python&quot; blog post at 
+  michaelgoerz.net). Since Gmail is my primary email provider, this 
+  explains the shift of focus in the direction of development.</p>
+  <p>I use ProcImap as the basis for a new-mail-notification-tool, as well 
+  as to perform backups of my Gmail account (see 
+  http://github.com/goerz/gmailbkp). I've also used ProcImap to assist in 
+  migrating large amounts of messages between accounts, and to debug IMAP 
+  servers interactively in an ipython console.</p>
+
+<!-- ==================== SUBMODULES ==================== -->
+<a name="section-Submodules"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Submodules</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Submodules"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr><td class="summary">
+  <ul class="nomargin">
+    <li> <strong class="uidlink"><a href="ProcImap.ImapMailbox-module.html">ProcImap.ImapMailbox</a></strong>: <em class="summary">This module provides the ImapMailbox class, which is a wrapper 
+        around the imaplib module of the standard library, and a full 
+        implementation of the mailbox.Mailbox interface.</em>    </li>
+    <li> <strong class="uidlink"><a href="ProcImap.ImapMessage-module.html">ProcImap.ImapMessage</a></strong>: <em class="summary">This module contains the ImapMessage class, which derives from 
+        mailbox.Message.</em>    </li>
+    <li> <strong class="uidlink"><a href="ProcImap.ImapServer-module.html">ProcImap.ImapServer</a></strong>: <em class="summary">This module contains a wrapper around an IMAP Server.</em>    </li>
+    <li> <strong class="uidlink"><a href="ProcImap.Utils-module.html">ProcImap.Utils</a></strong>
+    <ul>
+    <li> <strong class="uidlink"><a href="ProcImap.Utils.CLI-module.html">ProcImap.Utils.CLI</a></strong>: <em class="summary">This package contains a specialized OptionParser for use with 
+        ProcImap.</em>    </li>
+    <li> <strong class="uidlink"><a href="ProcImap.Utils.MailboxFactory-module.html">ProcImap.Utils.MailboxFactory</a></strong>: <em class="summary">This module contains the MailboxFactory class, together with some 
+        Exceptions that are thrown by MailboxFactory, and the pathgenerator
+        functions used for the default mailbox types (see documentation of 
+        MailboxFactory class)</em>    </li>
+    <li> <strong class="uidlink"><a href="ProcImap.Utils.Processing-module.html">ProcImap.Utils.Processing</a></strong>: <em class="summary">This module contains general functions for processing mail locally 
+        e.g.</em>    </li>
+    <li> <strong class="uidlink"><a href="ProcImap.Utils.Server-module.html">ProcImap.Utils.Server</a></strong>: <em class="summary">This module contains functions that work directly on an online 
+        ImapServer/ImapMailbox.</em>    </li>
+    </ul>
+    </li>
+    <li> <strong class="uidlink"><a href="ProcImap.imaplib2-module.html">ProcImap.imaplib2</a></strong>: <em class="summary">Threaded IMAP4 client.</em>    </li>
+  </ul></td></tr>
+</table>
+
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th bgcolor="#70b0f0" class="navbar-select"
+          >&nbsp;&nbsp;&nbsp;Home&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://github.com/goerz/procimap">ProcImap v.2.0</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Fri Aug  6 18:48:54 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

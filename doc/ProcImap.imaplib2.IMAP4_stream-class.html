@@ -1,0 +1,564 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ProcImap.imaplib2.IMAP4_stream</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://github.com/goerz/procimap">ProcImap v.2.0</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="ProcImap-module.html">Package&nbsp;ProcImap</a> ::
+        <a href="ProcImap.imaplib2-module.html">Module&nbsp;imaplib2</a> ::
+        Class&nbsp;IMAP4_stream
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="ProcImap.imaplib2.IMAP4_stream-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class IMAP4_stream</h1><p class="nomargin-top"><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4_stream">source&nbsp;code</a></span></p>
+<pre class="base-tree">
+object --+    
+         |    
+     <a href="ProcImap.imaplib2.IMAP4-class.html">IMAP4</a> --+
+             |
+            <strong class="uidshort">IMAP4_stream</strong>
+</pre>
+
+<hr />
+<pre class="literalblock">
+IMAP4 client class over a stream
+
+Instantiate with:
+    IMAP4_stream(command, debug=None, debug_file=None)
+
+    command    - string that can be passed to os.popen2();
+    debug      - debug level (default: 0 - no debug);
+    debug_file - debug stream (default: sys.stderr).
+
+For more documentation see the docstring of the parent class IMAP4.
+
+</pre>
+
+<!-- ==================== NESTED CLASSES ==================== -->
+<a name="section-NestedClasses"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Nested Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-NestedClasses"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="ProcImap.imaplib2.IMAP4-class.html">IMAP4</a></code></b>:
+      <code><a href="ProcImap.imaplib2.IMAP4.abort-class.html">abort</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4.error-class.html">error</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4.readonly-class.html">readonly</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4_stream-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">command</span>,
+        <span class="summary-sig-arg">debug</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">debug_file</span>=<span class="summary-sig-default">None</span>)</span><br />
+      x.__init__(...) initializes x; see x.__class__.__doc__ for signature</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4_stream.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4_stream-class.html#open" class="summary-sig-name">open</a>(<span class="summary-sig-arg">host</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">port</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Setup a stream connection via 'self.command'.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4_stream.open">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4_stream-class.html#read" class="summary-sig-name">read</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">size</span>)</span><br />
+      Read 'size' bytes from remote.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4_stream.read">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4_stream-class.html#send" class="summary-sig-name">send</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">data</span>)</span><br />
+      Send data to remote.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4_stream.send">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4_stream-class.html#shutdown" class="summary-sig-name">shutdown</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Close I/O established in &quot;open&quot;.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4_stream.shutdown">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="ProcImap.imaplib2.IMAP4-class.html">IMAP4</a></code></b>:
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#__getattr__">__getattr__</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#append">append</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#authenticate">authenticate</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#capability">capability</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#check">check</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#close">close</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#copy">copy</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#create">create</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#delete">delete</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#deleteacl">deleteacl</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#examine">examine</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#expunge">expunge</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#fetch">fetch</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#getacl">getacl</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#getannotation">getannotation</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#getquota">getquota</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#getquotaroot">getquotaroot</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#idle">idle</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#list">list</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#login">login</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#login_cram_md5">login_cram_md5</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#logout">logout</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#lsub">lsub</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#myrights">myrights</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#namespace">namespace</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#noop">noop</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#open_socket">open_socket</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#partial">partial</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#proxyauth">proxyauth</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#recent">recent</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#rename">rename</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#response">response</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#search">search</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#select">select</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#setacl">setacl</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#setannotation">setannotation</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#setquota">setquota</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#socket">socket</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#sort">sort</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#status">status</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#store">store</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#subscribe">subscribe</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#thread">thread</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#uid">uid</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#unsubscribe">unsubscribe</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#xatom">xatom</a></code>
+      </p>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="ProcImap.imaplib2.IMAP4-class.html">IMAP4</a></code></b> (private):
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_CRAM_MD5_AUTH" onclick="show_private();">_CRAM_MD5_AUTH</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_append_untagged" onclick="show_private();">_append_untagged</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_check_bye" onclick="show_private();">_check_bye</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_checkquote" onclick="show_private();">_checkquote</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_close_threads" onclick="show_private();">_close_threads</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_command" onclick="show_private();">_command</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_command_complete" onclick="show_private();">_command_complete</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_command_completer" onclick="show_private();">_command_completer</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_deliver_dat" onclick="show_private();">_deliver_dat</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_deliver_exc" onclick="show_private();">_deliver_exc</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_dump_ur" onclick="show_private();">_dump_ur</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_end_idle" onclick="show_private();">_end_idle</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_handler" onclick="show_private();">_handler</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_init_debug" onclick="show_private();">_init_debug</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_log" onclick="show_private();">_log</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_match" onclick="show_private();">_match</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_mesg" onclick="show_private();">_mesg</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_print_log" onclick="show_private();">_print_log</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_put_response" onclick="show_private();">_put_response</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_quote" onclick="show_private();">_quote</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_reader" onclick="show_private();">_reader</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_request_pop" onclick="show_private();">_request_pop</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_request_push" onclick="show_private();">_request_push</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_simple_command" onclick="show_private();">_simple_command</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_untagged_response" onclick="show_private();">_untagged_response</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#_writer" onclick="show_private();">_writer</a></code>
+      </p></div>
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__str__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code><a href="ProcImap.imaplib2.IMAP4-class.html">IMAP4</a></code></b>:
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#continuation_cre">continuation_cre</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#literal_cre">literal_cre</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#mapCRLF_cre">mapCRLF_cre</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#mustquote_cre">mustquote_cre</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#response_code_cre">response_code_cre</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#untagged_response_cre">untagged_response_cre</a></code>,
+      <code><a href="ProcImap.imaplib2.IMAP4-class.html#untagged_status_cre">untagged_status_cre</a></code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">command</span>,
+        <span class="sig-arg">debug</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">debug_file</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4_stream.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>x.__init__(...) initializes x; see x.__class__.__doc__ for 
+  signature</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__init__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="open"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">open</span>(<span class="sig-arg">host</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">port</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4_stream.open">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Setup a stream connection via 'self.command'.
+This connection will be used by the routines:
+    read, send, shutdown, socket.
+
+</pre>
+  <dl class="fields">
+    <dt>Overrides:
+        <a href="ProcImap.imaplib2.IMAP4-class.html#open">IMAP4.open</a>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="read"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">read</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">size</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4_stream.read">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Read 'size' bytes from remote.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        <a href="ProcImap.imaplib2.IMAP4-class.html#read">IMAP4.read</a>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="send"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">send</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">data</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4_stream.send">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Send data to remote.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        <a href="ProcImap.imaplib2.IMAP4-class.html#send">IMAP4.send</a>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="shutdown"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">shutdown</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4_stream.shutdown">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Close I/O established in &quot;open&quot;.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        <a href="ProcImap.imaplib2.IMAP4-class.html#shutdown">IMAP4.shutdown</a>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://github.com/goerz/procimap">ProcImap v.2.0</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Fri Aug  6 18:48:54 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

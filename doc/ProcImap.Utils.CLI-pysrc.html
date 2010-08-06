@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ProcImap.Utils.CLI</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://github.com/goerz/procimap">ProcImap v.2.0</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="ProcImap-module.html">Package&nbsp;ProcImap</a> ::
+        <a href="ProcImap.Utils-module.html">Package&nbsp;Utils</a> ::
+        Module&nbsp;CLI
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="ProcImap.Utils.CLI-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="ProcImap.Utils.CLI-module.html">Module ProcImap.Utils.CLI</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-comment">############################################################################</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    Copyright (C) 2008 by Michael Goerz                                   #</tt> </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    http://www.physik.fu-berlin.de/~goerz                                 #</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#                                                                          #</tt> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    This program is free software; you can redistribute it and#or modify  #</tt> </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    it under the terms of the GNU General Public License as published by  #</tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    the Free Software Foundation; either version 3 of the License, or     #</tt> </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    (at your option) any later version.                                   #</tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#                                                                          #</tt> </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    This program is distributed in the hope that it will be useful,       #</tt> </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    but WITHOUT ANY WARRANTY; without even the implied warranty of        #</tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         #</tt> </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    GNU General Public License for more details.                          #</tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#                                                                          #</tt> </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    You should have received a copy of the GNU General Public License     #</tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    along with this program; if not, write to the                         #</tt> </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    Free Software Foundation, Inc.,                                       #</tt> </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">#    59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             #</tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line"><tt class="py-comment"></tt><tt class="py-comment">############################################################################</tt> </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-comment"></tt> </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line"><tt class="py-docstring">""" This package contains a specialized OptionParser for use with ProcImap.</tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"><tt class="py-docstring">    All CLI tools developed from the ProcImap package should uniformly </tt> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"><tt class="py-docstring">    provide an option '-p' / '--profile' to read a MailboxFactory profile</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line"><tt class="py-docstring">    Optionally, the filename for the profile is read from the</tt> </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line"><tt class="py-docstring">    PROC_IMAP_PROFILE environment variable.</tt> </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line"><tt class="py-docstring">    This allows the user to keep account information (passwords) in one</tt> </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line"><tt class="py-docstring">    place for a variety of tools.</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line"><tt class="py-docstring">"""</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line"> </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt id="link-0" class="py-name" targets="Package ProcImap=ProcImap-module.html"><a title="ProcImap" class="py-name" href="#" onclick="return doclink('link-0', 'ProcImap', 'link-0');">ProcImap</a></tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package ProcImap.Utils=ProcImap.Utils-module.html"><a title="ProcImap.Utils" class="py-name" href="#" onclick="return doclink('link-1', 'Utils', 'link-1');">Utils</a></tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Module ProcImap.Utils.MailboxFactory=ProcImap.Utils.MailboxFactory-module.html,Class ProcImap.Utils.MailboxFactory.MailboxFactory=ProcImap.Utils.MailboxFactory.MailboxFactory-class.html"><a title="ProcImap.Utils.MailboxFactory
+ProcImap.Utils.MailboxFactory.MailboxFactory" class="py-name" href="#" onclick="return doclink('link-2', 'MailboxFactory', 'link-2');">MailboxFactory</a></tt> <tt class="py-keyword">import</tt> <tt id="link-3" class="py-name"><a title="ProcImap.Utils.MailboxFactory
+ProcImap.Utils.MailboxFactory.MailboxFactory" class="py-name" href="#" onclick="return doclink('link-3', 'MailboxFactory', 'link-2');">MailboxFactory</a></tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line"> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">optparse</tt> <tt class="py-keyword">import</tt> <tt class="py-name">OptionParser</tt><tt class="py-op">,</tt> <tt class="py-name">IndentedHelpFormatter</tt> </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line"><tt class="py-keyword">import</tt> <tt class="py-name">os</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line"> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line"> </tt>
+<a name="ProcImapOptParser"></a><div id="ProcImapOptParser-def"><a name="L39"></a><tt class="py-lineno"> 39</tt> <a class="py-toggle" href="#" id="ProcImapOptParser-toggle" onclick="return toggle('ProcImapOptParser');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="ProcImap.Utils.CLI.ProcImapOptParser-class.html">ProcImapOptParser</a><tt class="py-op">(</tt><tt class="py-base-class">OptionParser</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ProcImapOptParser-collapsed" style="display:none;" pad="+++" indent="++++"></div><div id="ProcImapOptParser-expanded"><a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">    <tt class="py-docstring">""" A special OptionParser for ProcImap. This takes the exact same</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line"><tt class="py-docstring">        arguments as optparse.OptionParser.</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line"><tt class="py-docstring">        However, there is a predefined option '-p' or '--profile'. If</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line"><tt class="py-docstring">        not given explicitely, this option takes the value of the</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line"><tt class="py-docstring">        environment variable PROC_IMAP_PROFILE. If the option is not</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line"><tt class="py-docstring">        given, neither explicitely nor implicitely through the envirnoment</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line"><tt class="py-docstring">        variable, ProcImapOptParser will shoot down the program it's</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line"><tt class="py-docstring">        running in with an error message.</tt> </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line"><tt class="py-docstring">        You can use ProcImapOptParser in this manner:</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line"><tt class="py-docstring">        &gt;&gt;&gt; opt = ProcImapOptParser()</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line"><tt class="py-docstring">        &gt;&gt;&gt; (options, args) = opt.parse_args(args=sys.argv)</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line"><tt class="py-docstring">        if sys.argv included e.g. '-p mailboxes.cfg', options.profile will</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line"><tt class="py-docstring">        NOT be the string 'mailboxes.cfg', but instead will be an instance </tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line"><tt class="py-docstring">        of MailboxFactory, generated from the file mailboxes.cfg.</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line"><tt class="py-docstring">        ProcImapOptParser also has a modified default formatter that </tt> </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line"><tt class="py-docstring">        allows explicit linebreaks (for paragraphs) in help-generating</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line"><tt class="py-docstring">        arguments like 'epilogue'.</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line"><tt class="py-docstring">    """</tt> </tt>
+<a name="ProcImapOptParser.__init__"></a><div id="ProcImapOptParser.__init__-def"><a name="L63"></a><tt class="py-lineno"> 63</tt> <a class="py-toggle" href="#" id="ProcImapOptParser.__init__-toggle" onclick="return toggle('ProcImapOptParser.__init__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="ProcImap.Utils.CLI.ProcImapOptParser-class.html#__init__">__init__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt class="py-param">args</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ProcImapOptParser.__init__-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="ProcImapOptParser.__init__-expanded"><a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">        <tt class="py-docstring">""" See documentation of optparse.OptionParser for arguments. """</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">        <tt class="py-keyword">class</tt> <tt class="py-def-name">MyIndentedHelpFormatter</tt><tt class="py-op">(</tt><tt class="py-base-class">IndentedHelpFormatter</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">            <tt class="py-docstring">""" Slightly modified formatter for help output: </tt> </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line"><tt class="py-docstring">                allow paragraphs </tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line"><tt class="py-docstring">            """</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">            <tt class="py-keyword">def</tt> <tt class="py-def-name">format_paragraphs</tt><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">text</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">                <tt class="py-docstring">""" wrap text per paragraph """</tt> </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">                <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-string">""</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">                <tt class="py-keyword">for</tt> <tt class="py-name">paragraph</tt> <tt class="py-keyword">in</tt> <tt class="py-name">text</tt><tt class="py-op">.</tt><tt class="py-name">split</tt><tt class="py-op">(</tt><tt class="py-string">"\n"</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">                    <tt class="py-name">result</tt> <tt class="py-op">+=</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">_format_text</tt><tt class="py-op">(</tt><tt class="py-name">paragraph</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-string">"\n"</tt> </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">                <tt class="py-keyword">return</tt> <tt class="py-name">result</tt> </tt>
+</div><a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">            <tt class="py-keyword">def</tt> <tt class="py-def-name">format_description</tt><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">description</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">                <tt class="py-docstring">""" format description, honoring paragraphs """</tt> </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">description</tt><tt class="py-op">:</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">                    <tt class="py-keyword">return</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">format_paragraphs</tt><tt class="py-op">(</tt><tt class="py-name">description</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-string">"\n"</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">                <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">                    <tt class="py-keyword">return</tt> <tt class="py-string">""</tt> </tt>
+</div><a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">            <tt class="py-keyword">def</tt> <tt class="py-def-name">format_epilog</tt><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">epilog</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">                <tt class="py-docstring">""" format epilog, honoring paragraphs """</tt> </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">                <tt class="py-keyword">if</tt> <tt class="py-name">epilog</tt><tt class="py-op">:</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">                    <tt class="py-keyword">return</tt> <tt class="py-string">"\n"</tt> <tt class="py-op">+</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">format_paragraphs</tt><tt class="py-op">(</tt><tt class="py-name">epilog</tt><tt class="py-op">)</tt> <tt class="py-op">+</tt> <tt class="py-string">"\n"</tt> </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">                <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">                    <tt class="py-keyword">return</tt> <tt class="py-string">""</tt> </tt>
+</div></div><a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">        <tt class="py-name">OptionParser</tt><tt class="py-op">.</tt><tt id="link-4" class="py-name" targets="Method ProcImap.ImapMailbox.ImapMailbox.__init__()=ProcImap.ImapMailbox.ImapMailbox-class.html#__init__,Method ProcImap.ImapMessage.ImapMessage.__init__()=ProcImap.ImapMessage.ImapMessage-class.html#__init__,Method ProcImap.ImapServer.ImapServer.__init__()=ProcImap.ImapServer.ImapServer-class.html#__init__,Method ProcImap.Utils.CLI.ProcImapOptParser.__init__()=ProcImap.Utils.CLI.ProcImapOptParser-class.html#__init__,Method ProcImap.Utils.MailboxFactory.MailboxFactory.__init__()=ProcImap.Utils.MailboxFactory.MailboxFactory-class.html#__init__,Method ProcImap.Utils.Processing.AddressListFile.__init__()=ProcImap.Utils.Processing.AddressListFile-class.html#__init__,Method ProcImap.Utils.Processing.ReplacementListFile.__init__()=ProcImap.Utils.Processing.ReplacementListFile-class.html#__init__,Method ProcImap.imaplib2.IMAP4.__init__()=ProcImap.imaplib2.IMAP4-class.html#__init__,Method ProcImap.imaplib2.IMAP4_SSL.__init__()=ProcImap.imaplib2.IMAP4_SSL-class.html#__init__,Method ProcImap.imaplib2.IMAP4_stream.__init__()=ProcImap.imaplib2.IMAP4_stream-class.html#__init__,Method ProcImap.imaplib2.Request.__init__()=ProcImap.imaplib2.Request-class.html#__init__,Method ProcImap.imaplib2._Authenticator.__init__()=ProcImap.imaplib2._Authenticator-class.html#__init__,Method ProcImap.imaplib2._IdleCont.__init__()=ProcImap.imaplib2._IdleCont-class.html#__init__"><a title="ProcImap.ImapMailbox.ImapMailbox.__init__
+ProcImap.ImapMessage.ImapMessage.__init__
+ProcImap.ImapServer.ImapServer.__init__
+ProcImap.Utils.CLI.ProcImapOptParser.__init__
+ProcImap.Utils.MailboxFactory.MailboxFactory.__init__
+ProcImap.Utils.Processing.AddressListFile.__init__
+ProcImap.Utils.Processing.ReplacementListFile.__init__
+ProcImap.imaplib2.IMAP4.__init__
+ProcImap.imaplib2.IMAP4_SSL.__init__
+ProcImap.imaplib2.IMAP4_stream.__init__
+ProcImap.imaplib2.Request.__init__
+ProcImap.imaplib2._Authenticator.__init__
+ProcImap.imaplib2._IdleCont.__init__" class="py-name" href="#" onclick="return doclink('link-4', '__init__', 'link-4');">__init__</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">,</tt> <tt class="py-op">**</tt><tt class="py-name">args</tt><tt class="py-op">)</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">add_option</tt><tt class="py-op">(</tt><tt class="py-string">"-p"</tt><tt class="py-op">,</tt> <tt class="py-string">"--profile"</tt><tt class="py-op">,</tt> <tt class="py-name">dest</tt><tt class="py-op">=</tt><tt class="py-string">"profile"</tt><tt class="py-op">,</tt> </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">                        <tt class="py-name">help</tt><tt class="py-op">=</tt><tt class="py-string">"Use FILE as the MailboxFactory config file "</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">                        <tt class="py-string">"defining all the mailboxes for this program."</tt><tt class="py-op">,</tt>  </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">                        <tt class="py-name">metavar</tt><tt class="py-op">=</tt><tt class="py-string">"FILE"</tt><tt class="py-op">)</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-keyword">not</tt> <tt class="py-name">args</tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Method ProcImap.ImapMailbox.ImapMailbox.has_key()=ProcImap.ImapMailbox.ImapMailbox-class.html#has_key"><a title="ProcImap.ImapMailbox.ImapMailbox.has_key" class="py-name" href="#" onclick="return doclink('link-5', 'has_key', 'link-5');">has_key</a></tt><tt class="py-op">(</tt><tt class="py-string">'formatter'</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">formatter</tt> <tt class="py-op">=</tt> <tt class="py-name">MyIndentedHelpFormatter</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">environ</tt><tt class="py-op">.</tt><tt id="link-6" class="py-name"><a title="ProcImap.ImapMailbox.ImapMailbox.has_key" class="py-name" href="#" onclick="return doclink('link-6', 'has_key', 'link-5');">has_key</a></tt><tt class="py-op">(</tt><tt class="py-string">'PROC_IMAP_PROFILE'</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">set_defaults</tt><tt class="py-op">(</tt><tt class="py-name">profile</tt><tt class="py-op">=</tt><tt class="py-name">os</tt><tt class="py-op">.</tt><tt class="py-name">environ</tt><tt class="py-op">[</tt><tt class="py-string">'PROC_IMAP_PROFILE'</tt><tt class="py-op">]</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line"> </tt>
+<a name="ProcImapOptParser.parse_args"></a><div id="ProcImapOptParser.parse_args-def"><a name="L97"></a><tt class="py-lineno"> 97</tt> <a class="py-toggle" href="#" id="ProcImapOptParser.parse_args-toggle" onclick="return toggle('ProcImapOptParser.parse_args');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="ProcImap.Utils.CLI.ProcImapOptParser-class.html#parse_args">parse_args</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">args</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">,</tt> <tt class="py-param">values</tt><tt class="py-op">=</tt><tt class="py-name">None</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="ProcImapOptParser.parse_args-collapsed" style="display:none;" pad="+++" indent="++++++++"></div><div id="ProcImapOptParser.parse_args-expanded"><a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">        <tt class="py-docstring">"""</tt> </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line"><tt class="py-docstring">        parse_args(args : [string] = sys.argv[1:],</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line"><tt class="py-docstring">                   values : Values = None)</tt> </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line"><tt class="py-docstring">        -&gt; (values : Values, args : [string])</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line"><tt class="py-docstring"></tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line"><tt class="py-docstring">        Parse the command-line options found in 'args' (default:</tt> </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line"><tt class="py-docstring">        sys.argv[1:]).  Any errors result in a call to 'error()', which</tt> </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line"><tt class="py-docstring">        by default prints the usage message to stderr and calls</tt> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line"><tt class="py-docstring">        sys.exit() with an error message.  On success returns a pair</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line"><tt class="py-docstring">        (values, args) where 'values' is an Values instance (with all</tt> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line"><tt class="py-docstring">        your option values) and 'args' is the list of arguments left</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line"><tt class="py-docstring">        over after parsing options.</tt> </tt>
+<a name="L110"></a><tt class="py-lineno">110</tt>  <tt class="py-line"><tt class="py-docstring">        """</tt> </tt>
+<a name="L111"></a><tt class="py-lineno">111</tt>  <tt class="py-line">        <tt class="py-name">result</tt> <tt class="py-op">=</tt> <tt class="py-name">OptionParser</tt><tt class="py-op">.</tt><tt id="link-7" class="py-name" targets="Method ProcImap.Utils.CLI.ProcImapOptParser.parse_args()=ProcImap.Utils.CLI.ProcImapOptParser-class.html#parse_args"><a title="ProcImap.Utils.CLI.ProcImapOptParser.parse_args" class="py-name" href="#" onclick="return doclink('link-7', 'parse_args', 'link-7');">parse_args</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">,</tt> <tt class="py-name">args</tt><tt class="py-op">,</tt> <tt id="link-8" class="py-name" targets="Method ProcImap.ImapMailbox.ImapMailbox.values()=ProcImap.ImapMailbox.ImapMailbox-class.html#values"><a title="ProcImap.ImapMailbox.ImapMailbox.values" class="py-name" href="#" onclick="return doclink('link-8', 'values', 'link-8');">values</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L112"></a><tt class="py-lineno">112</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-9" class="py-name"><a title="ProcImap.ImapMailbox.ImapMailbox.values" class="py-name" href="#" onclick="return doclink('link-9', 'values', 'link-8');">values</a></tt><tt class="py-op">.</tt><tt class="py-name">profile</tt> <tt class="py-keyword">is</tt> <tt class="py-name">None</tt><tt class="py-op">:</tt> </tt>
+<a name="L113"></a><tt class="py-lineno">113</tt>  <tt class="py-line">            <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">exit</tt><tt class="py-op">(</tt><tt id="link-10" class="py-name" targets="Method ProcImap.imaplib2.IMAP4.status()=ProcImap.imaplib2.IMAP4-class.html#status"><a title="ProcImap.imaplib2.IMAP4.status" class="py-name" href="#" onclick="return doclink('link-10', 'status', 'link-10');">status</a></tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-name">msg</tt><tt class="py-op">=</tt><tt class="py-string">"You did not provide a profile, and the "</tt> </tt>
+<a name="L114"></a><tt class="py-lineno">114</tt>  <tt class="py-line">                      <tt class="py-string">"PROC_IMAP_PROFILE environment variable is not set.\n"</tt><tt class="py-op">)</tt> </tt>
+<a name="L115"></a><tt class="py-lineno">115</tt>  <tt class="py-line">        <tt class="py-keyword">else</tt><tt class="py-op">:</tt> </tt>
+<a name="L116"></a><tt class="py-lineno">116</tt>  <tt class="py-line">            <tt class="py-keyword">try</tt><tt class="py-op">:</tt> </tt>
+<a name="L117"></a><tt class="py-lineno">117</tt>  <tt class="py-line">                <tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-11" class="py-name"><a title="ProcImap.ImapMailbox.ImapMailbox.values" class="py-name" href="#" onclick="return doclink('link-11', 'values', 'link-8');">values</a></tt><tt class="py-op">.</tt><tt class="py-name">profile</tt> <tt class="py-op">=</tt> <tt id="link-12" class="py-name"><a title="ProcImap.Utils.MailboxFactory
+ProcImap.Utils.MailboxFactory.MailboxFactory" class="py-name" href="#" onclick="return doclink('link-12', 'MailboxFactory', 'link-2');">MailboxFactory</a></tt><tt class="py-op">(</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt id="link-13" class="py-name"><a title="ProcImap.ImapMailbox.ImapMailbox.values" class="py-name" href="#" onclick="return doclink('link-13', 'values', 'link-8');">values</a></tt><tt class="py-op">.</tt><tt class="py-name">profile</tt><tt class="py-op">)</tt> </tt>
+<a name="L118"></a><tt class="py-lineno">118</tt>  <tt class="py-line">            <tt class="py-keyword">except</tt><tt class="py-op">:</tt> </tt>
+<a name="L119"></a><tt class="py-lineno">119</tt>  <tt class="py-line">                <tt class="py-keyword">raise</tt> </tt>
+<a name="L120"></a><tt class="py-lineno">120</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">result</tt> </tt>
+</div></div><a name="L121"></a><tt class="py-lineno">121</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://github.com/goerz/procimap">ProcImap v.2.0</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Fri Aug  6 18:48:55 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

@@ -1,0 +1,2153 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ProcImap.ImapMailbox.ImapMailbox</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://github.com/goerz/procimap">ProcImap v.2.0</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="ProcImap-module.html">Package&nbsp;ProcImap</a> ::
+        <a href="ProcImap.ImapMailbox-module.html">Module&nbsp;ImapMailbox</a> ::
+        Class&nbsp;ImapMailbox
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="ProcImap.ImapMailbox.ImapMailbox-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class ImapMailbox</h1><p class="nomargin-top"><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox">source&nbsp;code</a></span></p>
+<pre class="base-tree">
+         object --+
+                  |
+mailbox.Mailbox --+
+                  |
+                 <strong class="uidshort">ImapMailbox</strong>
+</pre>
+
+<hr />
+<p>An abstract representation of a mailbox on an IMAP Server. This class 
+  implements the mailbox.Mailbox interface, insofar possible. Methods for 
+  changing a message in-place are not available for IMAP; the 'update' and 
+  '__setitem__' methods will raise a NotSupportedError. By default deleting
+  messages (discard/remove) just adds the \Deleted flag to the message. 
+  Optionally, you can define a trash folder for any ImapMailbox. If set, 
+  &quot;deleted&quot; messages will be moved to the trash folder. Note that
+  you must set the trash folder to '[Gmail]/Trash' if you are using Gmail, 
+  as the Gmail IMAP server has a different interpretation of what deletion 
+  means.</p>
+  <p>The class specific attributes are:</p>
+  <p>name             name of the mailbox (readonly, see below) server
+  ImapServer object (readonly, see below) trash            Trash folder 
+  readonly         True if mailbox is readonly, false otherwise</p>
+  <p>The 'trash' attribute may a string, another instance of ImapMailbox, 
+  or an instance of mailbox.Mailbox. If not set, it is None.</p>
+  <p>If the 'readonly' attribute is set, all subsequent calls that would 
+  change the mailbox will raise a ReadOnlyError. Note that setting the 
+  readonly attribute does not prevent you from making changes through the 
+  methods of the server attribute.</p>
+
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">path</span>,
+        <span class="summary-sig-arg">factory</span>=<span class="summary-sig-default">&lt;class ProcImap.ImapMessage.ImapMessage at 0x11206c0&gt;</span>,
+        <span class="summary-sig-arg">readonly</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">create</span>=<span class="summary-sig-default">True</span>)</span><br />
+      Initialize an ImapMailbox path is a tuple with two elements, 
+      consisting of 1) an instance of ImapServer in any state 2) the name 
+      of a mailbox on the server as a string If the mailbox does not exist,
+      it is created unless create is set to False, in which case 
+      NoSuchMailboxError is raised.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="reconnect"></a><span class="summary-sig-name">reconnect</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Renew the connection to the mailbox</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.reconnect">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="switch"></a><span class="summary-sig-name">switch</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>,
+        <span class="summary-sig-arg">readonly</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">create</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Switch to a different Mailbox on the same server</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.switch">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#search" class="summary-sig-name">search</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">criteria</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">ALL</code><code class="variable-quote">'</code></span>,
+        <span class="summary-sig-arg">charset</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Return a list of all the UIDs in the mailbox (as integers)
+    that match the search criteria.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.search">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_unseen_uids"></a><span class="summary-sig-name">get_unseen_uids</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Get a list of all the unseen UIDs in the mailbox Equivalent to 
+      search(None, &quot;UNSEEN UNDELETED&quot;)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_unseen_uids">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#get_all_uids" class="summary-sig-name">get_all_uids</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Get a list of all the undeleted UIDs in the mailbox (as integers).</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_all_uids">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#_cache_message" class="summary-sig-name" onclick="show_private();">_cache_message</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>)</span><br />
+      Download the RFC822 text of the message with UID and put in in the 
+      cache.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox._cache_message">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#get_message" class="summary-sig-name">get_message</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>)</span><br />
+      Return an ImapMessage object created from the message with UID.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_message">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#__getitem__" class="summary-sig-name">__getitem__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>)</span><br />
+      Return an ImapMessage object created from the message with UID.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__getitem__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#get" class="summary-sig-name">get</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>,
+        <span class="summary-sig-arg">default</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Return an ImapMessage object created from the message with UID.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#get_string" class="summary-sig-name">get_string</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>)</span><br />
+      Return a RFC822 string representation of the message corresponding to
+      key, or raise a KeyError exception if no such message exists.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_string">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#get_file" class="summary-sig-name">get_file</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>)</span><br />
+      Return a cStringIO.StringIO of the message corresponding to key, or 
+      raise a KeyError exception if no such message exists.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_file">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#has_key" class="summary-sig-name">has_key</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>)</span><br />
+      Return True if key corresponds to a message, False otherwise.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.has_key">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#__contains__" class="summary-sig-name">__contains__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>)</span><br />
+      Return True if key corresponds to a message, False otherwise.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__contains__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#__len__" class="summary-sig-name">__len__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return a count of messages in the mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__len__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#clear" class="summary-sig-name">clear</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Delete all messages from the mailbox and expunge</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.clear">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#pop" class="summary-sig-name">pop</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>,
+        <span class="summary-sig-arg">default</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Return a representation of the message corresponding to key, delete 
+      and expunge the message.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.pop">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#popitem" class="summary-sig-name">popitem</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return an arbitrary (key, message) pair, where key is a key and 
+      message is a message representation, delete and expunge the 
+      corresponding message.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.popitem">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#update" class="summary-sig-name">update</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">arg</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Parameter arg should be a key-to-message mapping or an iterable of 
+      (key, message) pairs.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.update">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#flush" class="summary-sig-name">flush</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Equivalent to expunge()</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.flush">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#lock" class="summary-sig-name">lock</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Do nothing</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.lock">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#unlock" class="summary-sig-name">unlock</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Do nothing</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.unlock">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#get_header" class="summary-sig-name">get_header</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>)</span><br />
+      Return an ImapMessage object containing only the Header of the 
+      message with UID.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_header">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#get_fields" class="summary-sig-name">get_fields</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>,
+        <span class="summary-sig-arg">fields</span>)</span><br />
+      Return an mailbox.Message object containing only the requested header
+      fields of the message with UID.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_fields">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_size"></a><span class="summary-sig-name">get_size</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>)</span><br />
+      Get the number of bytes contained in the message with UID</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_size">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_imapflags"></a><span class="summary-sig-name">get_imapflags</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>)</span><br />
+      Return a list of imap flags for the message with UID Raise exception 
+      if there if there is no message with that UID.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_imapflags">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="get_internaldate"></a><span class="summary-sig-name">get_internaldate</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>)</span><br />
+      Return a time tuple representing the internal date for the message 
+      with UID Raise exception if there if there is no message with that 
+      UID.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_internaldate">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__eq__"></a><span class="summary-sig-name">__eq__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">other</span>)</span><br />
+      Equality test: mailboxes are equal if they are equal in server and 
+      name</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__eq__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__ne__"></a><span class="summary-sig-name">__ne__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">other</span>)</span><br />
+      Inequality test: mailboxes are unequal if they are not equal</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__ne__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#copy" class="summary-sig-name">copy</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>,
+        <span class="summary-sig-arg">targetmailbox</span>,
+        <span class="summary-sig-arg">exact</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Copy the message with UID to the targetmailbox and try to return the 
+      key that was assigned to the copied message in the targetmailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.copy">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#move" class="summary-sig-name">move</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>,
+        <span class="summary-sig-arg">targetmailbox</span>,
+        <span class="summary-sig-arg">exact</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Copy the message with UID to the targetmailbox, delete it in the 
+      original mailbox, and try to return the key that was assigned to the 
+      copied message in the targetmailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.move">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#discard" class="summary-sig-name">discard</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>,
+        <span class="summary-sig-arg">exact</span>=<span class="summary-sig-default">False</span>)</span><br />
+      If trash folder is defined, move the message with UID to trash and 
+      try to return the key assigned to the message in the trash; else, 
+      just add the \Deleted flag to the message with UID and return None.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.discard">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#remove" class="summary-sig-name">remove</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>,
+        <span class="summary-sig-arg">exact</span>=<span class="summary-sig-default">False</span>)</span><br />
+      Discard the message with UID.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.remove">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#__delitem__" class="summary-sig-name">__delitem__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>)</span><br />
+      Discard the message with UID.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__delitem__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#__setitem__" class="summary-sig-name">__setitem__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>,
+        <span class="summary-sig-arg">message</span>)</span><br />
+      Replace the message corresponding to key with message.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__setitem__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#iterkeys" class="summary-sig-name">iterkeys</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return an iterator over all UIDs This is an iterator over the list of
+      UIDs at the time iterkeys() is a called.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.iterkeys">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#keys" class="summary-sig-name">keys</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return a list of all UIDs</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.keys">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#itervalues" class="summary-sig-name">itervalues</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return an iterator over all messages.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.itervalues">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#__iter__" class="summary-sig-name">__iter__</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return an iterator over all messages.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__iter__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#values" class="summary-sig-name">values</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return a list of all messages The messages are represented as 
+      instances of ImapMessage unless a custom message factory was 
+      specified when the Mailbox instance was initialized.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.values">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#iteritems" class="summary-sig-name">iteritems</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return an iterator over (uid, message) pairs, where uid is a key and 
+      message is a message representation.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.iteritems">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#items" class="summary-sig-name">items</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Return a list (uid, message) pairs, where uid is a key and message is
+      a message representation.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.items">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#add" class="summary-sig-name">add</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">message</span>)</span><br />
+      Add the message to mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.add">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="add_imapflag"></a><span class="summary-sig-name">add_imapflag</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>,
+        <span class="summary-sig-arg">*flags</span>)</span><br />
+      Add imap flag to message with UID.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.add_imapflag">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="remove_imapflag"></a><span class="summary-sig-name">remove_imapflag</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>,
+        <span class="summary-sig-arg">*flags</span>)</span><br />
+      Remove imap flags from message with UID</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.remove_imapflag">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#set_imapflags" class="summary-sig-name">set_imapflags</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">uid</span>,
+        <span class="summary-sig-arg">flags</span>)</span><br />
+      Set imap flags for message with UID flags must be an iterable of 
+      flags, or a string.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.set_imapflags">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.ImapMailbox.ImapMailbox-class.html#close" class="summary-sig-name">close</a>(<span class="summary-sig-arg">self</span>)</span><br />
+      Flush mailbox, close connection to server</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.close">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="expunge"></a><span class="summary-sig-name">expunge</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Expunge the mailbox (delete all messages marked for deletion)</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.expunge">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__str__</code>
+      </p>
+    <div class="private">    <p class="indent-wrapped-lines"><b>Inherited from <code>mailbox.Mailbox</code></b> (private):
+      <code>_dump_message</code>
+      </p></div>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.ImapMailbox.ImapMailbox-class.html#name" class="summary-name">name</a><br />
+      Name of the mailbox on the server
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.ImapMailbox.ImapMailbox-class.html#server" class="summary-name">server</a><br />
+      Instance of the ImapServer that is being used as a backend
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">path</span>,
+        <span class="sig-arg">factory</span>=<span class="sig-default">&lt;class ProcImap.ImapMessage.ImapMessage at 0x11206c0&gt;</span>,
+        <span class="sig-arg">readonly</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">create</span>=<span class="sig-default">True</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Initialize an ImapMailbox path is a tuple with two elements, 
+  consisting of 1) an instance of ImapServer in any state 2) the name of a 
+  mailbox on the server as a string If the mailbox does not exist, it is 
+  created unless create is set to False, in which case NoSuchMailboxError 
+  is raised. The 'factory' parameter determines to which type the messages 
+  in the mailbox should be converted.</p>
+  <p>Note that two instances of ImapMailbox can never share the same 
+  instance of server. If you try to create an ImapMailbox with an instance 
+  of ImapServer that you already used for another mailbox, a 
+  ServerNotAvailableError will be thrown.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.__init__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="search"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">search</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">criteria</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">ALL</code><code class="variable-quote">'</code></span>,
+        <span class="sig-arg">charset</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.search">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Return a list of all the UIDs in the mailbox (as integers)
+    that match the search criteria. See documentation
+    of imaplib and/or RFC3501 for details.
+    Raise ImapNotOkError if a non-OK response is received from
+    the server or if the response cannot be parsed into a list
+    of integers.
+
+    charset indicates the charset
+    of the strings that appear in the search criteria.
+
+    In all search keys that use strings, a message matches the key if
+    the string is a substring of the field.  The matching is
+    case-insensitive.
+
+    The defined search keys are as follows.  Refer to RFC 3501 for detailed definitions of the
+    arguments.
+
+    &lt;sequence set&gt;
+    ALL
+    ANSWERED
+    BCC &lt;string&gt;
+    BEFORE &lt;date&gt;
+    BODY &lt;string&gt;
+    CC &lt;string&gt;
+    DELETED
+    DRAFT
+    FLAGGED
+    FROM &lt;string&gt;
+    HEADER &lt;field-name&gt; &lt;string&gt;
+    KEYWORD &lt;flag&gt;
+    LARGER &lt;n&gt;
+    NEW
+    NOT &lt;search-key&gt;
+    OLD
+    ON &lt;date&gt;
+    OR &lt;search-key1&gt; &lt;search-key2&gt;
+    RECENT
+    SEEN
+    SENTBEFORE &lt;date&gt;
+    SENTON &lt;date&gt;
+    SENTSINCE &lt;date&gt;
+    SINCE &lt;date&gt;
+    SMALLER &lt;n&gt;
+    SUBJECT &lt;string&gt;
+    TEXT &lt;string&gt;
+    TO &lt;string&gt;
+    UID &lt;sequence set&gt;
+    UNANSWERED
+    UNDELETED
+    UNDRAFT
+    UNFLAGGED
+    UNKEYWORD &lt;flag&gt;
+    UNSEEN
+
+Example:    search('FLAGGED SINCE 1-Feb-1994 NOT FROM &quot;Smith&quot;')
+            search('TEXT &quot;string not in mailbox&quot;')
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_all_uids"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_all_uids</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_all_uids">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Get a list of all the undeleted UIDs in the mailbox (as integers). 
+  Equivalent to search(None, &quot;UNDELETED&quot;)</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="_cache_message"></a>
+<div class="private">
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">_cache_message</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox._cache_message">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Download the RFC822 text of the message with UID and put in in the 
+  cache. Return the RFC822 text of the message. If the message is already 
+  in the cache, it is returned directly. Raise KeyError if there if there 
+  is no message with that UID.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_message"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_message</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_message">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return an ImapMessage object created from the message with UID. Raise 
+  KeyError if there if there is no message with that UID.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.get_message
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__getitem__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__getitem__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>)</span>
+    <br /><em class="fname">(Indexing operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__getitem__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return an ImapMessage object created from the message with UID. Raise 
+  KeyError if there if there is no message with that UID.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.__getitem__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>,
+        <span class="sig-arg">default</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return an ImapMessage object created from the message with UID. Return
+  default if there is no message with that UID.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.get
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_string"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_string</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_string">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return a RFC822 string representation of the message corresponding to 
+  key, or raise a KeyError exception if no such message exists.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.get_string
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_file"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_file</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_file">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return a cStringIO.StringIO of the message corresponding to key, or 
+  raise a KeyError exception if no such message exists.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.get_file
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="has_key"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">has_key</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.has_key">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return True if key corresponds to a message, False otherwise.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.has_key
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__contains__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__contains__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>)</span>
+    <br /><em class="fname">(In operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__contains__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return True if key corresponds to a message, False otherwise.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.__contains__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__len__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__len__</span>(<span class="sig-arg">self</span>)</span>
+    <br /><em class="fname">(Length operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__len__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return a count of messages in the mailbox.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.__len__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="clear"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">clear</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.clear">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Delete all messages from the mailbox and expunge</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.clear
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="pop"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">pop</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>,
+        <span class="sig-arg">default</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.pop">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return a representation of the message corresponding to key, delete 
+  and expunge the message. If no such message exists, return default if it 
+  was supplied (i.e. is not None) or else raise a KeyError exception. The 
+  message is represented as an instance of ImapMessage unless a custom 
+  message factory was specified when the Mailbox instance was 
+  initialized.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.pop
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="popitem"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">popitem</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.popitem">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return an arbitrary (key, message) pair, where key is a key and 
+  message is a message representation, delete and expunge the corresponding
+  message. If the mailbox is empty, raise a KeyError exception. The message
+  is represented as an instance of ImapMessage unless a custom message 
+  factory was specified when the Mailbox instance was initialized.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.popitem
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="update"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">update</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">arg</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.update">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Parameter arg should be a key-to-message mapping or an iterable of 
+  (key, message) pairs. Updates the mailbox so that, for each given key and
+  message, the message corresponding to key is set to message as if by 
+  using __setitem__(). This operation is not supported for IMAP mailboxes 
+  and will raise NotSupportedError</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.update
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="flush"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">flush</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.flush">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Equivalent to expunge()</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.flush
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="lock"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">lock</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.lock">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Do nothing</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.lock
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="unlock"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">unlock</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.unlock">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Do nothing</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.unlock
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_header"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_header</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_header">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return an ImapMessage object containing only the Header of the message
+  with UID. Raise KeyError if there if there is no message with that 
+  UID.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="get_fields"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">get_fields</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>,
+        <span class="sig-arg">fields</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.get_fields">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return an mailbox.Message object containing only the requested header 
+  fields of the message with UID. The fields parameter is a string ofheader
+  fields seperated by spaces, e.g. 'From SUBJECT date' Raise KeyError if 
+  there if there is no message with that UID.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="copy"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">copy</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>,
+        <span class="sig-arg">targetmailbox</span>,
+        <span class="sig-arg">exact</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.copy">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Copy the message with UID to the targetmailbox and try to return the 
+  key that was assigned to the copied message in the targetmailbox.  If 
+  targetmailbox is an ImapMailbox, this is the target-UID. targetmailbox 
+  can be a string (the name of a mailbox on the same imap server), any of 
+  mailbox.Mailbox. Note that not all imap flags will be preserved if the 
+  targetmailbox is not on an ImapMailbox. Copying is efficient (i.e. the 
+  message is not downloaded) if the targetmailbox is on the same server. Do
+  nothing and return None if there if there is no message with that UID. 
+  Unless 'exact' is set to True, the return value will be None if the 
+  targetmailbox is an ImapMailbox. This is because finding out the new UID 
+  of the copied message on an IMAP server is non-trivial. Giving 'exact' as
+  True means that additional work will be done to find the accurate result.
+  This operation can be relatively expensive. If targetmailbox is not an 
+  ImapMailbox, the value of 'exact' is irrelevant, and the return value 
+  will always be accurate.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="move"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">move</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>,
+        <span class="sig-arg">targetmailbox</span>,
+        <span class="sig-arg">exact</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.move">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Copy the message with UID to the targetmailbox, delete it in the 
+  original mailbox, and try to return the key that was assigned to the 
+  copied message in the targetmailbox. The discussions of the copy method 
+  concerning 'targetmailbox' and 'exact' apply here as well. Do nothing and
+  return None if there if there is no message with that UID.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="discard"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">discard</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>,
+        <span class="sig-arg">exact</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.discard">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>If trash folder is defined, move the message with UID to trash and try
+  to return the key assigned to the message in the trash; else, just add 
+  the \Deleted flag to the message with UID and return None. If a trash 
+  folder is defined, this method is equivalent to self.move(uid, 
+  self.trash). The discussions of the move/copy method apply. Do nothing 
+  and return None if there if there is no message with that UID.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.discard
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="remove"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">remove</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>,
+        <span class="sig-arg">exact</span>=<span class="sig-default">False</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.remove">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Discard the message with UID. If there is no message with that UID, 
+  raise a KeyError This is exactly equivalent to self.discard(uid), except 
+  for the KeyError exception.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.remove
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__delitem__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__delitem__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>)</span>
+    <br /><em class="fname">(Index deletion operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__delitem__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Discard the message with UID. If there is no message with that UID, 
+  raise a KeyError</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.__delitem__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__setitem__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__setitem__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>,
+        <span class="sig-arg">message</span>)</span>
+    <br /><em class="fname">(Index assignment operator)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__setitem__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Replace the message corresponding to key with message. This operation 
+  is not supported for IMAP mailboxes and will raise NotSupportedError</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.__setitem__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="iterkeys"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">iterkeys</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.iterkeys">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return an iterator over all UIDs This is an iterator over the list of 
+  UIDs at the time iterkeys() is a called.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.iterkeys
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="keys"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">keys</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.keys">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return a list of all UIDs</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.keys
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="itervalues"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">itervalues</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.itervalues">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return an iterator over all messages. The messages are represented as 
+  instances of ImapMessage unless a custom message factory was specified 
+  when the Mailbox instance was initialized.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.itervalues
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="__iter__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__iter__</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.__iter__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return an iterator over all messages. Identical to itervalues</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.__iter__
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="values"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">values</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.values">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return a list of all messages The messages are represented as 
+  instances of ImapMessage unless a custom message factory was specified 
+  when the Mailbox instance was initialized. Beware that this method can be
+  extremely expensive in terms of time, bandwidth, and memory.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.values
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="iteritems"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">iteritems</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.iteritems">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return an iterator over (uid, message) pairs, where uid is a key and 
+  message is a message representation.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.iteritems
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="items"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">items</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.items">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Return a list (uid, message) pairs, where uid is a key and message is 
+  a message representation. Beware that this method can be extremely 
+  expensive in terms of time, bandwidth, and memory.</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.items
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="add"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">add</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">message</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.add">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Add the message to mailbox. Message can be an instance of 
+  email.Message.Message (including instaces of mailbox.Message and its 
+  subclasses ); or an open file handle or a string containing an RFC822 
+  message. Return the highest UID in the mailbox, which should be, but is 
+  not guaranteed to be, the UID of the message that was added. Raise 
+  ImapNotOkError if a non-OK response is received from the server</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.add
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="set_imapflags"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">set_imapflags</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">uid</span>,
+        <span class="sig-arg">flags</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.set_imapflags">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Set imap flags for message with UID flags must be an iterable of 
+  flags, or a string. If flags is a string, it is taken as the single flag 
+  to be set.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="close"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">close</span>(<span class="sig-arg">self</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.ImapMailbox-pysrc.html#ImapMailbox.close">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>Flush mailbox, close connection to server</p>
+  <dl class="fields">
+    <dt>Overrides:
+        mailbox.Mailbox.close
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== PROPERTY DETAILS ==================== -->
+<a name="section-PropertyDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Property Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-PropertyDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="name"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">name</h3>
+  <p>Name of the mailbox on the server</p>
+  <dl class="fields">
+    <dt>Get Method:</dt>
+    <dd class="value"><span class="summary-sig"><i>unreachable</i>(<span class="summary-sig-arg">self</span>)</span>
+    </dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="server"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">server</h3>
+  <p>Instance of the ImapServer that is being used as a backend</p>
+  <dl class="fields">
+    <dt>Get Method:</dt>
+    <dd class="value"><span class="summary-sig"><i>unreachable</i>(<span class="summary-sig-arg">self</span>)</span>
+    </dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://github.com/goerz/procimap">ProcImap v.2.0</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Fri Aug  6 18:48:54 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

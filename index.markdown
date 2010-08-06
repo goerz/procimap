@@ -1,7 +1,7 @@
 --- 
 layout: default
 title: procimap
-github-url: http://github.com/goerz/Pagetest
+github-url: http://github.com/goerz/procimap
 ---
 
 The ProcImap package provides an API for the IMAP protocol, subclassing from
@@ -54,6 +54,6 @@ If you have run the installation successfully, the ProcImap package will
 be available in Python. Start programming! For examples, look in the
 example directory. Also, have a look at [http://github.com/goerz/gmailbkp][3]
 
-The API is available at ...
+The API is available [here](doc/)
 
 [3]: http://github.com/goerz/gmailbkp

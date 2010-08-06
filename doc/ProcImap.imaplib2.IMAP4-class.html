@@ -1,0 +1,2477 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>ProcImap.imaplib2.IMAP4</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://github.com/goerz/procimap">ProcImap v.2.0</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="ProcImap-module.html">Package&nbsp;ProcImap</a> ::
+        <a href="ProcImap.imaplib2-module.html">Module&nbsp;imaplib2</a> ::
+        Class&nbsp;IMAP4
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="ProcImap.imaplib2.IMAP4-class.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS DESCRIPTION ==================== -->
+<h1 class="epydoc">Class IMAP4</h1><p class="nomargin-top"><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4">source&nbsp;code</a></span></p>
+<pre class="base-tree">
+object --+
+         |
+        <strong class="uidshort">IMAP4</strong>
+</pre>
+
+<dl><dt>Known Subclasses:</dt>
+<dd>
+      <ul class="subclass-list">
+<li><a href="ProcImap.imaplib2.IMAP4_SSL-class.html">IMAP4_SSL</a></li><li class="private">, <a href="ProcImap.imaplib2.IMAP4_stream-class.html" onclick="show_private();">IMAP4_stream</a></li>  </ul>
+</dd></dl>
+
+<hr />
+<pre class="literalblock">
+Threaded IMAP4 client class.
+
+Instantiate with:
+    IMAP4(host=None, port=None, debug=None, debug_file=None)
+
+    host       - host's name (default: localhost);
+    port       - port number (default: standard IMAP4 port);
+    debug      - debug level (default: 0 - no debug);
+    debug_file - debug stream (default: sys.stderr).
+
+All IMAP4rev1 commands are supported by methods of the same name.
+
+Each command returns a tuple: (type, [data, ...]) where 'type'
+is usually 'OK' or 'NO', and 'data' is either the text from the
+tagged response, or untagged results from command. Each 'data' is
+either a string, or a tuple. If a tuple, then the first part is the
+header of the response, and the second part contains the data (ie:
+'literal' value).
+
+Errors raise the exception class &lt;instance&gt;.error(&quot;&lt;reason&gt;&quot;).
+IMAP4 server errors raise &lt;instance&gt;.abort(&quot;&lt;reason&gt;&quot;), which is
+a sub-class of 'error'. Mailbox status changes from READ-WRITE to
+READ-ONLY raise the exception class &lt;instance&gt;.readonly(&quot;&lt;reason&gt;&quot;),
+which is a sub-class of 'abort'.
+
+&quot;error&quot; exceptions imply a program error.
+&quot;abort&quot; exceptions imply the connection should be reset, and
+        the command re-tried.
+&quot;readonly&quot; exceptions imply the command should be re-tried.
+
+All commands take two optional named arguments:
+    'callback' and 'cb_arg'
+If 'callback' is provided then the command is asynchronous, so after
+the command is queued for transmission, the call returns immediately
+with the tuple (None, None).
+The result will be posted by invoking &quot;callback&quot; with one arg, a tuple:
+    callback((result, cb_arg, None))
+or, if there was a problem:
+    callback((None, cb_arg, (exception class, reason)))
+
+Otherwise the command is synchronous (waits for result). But note
+that state-changing commands will both block until previous commands
+have completed, and block subsequent commands until they have finished.
+
+All (non-callback) arguments to commands are converted to strings,
+except for AUTHENTICATE, and the last argument to APPEND which is
+passed as an IMAP4 literal.  If necessary (the string contains any
+non-printing characters or white-space and isn't enclosed with either
+parentheses or double quotes) each string is quoted.  However, the
+'password' argument to the LOGIN command is always quoted.  If you
+want to avoid having an argument string quoted (eg: the 'flags'
+argument to STORE) then enclose the string in parentheses (eg:
+&quot;(\Deleted)&quot;).
+
+There is one instance variable, 'state', that is useful for tracking
+whether the client needs to login to the server. If it has the
+value &quot;AUTH&quot; after instantiating the class, then the connection
+is pre-authenticated (otherwise it will be &quot;NONAUTH&quot;). Selecting a
+mailbox changes the state to be &quot;SELECTED&quot;, closing a mailbox changes
+back to &quot;AUTH&quot;, and once the client has logged out, the state changes
+to &quot;LOGOUT&quot; and no further commands may be issued.
+
+Note: to use this module, you must read the RFCs pertaining to the
+IMAP4 protocol, as the semantics of the arguments to each IMAP4
+command are left to the invoker, not to mention the results. Also,
+most IMAP servers implement a sub-set of the commands available here.
+
+Note also that you must call logout() to shut down threads before
+discarding an instance.
+
+</pre>
+
+<!-- ==================== NESTED CLASSES ==================== -->
+<a name="section-NestedClasses"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Nested Classes</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-NestedClasses"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2.IMAP4.error-class.html" class="summary-name">error</a>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2.IMAP4.abort-class.html" class="summary-name">abort</a>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2.IMAP4.readonly-class.html" class="summary-name">readonly</a>
+    </td>
+  </tr>
+</table>
+<!-- ==================== INSTANCE METHODS ==================== -->
+<a name="section-InstanceMethods"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Instance Methods</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-InstanceMethods"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#__init__" class="summary-sig-name">__init__</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">host</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">port</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">debug</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">debug_file</span>=<span class="summary-sig-default">None</span>)</span><br />
+      x.__init__(...) initializes x; see x.__class__.__doc__ for signature</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.__init__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="__getattr__"></a><span class="summary-sig-name">__getattr__</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">attr</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.__getattr__">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#open" class="summary-sig-name">open</a>(<span class="summary-sig-arg">host</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">port</span>=<span class="summary-sig-default">None</span>)</span><br />
+      Setup connection to remote server on &quot;host:port&quot;
+    (default: localhost:standard IMAP4 port).</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.open">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="open_socket"></a><span class="summary-sig-name">open_socket</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      Open socket choosing first address family available.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.open_socket">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="read"></a><span class="summary-sig-name">read</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">size</span>)</span><br />
+      data = read(size) Read at most 'size' bytes from remote.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.read">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="send"></a><span class="summary-sig-name">send</span>(<span class="summary-sig-arg">data</span>)</span><br />
+      Send 'data' to remote.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.send">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="shutdown"></a><span class="summary-sig-name">shutdown</span>()</span><br />
+      Close I/O established in &quot;open&quot;.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.shutdown">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="socket"></a><span class="summary-sig-name">socket</span>(<span class="summary-sig-arg">self</span>)</span><br />
+      socket = socket() Return socket instance used to connect to IMAP4 
+      server.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.socket">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#recent" class="summary-sig-name">recent</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = recent() Return most recent 'RECENT' responses if any
+      exist, else prompt server for an update using the 'NOOP' command.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.recent">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#response" class="summary-sig-name">response</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">code</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (code, [data]) = response(code) Return data for response 'code' if 
+      received, or None.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.response">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#append" class="summary-sig-name">append</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>,
+        <span class="summary-sig-arg">flags</span>,
+        <span class="summary-sig-arg">date_time</span>,
+        <span class="summary-sig-arg">message</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = append(mailbox, flags, date_time, message) Append 
+      message to named mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.append">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#authenticate" class="summary-sig-name">authenticate</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mechanism</span>,
+        <span class="summary-sig-arg">authobject</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = authenticate(mechanism, authobject)
+Authenticate command - requires response processing.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.authenticate">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="capability"></a><span class="summary-sig-name">capability</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = capability() Fetch capabilities list from server.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.capability">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="check"></a><span class="summary-sig-name">check</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = check() Checkpoint mailbox on server.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.check">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#close" class="summary-sig-name">close</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = close() Close currently selected mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.close">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="copy"></a><span class="summary-sig-name">copy</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">message_set</span>,
+        <span class="summary-sig-arg">new_mailbox</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = copy(message_set, new_mailbox) Copy 'message_set' 
+      messages onto end of 'new_mailbox'.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.copy">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="create"></a><span class="summary-sig-name">create</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = create(mailbox) Create new mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.create">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="delete"></a><span class="summary-sig-name">delete</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = delete(mailbox) Delete old mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.delete">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="deleteacl"></a><span class="summary-sig-name">deleteacl</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>,
+        <span class="summary-sig-arg">who</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = deleteacl(mailbox, who) Delete the ACLs (remove any 
+      rights) set for who on mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.deleteacl">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#examine" class="summary-sig-name">examine</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">INBOX</code><code class="variable-quote">'</code></span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = examine(mailbox='INBOX', readonly=False) Select a 
+      mailbox for READ-ONLY access.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.examine">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#expunge" class="summary-sig-name">expunge</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = expunge() Permanently remove deleted items from 
+      selected mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.expunge">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#fetch" class="summary-sig-name">fetch</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">message_set</span>,
+        <span class="summary-sig-arg">message_parts</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data, ...]) = fetch(message_set, message_parts) Fetch (parts 
+      of) messages.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.fetch">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="getacl"></a><span class="summary-sig-name">getacl</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = getacl(mailbox) Get the ACLs for a mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.getacl">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="getannotation"></a><span class="summary-sig-name">getannotation</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>,
+        <span class="summary-sig-arg">entry</span>,
+        <span class="summary-sig-arg">attribute</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = getannotation(mailbox, entry, attribute) Retrieve 
+      ANNOTATIONs.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.getannotation">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#getquota" class="summary-sig-name">getquota</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">root</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = getquota(root) Get the quota root's resource usage 
+      and limits.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.getquota">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="getquotaroot"></a><span class="summary-sig-name">getquotaroot</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [[QUOTAROOT responses...], [QUOTA responses...]]) = 
+      getquotaroot(mailbox) Get the list of quota roots for the named 
+      mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.getquotaroot">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="idle"></a><span class="summary-sig-name">idle</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">timeout</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      &quot;(typ, [data]) = idle(timeout=None) Put server into IDLE mode 
+      until server notifies some change, or 'timeout' (secs) occurs 
+      (default: 29 minutes), or another IMAP4 command is scheduled.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.idle">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#list" class="summary-sig-name">list</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">directory</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">&quot;&quot;</code><code class="variable-quote">'</code></span>,
+        <span class="summary-sig-arg">pattern</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">*</code><code class="variable-quote">'</code></span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = list(directory='&quot;&quot;', pattern='*') List 
+      mailbox names in directory matching pattern.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.list">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#login" class="summary-sig-name">login</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">user</span>,
+        <span class="summary-sig-arg">password</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = login(user, password) Identify client using plaintext
+      password.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.login">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="login_cram_md5"></a><span class="summary-sig-name">login_cram_md5</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">user</span>,
+        <span class="summary-sig-arg">password</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = login_cram_md5(user, password) Force use of CRAM-MD5 
+      authentication.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.login_cram_md5">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_CRAM_MD5_AUTH"></a><span class="summary-sig-name">_CRAM_MD5_AUTH</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">challenge</span>)</span><br />
+      Authobject to use with CRAM-MD5 authentication.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._CRAM_MD5_AUTH">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#logout" class="summary-sig-name">logout</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = logout() Shutdown connection to server.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.logout">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#lsub" class="summary-sig-name">lsub</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">directory</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">&quot;&quot;</code><code class="variable-quote">'</code></span>,
+        <span class="summary-sig-arg">pattern</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">*</code><code class="variable-quote">'</code></span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data, ...]) = lsub(directory='&quot;&quot;', pattern='*') List
+      'subscribed' mailbox names in directory matching pattern.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.lsub">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#myrights" class="summary-sig-name">myrights</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>)</span><br />
+      (typ, [data]) = myrights(mailbox) Show my ACLs for a mailbox (i.e.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.myrights">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="namespace"></a><span class="summary-sig-name">namespace</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data, ...]) = namespace() Returns IMAP namespaces ala rfc2342.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.namespace">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="noop"></a><span class="summary-sig-name">noop</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = noop() Send NOOP command.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.noop">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#partial" class="summary-sig-name">partial</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">message_num</span>,
+        <span class="summary-sig-arg">message_part</span>,
+        <span class="summary-sig-arg">start</span>,
+        <span class="summary-sig-arg">length</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data, ...]) = partial(message_num, message_part, start, 
+      length) Fetch truncated part of a message.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.partial">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#proxyauth" class="summary-sig-name">proxyauth</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">user</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = proxyauth(user) Assume authentication as 'user'.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.proxyauth">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="rename"></a><span class="summary-sig-name">rename</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">oldmailbox</span>,
+        <span class="summary-sig-arg">newmailbox</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = rename(oldmailbox, newmailbox) Rename old mailbox 
+      name to new.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.rename">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#search" class="summary-sig-name">search</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">charset</span>,
+        <span class="summary-sig-arg">*criteria</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = search(charset, criterion, ...) Search mailbox for 
+      matching messages.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.search">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#select" class="summary-sig-name">select</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>=<span class="summary-sig-default"><code class="variable-quote">'</code><code class="variable-string">INBOX</code><code class="variable-quote">'</code></span>,
+        <span class="summary-sig-arg">readonly</span>=<span class="summary-sig-default">False</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = select(mailbox='INBOX', readonly=False) Select a 
+      mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.select">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="setacl"></a><span class="summary-sig-name">setacl</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>,
+        <span class="summary-sig-arg">who</span>,
+        <span class="summary-sig-arg">what</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = setacl(mailbox, who, what) Set a mailbox acl.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.setacl">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="setannotation"></a><span class="summary-sig-name">setannotation</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">*args</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = setannotation(mailbox[, entry, attribute]+) Set 
+      ANNOTATIONs.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.setannotation">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="setquota"></a><span class="summary-sig-name">setquota</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">root</span>,
+        <span class="summary-sig-arg">limits</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = setquota(root, limits) Set the quota root's resource 
+      limits.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.setquota">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="sort"></a><span class="summary-sig-name">sort</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">sort_criteria</span>,
+        <span class="summary-sig-arg">charset</span>,
+        <span class="summary-sig-arg">*search_criteria</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = sort(sort_criteria, charset, search_criteria, ...) 
+      IMAP4rev1 extension SORT command.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.sort">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="status"></a><span class="summary-sig-name">status</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>,
+        <span class="summary-sig-arg">names</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = status(mailbox, names) Request named status 
+      conditions for mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.status">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="store"></a><span class="summary-sig-name">store</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">message_set</span>,
+        <span class="summary-sig-arg">command</span>,
+        <span class="summary-sig-arg">flags</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = store(message_set, command, flags) Alters flag 
+      dispositions for messages in mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.store">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="subscribe"></a><span class="summary-sig-name">subscribe</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = subscribe(mailbox) Subscribe to new mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.subscribe">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="thread"></a><span class="summary-sig-name">thread</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">threading_algorithm</span>,
+        <span class="summary-sig-arg">charset</span>,
+        <span class="summary-sig-arg">*search_criteria</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (type, [data]) = thread(threading_alogrithm, charset, 
+      search_criteria, ...) IMAPrev1 extension THREAD command.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.thread">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#uid" class="summary-sig-name">uid</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">command</span>,
+        <span class="summary-sig-arg">*args</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = uid(command, arg, ...)
+Execute &quot;command arg ...&quot; with messages identified by UID,
+    rather than message number.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.uid">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="unsubscribe"></a><span class="summary-sig-name">unsubscribe</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">mailbox</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = unsubscribe(mailbox) Unsubscribe from old mailbox.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.unsubscribe">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a href="ProcImap.imaplib2.IMAP4-class.html#xatom" class="summary-sig-name">xatom</a>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>,
+        <span class="summary-sig-arg">*args</span>,
+        <span class="summary-sig-arg">**kw</span>)</span><br />
+      (typ, [data]) = xatom(name, arg, ...) Allow simple extension commands
+      notified by server in CAPABILITY response.</td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.xatom">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_append_untagged"></a><span class="summary-sig-name">_append_untagged</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">typ</span>,
+        <span class="summary-sig-arg">dat</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._append_untagged">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_check_bye"></a><span class="summary-sig-name">_check_bye</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._check_bye">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_checkquote"></a><span class="summary-sig-name">_checkquote</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">arg</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._checkquote">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_command"></a><span class="summary-sig-name">_command</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>,
+        <span class="summary-sig-arg">*args</span>,
+        <span class="summary-sig-arg">**kw</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._command">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_command_complete"></a><span class="summary-sig-name">_command_complete</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">rqb</span>,
+        <span class="summary-sig-arg">kw</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._command_complete">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_command_completer"></a><span class="summary-sig-name">_command_completer</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">(response, cb_arg, error)</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._command_completer">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_deliver_dat"></a><span class="summary-sig-name">_deliver_dat</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">typ</span>,
+        <span class="summary-sig-arg">dat</span>,
+        <span class="summary-sig-arg">kw</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._deliver_dat">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_deliver_exc"></a><span class="summary-sig-name">_deliver_exc</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">exc</span>,
+        <span class="summary-sig-arg">dat</span>,
+        <span class="summary-sig-arg">kw</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._deliver_exc">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_end_idle"></a><span class="summary-sig-name">_end_idle</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._end_idle">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_match"></a><span class="summary-sig-name">_match</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">cre</span>,
+        <span class="summary-sig-arg">s</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._match">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_put_response"></a><span class="summary-sig-name">_put_response</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">resp</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._put_response">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_quote"></a><span class="summary-sig-name">_quote</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">arg</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._quote">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_request_pop"></a><span class="summary-sig-name">_request_pop</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>,
+        <span class="summary-sig-arg">data</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._request_pop">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_request_push"></a><span class="summary-sig-name">_request_push</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">tag</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">name</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">**kw</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._request_push">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_simple_command"></a><span class="summary-sig-name">_simple_command</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">name</span>,
+        <span class="summary-sig-arg">*args</span>,
+        <span class="summary-sig-arg">**kw</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._simple_command">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_untagged_response"></a><span class="summary-sig-name">_untagged_response</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">typ</span>,
+        <span class="summary-sig-arg">dat</span>,
+        <span class="summary-sig-arg">name</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._untagged_response">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_close_threads"></a><span class="summary-sig-name">_close_threads</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._close_threads">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_handler"></a><span class="summary-sig-name">_handler</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._handler">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_reader"></a><span class="summary-sig-name">_reader</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._reader">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_writer"></a><span class="summary-sig-name">_writer</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._writer">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_init_debug"></a><span class="summary-sig-name">_init_debug</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">debug</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">debug_file</span>=<span class="summary-sig-default">None</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._init_debug">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_dump_ur"></a><span class="summary-sig-name">_dump_ur</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">lvl</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._dump_ur">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_log"></a><span class="summary-sig-name">_log</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">lvl</span>,
+        <span class="summary-sig-arg">line</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._log">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_mesg"></a><span class="summary-sig-name">_mesg</span>(<span class="summary-sig-arg">self</span>,
+        <span class="summary-sig-arg">s</span>,
+        <span class="summary-sig-arg">tn</span>=<span class="summary-sig-default">None</span>,
+        <span class="summary-sig-arg">secs</span>=<span class="summary-sig-default">None</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._mesg">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+<tr class="private">
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+      <table width="100%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td><span class="summary-sig"><a name="_print_log"></a><span class="summary-sig-name">_print_log</span>(<span class="summary-sig-arg">self</span>)</span></td>
+          <td align="right" valign="top">
+            <span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4._print_log">source&nbsp;code</a></span>
+            
+          </td>
+        </tr>
+      </table>
+      
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__delattr__</code>,
+      <code>__getattribute__</code>,
+      <code>__hash__</code>,
+      <code>__new__</code>,
+      <code>__reduce__</code>,
+      <code>__reduce_ex__</code>,
+      <code>__repr__</code>,
+      <code>__setattr__</code>,
+      <code>__str__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== CLASS VARIABLES ==================== -->
+<a name="section-ClassVariables"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variables</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariables"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="continuation_cre"></a><span class="summary-name">continuation_cre</span> = <code title="re.compile(r'\+( (?P&lt;data&gt;.*))?')">re.compile(r'\+<code class="re-group">(</code> <code class="re-group">(?P&lt;</code><code class="re-ref">data</code><code class="re-group">&gt;</code>.<code class="re-op">*</code><code class="re-group">)</code><code class="re-group">)</code><code class="re-op">?</code>')</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="literal_cre"></a><span class="summary-name">literal_cre</span> = <code title="re.compile(r'.*\{(?P&lt;size&gt;\d+)\}$')">re.compile(r'.<code class="re-op">*</code>\{<code class="re-group">(?P&lt;</code><code class="re-ref">size</code><code class="re-group">&gt;</code>\d<code class="re-op">+</code><code class="re-group">)</code>\}$')</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="mapCRLF_cre"></a><span class="summary-name">mapCRLF_cre</span> = <code title="re.compile(r'\r\n|\r|\n')">re.compile(r'\r\n<code class="re-op">|</code>\r<code class="re-op">|</code>\n')</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a name="mustquote_cre"></a><span class="summary-name">mustquote_cre</span> = <code title="re.compile(r'[^\w!#\$%&amp;\'\*\+,\.:;&lt;=&gt;\?\^`\|~-]')">re.compile(r'<code class="re-group">[</code><code class="re-op">^</code>\w!#\$%&amp;\'\*\+,\.:;&lt;=&gt;\?\^`\|~-<code class="re-group">]</code>')</code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2.IMAP4-class.html#response_code_cre" class="summary-name">response_code_cre</a> = <code title="re.compile(r'\[(?P&lt;type&gt;[A-Z-]+)( (?P&lt;data&gt;[^\]]*))?\]')">re.compile(r'\[<code class="re-group">(?P&lt;</code><code class="re-ref">type</code><code class="re-group">&gt;</code><code class="re-group">[</code>A<code class="re-op">-</code>Z-<code class="re-group">]</code><code class="re-op">+</code><code class="re-group">)</code><code class="re-group">(</code> <code class="re-group">(?P&lt;</code><code class="re-ref">data</code><code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2.IMAP4-class.html#untagged_response_cre" class="summary-name">untagged_response_cre</a> = <code title="re.compile(r'\* (?P&lt;type&gt;[A-Z-]+)( (?P&lt;data&gt;.*))?')">re.compile(r'\* <code class="re-group">(?P&lt;</code><code class="re-ref">type</code><code class="re-group">&gt;</code><code class="re-group">[</code>A<code class="re-op">-</code>Z-<code class="re-group">]</code><code class="re-op">+</code><code class="re-group">)</code><code class="re-group">(</code> <code class="re-group">(?P</code><code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+<tr>
+    <td width="15%" align="right" valign="top" class="summary">
+      <span class="summary-type">&nbsp;</span>
+    </td><td class="summary">
+        <a href="ProcImap.imaplib2.IMAP4-class.html#untagged_status_cre" class="summary-name">untagged_status_cre</a> = <code title="re.compile(r'\* (?P&lt;data&gt;\d+) (?P&lt;type&gt;[A-Z-]+)( (?P&lt;data2&gt;.*))?')">re.compile(r'\* <code class="re-group">(?P&lt;</code><code class="re-ref">data</code><code class="re-group">&gt;</code>\d<code class="re-op">+</code><code class="re-group">)</code> <code class="re-group">(?P&lt;</code><code class="re-ref">type</code><code class="re-group">&gt;</code><code class="re-group">[</code><code class="variable-ellipsis">...</code></code>
+    </td>
+  </tr>
+</table>
+<!-- ==================== PROPERTIES ==================== -->
+<a name="section-Properties"></a>
+<table class="summary" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Properties</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-Properties"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+  <tr>
+    <td colspan="2" class="summary">
+    <p class="indent-wrapped-lines"><b>Inherited from <code>object</code></b>:
+      <code>__class__</code>
+      </p>
+    </td>
+  </tr>
+</table>
+<!-- ==================== METHOD DETAILS ==================== -->
+<a name="section-MethodDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Method Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-MethodDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="__init__"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">__init__</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">host</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">port</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">debug</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">debug_file</span>=<span class="sig-default">None</span>)</span>
+    <br /><em class="fname">(Constructor)</em>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.__init__">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>x.__init__(...) initializes x; see x.__class__.__doc__ for 
+  signature</p>
+  <dl class="fields">
+    <dt>Overrides:
+        object.__init__
+        <dd><em class="note">(inherited documentation)</em></dd>
+    </dt>
+  </dl>
+</td></tr></table>
+</div>
+<a name="open"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">open</span>(<span class="sig-arg">host</span>=<span class="sig-default">None</span>,
+        <span class="sig-arg">port</span>=<span class="sig-default">None</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.open">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+Setup connection to remote server on &quot;host:port&quot;
+    (default: localhost:standard IMAP4 port).
+This connection will be used by the routines:
+    read, send, shutdown, socket.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="recent"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">recent</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.recent">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = recent() Return most recent 'RECENT' responses if any 
+  exist, else prompt server for an update using the 'NOOP' command. 'data' 
+  is None if no new messages, else list of RECENT responses, most recent 
+  last.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="response"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">response</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">code</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.response">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(code, [data]) = response(code) Return data for response 'code' if 
+  received, or None. Old value for response 'code' is cleared.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="append"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">append</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">mailbox</span>,
+        <span class="sig-arg">flags</span>,
+        <span class="sig-arg">date_time</span>,
+        <span class="sig-arg">message</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.append">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = append(mailbox, flags, date_time, message) Append 
+  message to named mailbox. All args except `message' can be None.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="authenticate"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">authenticate</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">mechanism</span>,
+        <span class="sig-arg">authobject</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.authenticate">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+(typ, [data]) = authenticate(mechanism, authobject)
+Authenticate command - requires response processing.
+
+'mechanism' specifies which authentication mechanism is to
+be used - it must appear in &lt;instance&gt;.capabilities in the
+form AUTH=&lt;mechanism&gt;.
+
+'authobject' must be a callable object:
+
+        data = authobject(response)
+
+It will be called to process server continuation responses.
+It should return data that will be encoded and sent to server.
+It should return None if the client abort response '*' should
+be sent instead.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="close"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">close</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.close">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = close() Close currently selected mailbox.</p>
+  <p>Deleted messages are removed from writable mailbox. This is the 
+  recommended command before 'LOGOUT'.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="examine"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">examine</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">mailbox</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">INBOX</code><code class="variable-quote">'</code></span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.examine">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = examine(mailbox='INBOX', readonly=False) Select a 
+  mailbox for READ-ONLY access. (Flushes all untagged responses.) 'data' is
+  count of messages in mailbox ('EXISTS' response). Mandated responses are 
+  ('FLAGS', 'EXISTS', 'RECENT', 'UIDVALIDITY'), so other responses should 
+  be obtained via &quot;response('FLAGS')&quot; etc.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="expunge"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">expunge</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.expunge">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = expunge() Permanently remove deleted items from 
+  selected mailbox. Generates 'EXPUNGE' response for each deleted message. 
+  'data' is list of 'EXPUNGE'd message numbers in order received.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="fetch"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">fetch</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">message_set</span>,
+        <span class="sig-arg">message_parts</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.fetch">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data, ...]) = fetch(message_set, message_parts) Fetch (parts 
+  of) messages. 'message_parts' should be a string of selected parts 
+  enclosed in parentheses, eg: &quot;(UID BODY[TEXT])&quot;. 'data' are 
+  tuples of message part envelope and data, followed by a string containing
+  the trailer.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="getquota"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">getquota</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">root</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.getquota">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = getquota(root) Get the quota root's resource usage and
+  limits. (Part of the IMAP4 QUOTA extension defined in rfc2087.)</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="list"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">list</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">directory</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">&quot;&quot;</code><code class="variable-quote">'</code></span>,
+        <span class="sig-arg">pattern</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">*</code><code class="variable-quote">'</code></span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.list">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = list(directory='&quot;&quot;', pattern='*') List 
+  mailbox names in directory matching pattern. 'data' is list of LIST 
+  responses.</p>
+  <p>NB: for 'pattern': % matches all except separator ( so LIST 
+  &quot;&quot; &quot;%&quot; returns names at root) * matches all (so LIST 
+  &quot;&quot; &quot;*&quot; returns whole directory tree from root)</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="login"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">login</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">user</span>,
+        <span class="sig-arg">password</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.login">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = login(user, password) Identify client using plaintext 
+  password. NB: 'password' will be quoted.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="logout"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">logout</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.logout">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = logout() Shutdown connection to server. Returns server
+  'BYE' response.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="lsub"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">lsub</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">directory</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">&quot;&quot;</code><code class="variable-quote">'</code></span>,
+        <span class="sig-arg">pattern</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">*</code><code class="variable-quote">'</code></span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.lsub">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data, ...]) = lsub(directory='&quot;&quot;', pattern='*') List 
+  'subscribed' mailbox names in directory matching pattern. 'data' are 
+  tuples of message part envelope and data.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="myrights"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">myrights</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">mailbox</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.myrights">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = myrights(mailbox) Show my ACLs for a mailbox (i.e. the
+  rights that I have on mailbox).</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="partial"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">partial</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">message_num</span>,
+        <span class="sig-arg">message_part</span>,
+        <span class="sig-arg">start</span>,
+        <span class="sig-arg">length</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.partial">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data, ...]) = partial(message_num, message_part, start, length)
+  Fetch truncated part of a message. 'data' is tuple of message part 
+  envelope and data. NB: obsolete.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="proxyauth"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">proxyauth</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">user</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.proxyauth">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = proxyauth(user) Assume authentication as 'user'. 
+  (Allows an authorised administrator to proxy into any user's 
+  mailbox.)</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="search"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">search</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">charset</span>,
+        <span class="sig-arg">*criteria</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.search">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = search(charset, criterion, ...) Search mailbox for 
+  matching messages. 'data' is space separated list of matching message 
+  numbers.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="select"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">select</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">mailbox</span>=<span class="sig-default"><code class="variable-quote">'</code><code class="variable-string">INBOX</code><code class="variable-quote">'</code></span>,
+        <span class="sig-arg">readonly</span>=<span class="sig-default">False</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.select">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = select(mailbox='INBOX', readonly=False) Select a 
+  mailbox. (Flushes all untagged responses.) 'data' is count of messages in
+  mailbox ('EXISTS' response). Mandated responses are ('FLAGS', 'EXISTS', 
+  'RECENT', 'UIDVALIDITY'), so other responses should be obtained via 
+  &quot;response('FLAGS')&quot; etc.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="uid"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">uid</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">command</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.uid">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <pre class="literalblock">
+(typ, [data]) = uid(command, arg, ...)
+Execute &quot;command arg ...&quot; with messages identified by UID,
+    rather than message number.
+Returns response appropriate to 'command'.
+
+</pre>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<a name="xatom"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr valign="top"><td>
+  <h3 class="epydoc"><span class="sig"><span class="sig-name">xatom</span>(<span class="sig-arg">self</span>,
+        <span class="sig-arg">name</span>,
+        <span class="sig-arg">*args</span>,
+        <span class="sig-arg">**kw</span>)</span>
+  </h3>
+  </td><td align="right" valign="top"
+    ><span class="codelink"><a href="ProcImap.imaplib2-pysrc.html#IMAP4.xatom">source&nbsp;code</a></span>&nbsp;
+    </td>
+  </tr></table>
+  
+  <p>(typ, [data]) = xatom(name, arg, ...) Allow simple extension commands 
+  notified by server in CAPABILITY response. Assumes extension command 
+  'name' is legal in current state. Returns response appropriate to 
+  extension command 'name'.</p>
+  <dl class="fields">
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== CLASS VARIABLE DETAILS ==================== -->
+<a name="section-ClassVariableDetails"></a>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr bgcolor="#70b0f0" class="table-header">
+  <td colspan="2" class="table-header">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+      <tr valign="top">
+        <td align="left"><span class="table-header">Class Variable Details</span></td>
+        <td align="right" valign="top"
+         ><span class="options">[<a href="#section-ClassVariableDetails"
+         class="privatelink" onclick="toggle_private();"
+         >hide private</a>]</span></td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>
+<a name="response_code_cre"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">response_code_cre</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+re.compile(r'\[<code class="re-group">(?P&lt;</code><code class="re-ref">type</code><code class="re-group">&gt;</code><code class="re-group">[</code>A<code class="re-op">-</code>Z-<code class="re-group">]</code><code class="re-op">+</code><code class="re-group">)</code><code class="re-group">(</code> <code class="re-group">(?P&lt;</code><code class="re-ref">data</code><code class="re-group">&gt;</code><code class="re-group">[^</code>\]<code class="re-group">]</code><code class="re-op">*</code><code class="re-group">)</code><code class="re-group">)</code><code class="re-op">?</code>\]')
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="untagged_response_cre"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">untagged_response_cre</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+re.compile(r'\* <code class="re-group">(?P&lt;</code><code class="re-ref">type</code><code class="re-group">&gt;</code><code class="re-group">[</code>A<code class="re-op">-</code>Z-<code class="re-group">]</code><code class="re-op">+</code><code class="re-group">)</code><code class="re-group">(</code> <code class="re-group">(?P&lt;</code><code class="re-ref">data</code><code class="re-group">&gt;</code>.<code class="re-op">*</code><code class="re-group">)</code><code class="re-group">)</code><code class="re-op">?</code>')
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<a name="untagged_status_cre"></a>
+<div>
+<table class="details" border="1" cellpadding="3"
+       cellspacing="0" width="100%" bgcolor="white">
+<tr><td>
+  <h3 class="epydoc">untagged_status_cre</h3>
+  
+  <dl class="fields">
+  </dl>
+  <dl class="fields">
+    <dt>Value:</dt>
+      <dd><table><tr><td><pre class="variable">
+re.compile(r'\* <code class="re-group">(?P&lt;</code><code class="re-ref">data</code><code class="re-group">&gt;</code>\d<code class="re-op">+</code><code class="re-group">)</code> <code class="re-group">(?P&lt;</code><code class="re-ref">type</code><code class="re-group">&gt;</code><code class="re-group">[</code>A<code class="re-op">-</code>Z-<code class="re-group">]</code><code class="re-op">+</code><code class="re-group">)</code><code class="re-group">(</code> <code class="re-group">(?P&lt;</code><code class="re-ref">data2</code><code class="re-group">&gt;</code>.<code class="re-op">*</code><code class="re-group">)</code><code class="re-group">)</code><code class="re-op">?</code>')
+</pre></td></tr></table>
+</dd>
+  </dl>
+</td></tr></table>
+</div>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="ProcImap-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Project homepage -->
+      <th class="navbar" align="right" width="100%">
+        <table border="0" cellpadding="0" cellspacing="0">
+          <tr><th class="navbar" align="center"
+            ><a class="navbar" target="_top" href="http://github.com/goerz/procimap">ProcImap v.2.0</a></th>
+          </tr></table></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Fri Aug  6 18:48:54 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
