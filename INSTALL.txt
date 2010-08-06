@@ -6,7 +6,7 @@ If you are on Windows, you might want to set
 DEFAULT_PAGER = 'more' in ProcImap/ImapMailbox.py, and
 STANDARD_IMAPLIB = True in ProcImap/ImapServer.py
 
-Make sure that you have a working python environment. Preferrably, get
+Make sure that you have a working python environment. Preferably, get
 Python from www.python.org. The Enthought Edition of Python on Windows
 is broken! At least last time I tried it.
 
@@ -22,5 +22,4 @@ Usage
 =====
 If you have run the installation successfuly, the ProcImap package will
 be available in Python. Start programming! For examples, look in the
-example directory. If you want to run this as a replacement for procmail,
-have a look at examples/process_emails.py.
+example directory. Also, have a look at http://github.com/goerz/gmailbkp

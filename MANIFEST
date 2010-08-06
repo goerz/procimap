@@ -5,8 +5,6 @@ examples/decrypt_mailbox.py
 examples/eml_decrypt.pl
 examples/mailboxes.cfg
 examples/mbox2imap.py
-examples/processed_flag.py
-examples/process_emails.py
 examples/readimap.py
 examples/restore_mailbox.py
 INSTALL.txt
@@ -17,7 +15,7 @@ ProcImap/ImapServer.py
 ProcImap/__init__.py
 ProcImap/Utils/
 ProcImap/Utils/__init__.py
-ProcImap/Utils/Gmail.py
+ProcImap/Utils/CLI.py
 ProcImap/Utils/MailboxFactory.py
 ProcImap/Utils/Processing.py
 ProcImap/Utils/Server.py

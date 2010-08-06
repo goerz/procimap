@@ -7,7 +7,7 @@ setup(name='ProcImap',
       description='Python IMAP Library and Mail Processing Utility',
       author='Michael Goerz',
       author_email='goerz@physik.fu-berlin.de',
-      url='http://code.google.com/p/procimap/',
+      url='http://github.com/goerz/procimap',
       license='GPL',
       packages=['ProcImap', 'ProcImap.Utils']
      )
