@@ -1,80 +1,38 @@
 """ 
-The ProcImap package fulfills two purposes: 
+The ProcImap package provides an API for the IMAP protocol, subclassing from
+the "mailbox" and "email" packages provided by the Python standard library.
 
-a) provide a reasonably simple framework for writing filters on an IMAP
-   Mailbox, inspired by procmail recipes
+This allows to handle messages stored in an IMAP mailbox in much the same way
+as e.g. messages stored in an mbox or maildir format (with some limitations).
+This abstract interface is  much nicer than having to work with the standard
+library's imaplib module, which is only a very thin wrapper around the IMAP
+protocol itself.
 
-b) provide a nice object oriented interface to IMAP accounts that integrates
-   well with the standard library
+In addition, ProcImap contains a number of "utility" functions and classes,
+targeted for automatic processing/filtering of email messages, interactive work
+on an an IMAP server from inside ipython, and writing consistent command line
+tools operating on IMAP mailboxes.
 
-Traditionally, many people have used procmail (http://www.procmail.org) to
-organize their emails. They pull their email in from one or more POP servers
-(or receive it directly on their machine) and then filter the incoming mail
-through a series of procmail "recipes". The procmail recipes can deliver the
-mail to arbitrary mail folders (based on header data), put it through a spam
-filter (e.g. spamassassin), modify the message (e.g. fix and empty subject
-line), separate attachments, or pretty much anything else imaginable.
+The original intent of the ProcImap package was to provide a framework inspired
+by the traditional procmail (http://www.procmail.org) tool, allowing to filter
+and organize incoming email messages (hence the name). However, in the course
+of development the focus has shifted to creating an abstract API for working
+with IMAP messages, while processing incoming mail has become of secondary
+interest. 
 
-More recently, access to email over IMAP servers has become rather common and
-convenient. IMAP has the huge benefit of allowing people to keep their email on
-a central server and access it from everywhere with multiple clients. However,
-in many cases, users don't have the ability to use procmail together with an
-IMAP server.  In some cases, there are other means of filtering incoming
-messages. For example, Google's popular GMail service allows users to define
-some filters. These solutions generally don't have the full power of procmail;
-it is usually not possible to modify messages.
+Nonetheless, you can easily use ProcImap to assist in writing simple scripts
+that process incoming mails on your standard IMAP server. You should be advised
+however that many of the techniques that work fine on a standard IMAP mailbox
+do not work so well when trying to apply them to a Gmail account. While
+technically Gmail fulfills all specifications of the IMAP protocol, the
+philosophy behind the system is rather incompatible (look for my "Accessing
+Gmail through Python" blog post at michaelgoerz.net). Since Gmail is my primary
+email provider, this explains the shift of focus in the direction of
+development.
 
-To fill this gap, I decided to write a python framework that would make it easy
-to have "recipes" for incoming mail messages. The idea is to have an IMAP
-client that logs into the server and continuously monitors the INBOX for new
-messages. These are then run through a series of recipes, and may be moved to
-different mailboxes (on the same server or not), or be changed (i.e. replaced
-by a modified version)
-
-This framework is provided by the ProcImap module. In ProcImap.ProcImap you
-will find the AbstractProcImap class. To write filters for your IMAP inbox, you
-have to subclass from this abstract class and fill it with "recipes". Calling
-the 'run'-method of your derived class will then start to monitor and filter
-your IMAP account. For details, see the documentation of the ProcImap.ProcImap
-package.  
-
-While writing the ProcImap.ProcImap class, I felt that python's IMAP interface
-was rather weak, providing only the imaplib module, which is basically just a
-low level wrapper around the IMAP protocol. Specifically, IMAP was not integrated
-in the 'mailbox' and 'email' packages of the standard library.
-
-[...]
-
-To summarize, the ProcImap package has the following structure:
-
-First, for the part that allows you to write filters:
-- The ProcImap module, which provides an abstract class from which you can
-  derive to write you own filters
-- The Utils module, which contains some classes and functions that I
-  thought were helpful in the context of writing filters. For example there
-  is a class that makes it easy to have blacklists/whitelists
-
-Second, and independently, there is the object oriented IMAP interface:
-- The ImapServer module containing the ImapServer class, which is a thin
-  layer over the imaplib module of the standard library or the imaplib2 module
-  provided by Piers Lauder.
-- The ImapMailbox and ImapMessage modules, which integrate into the standard
-  library.
- -The MailboxFactory module, which just makes organizing your IMAP accounts
-  easier: You can define the account data (with all the clear-text-passwords) in
-  a central configuration file, and then create ImapMailbox objects on the fly
-  based on that data.
-The ImapMailbox class is the "frontend" class, which you will be dealing
-with most of the time.
-Lastly, the  imaplib2 module is included, which was written by Piers
-Lauder. It is a direct replacement of the imaplib module in the standard
-library, and is used as a backend for my ImapServer class by default. Since
-the original purpose of the ProcImap package was to create clients that
-continuously monitor your INBOX, the IMAP 'idle' command was very useful.
-Unfortunately, the idle command is not supported by the imaplib library, but
-only by the multi-threaded imaplib2. On some systems, I have seen problems with
-the imaplib2 library (lock-ups of the connection). If you experience problems,
-you can set a flag in the source code of the ImapServer module to use the
-standard imaplib library. See the documentation of the ImapServer module
-for details.
+I use ProcImap as the basis for a new-mail-notification-tool, as well as to
+perform backups of my Gmail account (see http://github.com/goerz/gmailbkp).
+I've also used ProcImap to assist in migrating large amounts of messages
+between accounts, and to debug IMAP servers interactively in an ipython
+console.
 """
