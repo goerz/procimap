@@ -8,8 +8,7 @@ In addition, ProcImap contains a number of "utility" functions and classes,
 targeted for automatic processing/filtering of email messages inside an IMAP
 mailbox.
 
-[1]: http://docs.python.org/library/mailbox.html
-[2]: http://docs.python.org/library/email
+See the [API][4] for more information.
 
 Author: [Michael Goerz](http://michaelgoerz.net)
 
@@ -40,8 +39,11 @@ with sufficient privileges (i.e. as root on linux)
 
 If you have run the installation successfully, the ProcImap package will
 be available in Python. Start programming! For examples, look in the
-example directory. Also, have a look at [http://github.com/goerz/gmailbkp][3]
+example directory. Also, have a look at [http://github.com/goerz/gmailbkp][4]
 
-The API is available at ...
+The complete API is available at [http://goerz.github.com/procimap/doc/][3]
 
-[3]: http://github.com/goerz/gmailbkp
+[1]: http://docs.python.org/library/mailbox.html
+[2]: http://docs.python.org/library/email
+[3]: http://goerz.github.com/procimap/doc/
+[4]: http://github.com/goerz/gmailbkp
