@@ -1,3 +1,4 @@
+README.markdown
 COPYING.txt
 examples/backup_mailbox.py
 examples/create_message_ids.py
@@ -8,7 +9,6 @@ examples/mbox2imap.py
 examples/readimap.py
 examples/restore_mailbox.py
 examples/notify.py
-INSTALL.txt
 ProcImap/imaplib2.py
 ProcImap/ImapMailbox.py
 ProcImap/ImapMessage.py
