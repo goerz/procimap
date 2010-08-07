@@ -8,7 +8,7 @@ In addition, ProcImap contains a number of "utility" functions and classes,
 targeted for automatic processing/filtering of email messages inside an IMAP
 mailbox.
 
-See the [API][4] for more information.
+See the [API][3] for more information.
 
 Author: [Michael Goerz](http://michaelgoerz.net)
 
