@@ -77,7 +77,7 @@ def notify(priority=False):
                     decoded_subject += part[0].decode(part[1])
             pipe.write(decoded_subject.encode('utf-8'))
             pipe.write('"')
-            (code, data) = inbox._server.uid('fetch', uid, '(BODY[1])')
+            (code, data) = inbox._server.uid('fetch', uid, '(BODY.PEEK[1])')
             if code == 'OK':
                 pipe.write("\n")
                 body = data[0][1][:60]
