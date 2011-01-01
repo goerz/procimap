@@ -248,8 +248,18 @@ class ImapServer:
         """
         if not self._flags['logged_in']:
             raise ClosedMailboxError, "called list before logging in"
-        mailbox_pattern = re.compile(
-            r'\(\\HasNoChildren\) "/" "(?P<mailboxname>.+)"')
+        imap_flist_pattern = r"""
+            \(                  # open paren, indicating start of flags
+            (?!.*\\Noselect)    # negative lookahead, ensure Noselect is not set
+            [^)]*               # skip all remaining flags
+            \)                  # close paren, end of flags
+            \s"/"\s             # Folder root, ignored
+            "*                  # optional quoted, rest of folder.
+            (?P<mailboxname>    # match folder into group
+            [^"]+)              # all non-quote characters
+            "*                  # optional quoted, end of folder
+        """
+        mailbox_pattern = re.compile(imap_flist_pattern, re.VERBOSE);
         code, mailboxlist = self._server.list()
         result = []
         if code == 'OK':
