@@ -4,7 +4,7 @@
     The IMAP attributes are stored in each message in special header fields"
 """
 from ProcImap.ImapMailbox import ImapMailbox
-from ProcImap.MailboxFactory import MailboxFactory
+from ProcImap.Utils.MailboxFactory import MailboxFactory
 from mailbox import mbox
 import sys
 

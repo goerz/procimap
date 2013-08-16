@@ -27,7 +27,12 @@ import subprocess
 import tempfile
 import os
 from email.generator import Generator
-from cStringIO import StringIO
+import sys
+
+if sys.version_info > (3, 0):
+    from io import StringIO
+else:
+    from cStringIO import StringIO
 
 from ProcImap.ImapMessage import ImapMessage
 

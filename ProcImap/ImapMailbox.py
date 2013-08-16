@@ -25,9 +25,14 @@
 
 import imaplib
 from email.generator import Generator
-from cStringIO import StringIO
 from mailbox import Mailbox
 from mailbox import Message
+import sys
+
+if sys.version_info > (3, 0):
+    from io import StringIO
+else:
+    from cStringIO import StringIO
 
 from ProcImap.ImapServer import ImapServer
 from ProcImap.ImapMessage import ImapMessage
@@ -67,7 +72,7 @@ class ServerNotAvailableError(Exception):
 
 
 
-class ImapMailbox(object, Mailbox):
+class ImapMailbox(Mailbox):
     """ An abstract representation of a mailbox on an IMAP Server.
         This class implements the mailbox.Mailbox interface, insofar
         possible. Methods for changing a message in-place are not
@@ -119,16 +124,16 @@ class ImapMailbox(object, Mailbox):
         try:
             (server, name) = path
         except:
-            raise TypeError, "path must be a tuple, consisting of an "\
-                            + " instance of ImapServer and a string"
+            raise TypeError("path must be a tuple, consisting of an "\
+                            + " instance of ImapServer and a string")
         if isinstance(server, ImapServer):
             if hasattr(server, 'locked') and server.locked:
-                raise ServerNotAvailableError, "This instance of ImapServer"\
-                                    + " is already in use for another mailbox"
+                raise ServerNotAvailableError("This instance of ImapServer"\
+                                    + " is already in use for another mailbox")
             self._server = server
         else:
-            raise TypeError, "path must be a tuple, consisting of an "\
-                            + " instance of ImapServer and a string"
+            raise TypeError("path must be a tuple, consisting of an "\
+                            + " instance of ImapServer and a string")
         if not isinstance(name, str):
             raise TypeError("path must be a tuple, consisting of an "\
                             + " instance of ImapServer and a string")
@@ -234,11 +239,11 @@ class ImapMailbox(object, Mailbox):
         (code, data) = self._server.uid('search', charset, "(%s)" % criteria)
         uidlist = data[0].split()
         if code != 'OK':
-            raise ImapNotOkError, "%s in search" % code
+            raise ImapNotOkError("%s in search" % code)
         try:
             return [int(uid) for uid in uidlist]
         except ValueError:
-            raise ImapNotOkError, "received unparsable response."
+            raise ImapNotOkError("received unparsable response.")
 
     def get_unseen_uids(self):
         """ Get a list of all the unseen UIDs in the mailbox
@@ -263,12 +268,12 @@ class ImapMailbox(object, Mailbox):
             try:
                 (code, data) = self._server.uid('fetch', uid, "(RFC822)")
                 if code != 'OK':
-                    raise ImapNotOkError, "%s in fetch_message(%s)" \
-                                                                   % (code, uid)
+                    raise ImapNotOkError("%s in fetch_message(%s)" \
+                                                                   % (code, uid))
                 try:
                     rfc822string = data[0][1]
                 except TypeError:
-                    raise KeyError, "No message %s in _cache_message" % uid
+                    raise KeyError("No message %s in _cache_message" % uid)
             except MemoryError:
                 # this happens sometimes for unknown reasons. Try do download
                 # in chunks instead
@@ -284,8 +289,8 @@ class ImapMailbox(object, Mailbox):
                             (code, data) = self._server.uid('fetch', uid, 
                                   "(BODY[]<%s.%s>)" % (octets_read, chunksize))
                             if code != 'OK':
-                                raise ImapNotOkError, "%s in fetch_message(%s)"\
-                                                                   % (code, uid)
+                                raise ImapNotOkError("%s in fetch_message(%s)"\
+                                                                   % (code, uid))
                             break
                         except:
                             self.reconnect()
@@ -297,7 +302,7 @@ class ImapMailbox(object, Mailbox):
                     try:
                         chunks.append(data[0][1])
                     except TypeError:
-                        raise KeyError, "No message %s in _cache_message" % uid
+                        raise KeyError("No message %s in _cache_message" % uid)
                     octets_read += chunksize
                 rfc822string = ''.join(chunks)
             if FIX_BUGGY_IMAP_FROMLINE:
@@ -367,7 +372,7 @@ class ImapMailbox(object, Mailbox):
     def clear(self):
         """ Delete all messages from the mailbox and expunge"""
         if self.readonly:
-            raise ReadOnlyError, "Tried to clear read-only mailbox"
+            raise ReadOnlyError("Tried to clear read-only mailbox")
         for uid in self.get_all_uids():
             self.discard(uid)
         self.expunge()
@@ -381,7 +386,7 @@ class ImapMailbox(object, Mailbox):
             specified when the Mailbox instance was initialized.
         """
         if self.readonly:
-            raise ReadOnlyError, "Tried to pop read-only mailbox"
+            raise ReadOnlyError("Tried to pop read-only mailbox")
         try:
             message = self[uid]
             del self[uid]
@@ -391,7 +396,7 @@ class ImapMailbox(object, Mailbox):
             if default is not None:
                 return default
             else:
-                raise KeyError, "No such UID"
+                raise KeyError("No such UID")
 
     def popitem(self):
         """ Return an arbitrary (key, message) pair, where key is a key
@@ -402,7 +407,7 @@ class ImapMailbox(object, Mailbox):
             when the Mailbox instance was initialized.
         """
         if self.readonly:
-            raise ReadOnlyError, "Tried to pop item from read-only mailbox"
+            raise ReadOnlyError("Tried to pop item from read-only mailbox")
         self.expunge()
         uids = self.search("ALL")
         if len(uids) > 0:
@@ -412,7 +417,7 @@ class ImapMailbox(object, Mailbox):
             self.expunge()
             return result
         else:
-            raise KeyError, "Mailbox is empty"
+            raise KeyError("Mailbox is empty")
 
     def update(self, arg=None):
         """ Parameter arg should be a key-to-message mapping or an iterable
@@ -422,7 +427,7 @@ class ImapMailbox(object, Mailbox):
             This operation is not supported for IMAP mailboxes and will
             raise NotSupportedError
         """
-        raise NotSupportedError, "Updating items in IMAP not supported"
+        raise NotSupportedError("Updating items in IMAP not supported")
 
 
     def flush(self):
@@ -445,11 +450,11 @@ class ImapMailbox(object, Mailbox):
         """
         (code, data) = self._server.uid('fetch', uid, "(BODY.PEEK[HEADER])")
         if code != 'OK':
-            raise ImapNotOkError, "%s in fetch_header(%s)" % (code, uid)
+            raise ImapNotOkError("%s in fetch_header(%s)" % (code, uid))
         try:
             rfc822string = data[0][1]
         except TypeError:
-            raise KeyError, "No UID %s in get_header" % uid
+            raise KeyError("No UID %s in get_header" % uid)
         result = ImapMessage(rfc822string)
         result.set_imapflags(self.get_imapflags(uid))
         result.internaldate = self.get_internaldate(uid)
@@ -469,11 +474,11 @@ class ImapMailbox(object, Mailbox):
                                         "(BODY.PEEK[HEADER.FIELDS (%s)])" 
                                         % fields)
         if code != 'OK':
-            raise ImapNotOkError, "%s in fetch_header(%s)" % (code, uid)
+            raise ImapNotOkError("%s in fetch_header(%s)" % (code, uid))
         try:
             rfc822string = data[0][1]
         except TypeError:
-            raise KeyError, "No UID %s in get_fields" % uid
+            raise KeyError("No UID %s in get_fields" % uid)
         result = Message(rfc822string)
         return result
 
@@ -484,15 +489,15 @@ class ImapMailbox(object, Mailbox):
             (code, data) = self._server.uid('fetch', uid, '(RFC822.SIZE)')
             sizeresult = data[0]
             if code != 'OK':
-                raise ImapNotOkError, "%s in get_imapflags(%s)" % (code, uid)
+                raise ImapNotOkError("%s in get_imapflags(%s)" % (code, uid))
             if sizeresult is None:
-                raise NoSuchUIDError, "No message %s in get_size" % uid
+                raise NoSuchUIDError("No message %s in get_size" % uid)
             startindex = sizeresult.find('SIZE') + 5
             stopindex = sizeresult.find(' ', startindex)
             return int(sizeresult[startindex:stopindex])
         except (TypeError, ValueError):
-            raise ValueError, "Unexpected results while fetching flags " \
-                              + "from server for message %s" % uid
+            raise ValueError("Unexpected results while fetching flags " \
+                              + "from server for message %s" % uid)
 
     def get_imapflags(self, uid):
         """ Return a list of imap flags for the message with UID
@@ -502,12 +507,12 @@ class ImapMailbox(object, Mailbox):
             (code, data) = self._server.uid('fetch', uid, '(FLAGS)')
             flagresult = data[0]
             if code != 'OK':
-                raise ImapNotOkError, "%s in get_imapflags(%s)" % (code, uid)
+                raise ImapNotOkError("%s in get_imapflags(%s)" % (code, uid))
             return list(imaplib.ParseFlags(flagresult))
         except (TypeError, ValueError):
-            raise ValueError, "Unexpected results while fetching flags " \
+            raise ValueError("Unexpected results while fetching flags " \
                          + "from server for message %s; response was (%s, %s)" \
-                                                             % (uid, code, data)
+                                                             % (uid, code, data))
 
     def get_internaldate(self, uid):
         """ Return a time tuple representing the internal date for the
@@ -518,13 +523,13 @@ class ImapMailbox(object, Mailbox):
             (code, data) = self._server.uid('fetch', uid, '(INTERNALDATE)')
             dateresult = data[0]
             if code != 'OK':
-                raise ImapNotOkError, "%s in get_internaldate(%s)" % (code, uid)
+                raise ImapNotOkError("%s in get_internaldate(%s)" % (code, uid))
             if dateresult is None:
-                raise NoSuchUIDError, "No message %s in get_internaldate" % uid
+                raise NoSuchUIDError("No message %s in get_internaldate" % uid)
             return imaplib.Internaldate2tuple(dateresult)
         except (TypeError, ValueError):
-            raise ValueError, "Unexpected results while fetching flags " \
-                              + "from server for message %s" % uid
+            raise ValueError("Unexpected results while fetching flags " \
+                              + "from server for message %s" % uid)
 
 
     def __eq__(self, other):
@@ -583,7 +588,7 @@ class ImapMailbox(object, Mailbox):
             if targetmailbox != self.name:
                 (code, data) = self._server.uid('copy', uid, targetmailbox)
                 if code != 'OK':
-                    raise ImapNotOkError, "%s in copy: %s" % (code, data)
+                    raise ImapNotOkError("%s in copy: %s" % (code, data))
                 if exact:
                     pass
                     # TODO: get more exact result
@@ -591,7 +596,7 @@ class ImapMailbox(object, Mailbox):
             else:
                 return uid
         else:
-            raise TypeError, "targetmailbox in copy is of unknown type."
+            raise TypeError("targetmailbox in copy is of unknown type.")
         return result
 
 
@@ -606,13 +611,13 @@ class ImapMailbox(object, Mailbox):
         """
         result = None
         if self.readonly:
-            raise ReadOnlyError, "Tried to move message from read-only mailbox"
+            raise ReadOnlyError("Tried to move message from read-only mailbox")
         if (targetmailbox != self) and (targetmailbox != self.name):
             result = self.copy(uid, targetmailbox, exact)
             (code, data) = self._server.uid('store', uid, \
                                            '+FLAGS', "(\\Deleted)")
             if code != 'OK':
-                raise ImapNotOkError, "%s in move: %s" % (code, data)
+                raise ImapNotOkError("%s in move: %s" % (code, data))
         else:
             return uid
         return result
@@ -631,11 +636,11 @@ class ImapMailbox(object, Mailbox):
         """
         result = None
         if self.readonly:
-            raise ReadOnlyError, "Tried to discard from read-only mailbox"
+            raise ReadOnlyError("Tried to discard from read-only mailbox")
         if self.trash is None:
             self.add_imapflag(uid, "\\Deleted")
         else:
-            print "Moving to %s" % self.trash
+            print("Moving to %s" % self.trash)
             return self.move(uid, self.trash, exact)
         return result
 
@@ -646,9 +651,9 @@ class ImapMailbox(object, Mailbox):
             the KeyError exception.
         """
         if self.readonly:
-            raise ReadOnlyError, "Tried to remove from read-only mailbox"
+            raise ReadOnlyError("Tried to remove from read-only mailbox")
         if uid not in self.search("ALL"):
-            raise KeyError, "No UID %s" % uid
+            raise KeyError("No UID %s" % uid)
         return self.discard(uid, exact)
 
     def __delitem__(self, uid):
@@ -662,7 +667,7 @@ class ImapMailbox(object, Mailbox):
             This operation is not supported for IMAP mailboxes
             and will raise NotSupportedError
         """
-        raise NotSupportedError, "Setting items in IMAP not supported"
+        raise NotSupportedError("Setting items in IMAP not supported")
 
     def iterkeys(self):
         """ Return an iterator over all UIDs
@@ -731,7 +736,7 @@ class ImapMailbox(object, Mailbox):
             the server
         """
         if self.readonly:
-            raise ReadOnlyError, "Tried to add to a read-only mailbox"
+            raise ReadOnlyError("Tried to add to a read-only mailbox")
         message = ImapMessage(message)
         flags = message.flagstring()
         date_time = message.internaldatestring()
@@ -742,7 +747,7 @@ class ImapMailbox(object, Mailbox):
         (code, data) = self._server.append(self.name, flags, \
                                       date_time, message_str)
         if code != 'OK':
-            raise ImapNotOkError, "%s in add: %s" % (code, data)
+            raise ImapNotOkError("%s in add: %s" % (code, data))
         try:
             return self.get_all_uids()[-1]
         except IndexError:
@@ -753,27 +758,27 @@ class ImapMailbox(object, Mailbox):
         """ Add imap flag to message with UID.
         """
         if self.readonly:
-            raise ReadOnlyError, \
-                       "Tried to add imap flag for message in read-only mailbox"
+            raise ReadOnlyError(
+                       "Tried to add imap flag for message in read-only mailbox")
         for flag in flags:
             (code, data) = self._server.uid('store', uid, '+FLAGS', \
                                            "(%s)" % flag )
             if code != 'OK':
-                raise ImapNotOkError, "%s in add_flags(%s, %s): %s" \
-                                                       % (uid, flag, code, data)
+                raise ImapNotOkError("%s in add_flags(%s, %s): %s" \
+                                                       % (uid, flag, code, data))
 
     def remove_imapflag(self, uid, *flags):
         """ Remove imap flags from message with UID
         """
         if self.readonly:
-            raise ReadOnlyError, \
-                   "Tried to remove imap flag from message in read-only mailbox"
+            raise ReadOnlyError(
+                   "Tried to remove imap flag from message in read-only mailbox")
         for flag in flags:
             (code, data) = self._server.uid('store', uid, '-FLAGS', \
                                            "(%s)" % flag )
             if code != 'OK':
-                raise ImapNotOkError, "%s in remove_flag(%s, %s): %s" \
-                                                       % (uid, flag, code, data)
+                raise ImapNotOkError("%s in remove_flag(%s, %s): %s" \
+                                                       % (uid, flag, code, data))
 
     def set_imapflags(self, uid, flags):
         """ Set imap flags for message with UID
@@ -782,15 +787,15 @@ class ImapMailbox(object, Mailbox):
             to be set.
         """
         if self.readonly:
-            raise ReadOnlyError, \
-                      "Tried to set imap flags for message in read-only mailbox"
+            raise ReadOnlyError(
+                      "Tried to set imap flags for message in read-only mailbox")
         if isinstance(flags, str):
             flags = [flags]
         flagstring = "(%s)" % ' '.join(flags)
         (code, data) = self._server.uid('store', uid, 'FLAGS', flagstring )
         if code != 'OK':
-            raise ImapNotOkError, "%s in set_imapflags(%s, %s): %s" \
-                                                      % (code, uid, flags, data)
+            raise ImapNotOkError("%s in set_imapflags(%s, %s): %s" \
+                                                      % (code, uid, flags, data))
 
     def close(self):
         """ Flush mailbox, close connection to server """
@@ -803,6 +808,6 @@ class ImapMailbox(object, Mailbox):
     def expunge(self):
         """ Expunge the mailbox (delete all messages marked for deletion)"""
         if self.readonly:
-            raise ReadOnlyError, "Tried to expunge read-only mailbox"
+            raise ReadOnlyError("Tried to expunge read-only mailbox")
         self._server.expunge()
 

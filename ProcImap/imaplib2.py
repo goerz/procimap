@@ -362,11 +362,11 @@ class IMAP4(object):
             af, socktype, proto, canonname, sa = res
             try:
                 s = socket.socket(af, socktype, proto)
-            except socket.error, msg:
+            except socket.error as msg:
                 continue
             try:
                 s.connect(sa)
-            except socket.error, msg:
+            except socket.error as msg:
                 s.close()
                 continue
             break
@@ -1100,9 +1100,10 @@ class IMAP4(object):
         return typ, dat
 
 
-    def _command_completer(self, (response, cb_arg, error)):
+    def _command_completer(self, args):
 
         # Called for callback commands
+        response, cb_arg, error = args
         rqb, kw = cb_arg
         rqb.callback = kw['callback']
         rqb.callback_arg = kw.get('cb_arg')
@@ -1288,7 +1289,7 @@ class IMAP4(object):
             tag = rqb.tag
         self.tagged_commands[tag] = rqb
         self.commands_lock.release()
-        if __debug__: self._log(4, '_request_push(%s, %s, %s)' % (tag, name, `kw`))
+        if __debug__: self._log(4, '_request_push(%s, %s, %s)' % (tag, name, repr(kw)))
         return rqb
 
 
@@ -1418,7 +1419,7 @@ class IMAP4(object):
                 timeout = None
             try:
                 r = poll.poll(timeout)
-                if __debug__: self._log(5, 'poll => %s' % `r`)
+                if __debug__: self._log(5, 'poll => %s' % repr(r))
                 if not r:
                     continue                                # Timeout
 
@@ -1915,7 +1916,7 @@ if __name__ == '__main__':
 
     try:
         optlist, args = getopt.getopt(sys.argv[1:], 'd:l:s:p:')
-    except getopt.error, val:
+    except getopt.error as val:
         optlist, args = (), ()
 
     debug, port, stream_command, keyfile, certfile = (None,)*5
@@ -1974,8 +1975,9 @@ if __name__ == '__main__':
 
     AsyncError = None
 
-    def responder((response, cb_arg, error)):
+    def responder(args):
         global AsyncError
+        response, cb_arg, error = args
         cmd, args = cb_arg
         if error is not None:
             AsyncError = error
@@ -2053,15 +2055,15 @@ if __name__ == '__main__':
             print
             M._print_log()
 
-        print '\nAll tests OK.'
+        print('\nAll tests OK.')
 
     except:
-        print '\nTests failed.'
+        print('\nTests failed.')
 
         if not debug:
-            print '''
+            print('''
 If you would like to see debugging output,
 try: %s -d5
-''' % sys.argv[0]
+''' % sys.argv[0])
 
         raise

@@ -27,7 +27,12 @@
 """
 
 import mailbox
-from ConfigParser import ConfigParser
+import sys
+
+if sys.version_info > (3, 0):
+    from configparser import ConfigParser
+else:
+    from ConfigParser import ConfigParser
 
 from ProcImap.ImapServer import ImapServer
 from ProcImap.ImapMailbox import ImapMailbox
@@ -126,7 +131,7 @@ class MailboxFactory:
         """
         mailboxtype = self._configparser.get(name, 'type').lower()
         if not mailboxtype in self._types.keys():
-            raise UnknownMailboxTypeError, "Unknown type: %s" % mailboxtype
+            raise UnknownMailboxTypeError("Unknown type: %s" % mailboxtype)
         factory, pathgenerator = self._types[mailboxtype]
         path = pathgenerator(dict(self._configparser.items(name)))
         return(factory(path))
@@ -153,7 +158,7 @@ class MailboxFactory:
         """
         mailboxtype = self._configparser.get(name, 'type').lower()
         if mailboxtype != 'imap':
-            raise TypeError, "You can only create a server from an IMAP mailbox"
+            raise TypeError("You can only create a server from an IMAP mailbox")
         factory, pathgenerator = self._types[mailboxtype]
         path = pathgenerator(dict(self._configparser.items(name)))
         return(path[0])
@@ -217,10 +222,10 @@ def imap_pathgenerator(optionsdict):
         if optionsdict.has_key('port'):
             port = int(optionsdict['port'])
     except KeyError:
-        raise MailboxOptionsNotCompleteError, \
+        raise MailboxOptionsNotCompleteError(
               "IMAP Mailbox object needs the following parameters\n " \
               + "'mailbox', 'server', 'username', 'password'.\n" \
-              + "The 'ssl' and 'port' parameters are optional."
+              + "The 'ssl' and 'port' parameters are optional.")
     server = ImapServer(serveraddress, username, password, ssl, port)
     return(tuple((server, name)))
 
@@ -230,5 +235,5 @@ def standard_pathgenerator(optionsdict):
     try:
         return optionsdict['path']
     except KeyError:
-        raise MailboxOptionsNotCompleteError, \
-              "Standard Mailbox object needs 'path' parameter"
+        raise MailboxOptionsNotCompleteError(
+              "Standard Mailbox object needs 'path' parameter")
