@@ -186,7 +186,7 @@ class ImapServer:
         """ Append message to named mailbox. All parameters are strings which
             need to be in the appropriate format as described in RFC3501"""
         if not self._flags['open']:
-            raise ClosedMailboxError, "called append on closed mailbox"
+            raise ClosedMailboxError("called append on closed mailbox")
         flags = flags.replace("\\Recent", '')
         return self._server.append(mailbox, flags, date_time, messagestr)
 
@@ -196,7 +196,7 @@ class ImapServer:
             Returns response appropriate to command.
         """
         if not self._flags['open']:
-            raise ClosedMailboxError, "called uid on closed mailbox"
+            raise ClosedMailboxError("called uid on closed mailbox")
         return self._server.uid(command, *args)
 
     def expunge(self):
@@ -206,7 +206,7 @@ class ImapServer:
             in order received.
         """
         if not self._flags['open']:
-            raise ClosedMailboxError, "called expunge on closed mailbox"
+            raise ClosedMailboxError("called expunge on closed mailbox")
         return self._server.expunge()
 
     def close(self):
@@ -239,15 +239,15 @@ class ImapServer:
                 self.create(mailbox)
                 self.select(mailbox, create=False)
             else:
-                raise NoSuchMailboxError, "mailbox %s does not exist." \
-                                           % mailbox
+                raise NoSuchMailboxError("mailbox %s does not exist." \
+                                           % mailbox)
 
     def list(self):
         """ Return list mailbox names, or None if the server does
             not send an 'OK' reply.
         """
         if not self._flags['logged_in']:
-            raise ClosedMailboxError, "called list before logging in"
+            raise ClosedMailboxError("called list before logging in")
         imap_flist_pattern = r"""
             \(                  # open paren, indicating start of flags
             (?!.*\\Noselect)    # negative lookahead, ensure Noselect is not set
@@ -274,7 +274,7 @@ class ImapServer:
     def lsub(self):
         """ List subscribed mailbox names """
         if not self._flags['logged_in']:
-            raise ClosedMailboxError, "called lsub before logging in"
+            raise ClosedMailboxError("called lsub before logging in")
         return self._server.lsub()
 
     def __eq__(self, other):

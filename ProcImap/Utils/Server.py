@@ -107,7 +107,7 @@ def summary(mailbox, uids, printout=True, printuid=True):
             date,
             subject[:length_subject].ljust(length_subject, " "))
         if printout:
-            print generated_line
+            print(generated_line)
         else:
             result.append(generated_line)
     if not printout:

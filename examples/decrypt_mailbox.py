@@ -46,34 +46,34 @@ if 'imap.gmail.com' in mailbox_server.servername:
 
 for mailbox_name in args[2:]:
     mailbox =  ImapMailbox((mailbox_server.clone(), mailbox_name))
-    print "\n\nProcessing mailbox %s" % mailbox.name
+    print("\n\nProcessing mailbox %s" % mailbox.name)
     encrypted = mailbox.search('UNDELETED HEADER Content-Type encrypted')
     for uid in encrypted:
-        print "    Decrypting UID %s" % uid
+        print("    Decrypting UID %s" % uid)
         message = mailbox[uid]
         labels = [mailbox_name] # all the mailboxes the mail appears (for gmail)
         if options.backup is not None:
-            print "        Backing up the original (encrypted) message"
+            print("        Backing up the original (encrypted) message")
             backupbox.add(message)
-        print "        Deleting the original (encrypted) message"
+        print("        Deleting the original (encrypted) message")
         if is_gmail_box(mailbox):
             labels = cache.get_labels("%s.%s" % (mailbox_name, uid))
             delete(mailbox, uid)
         else:
             mailbox.discard(uid)
-        print "        Piping message through decryption program"
+        print("        Piping message through decryption program")
         try:
             message = pipe_message(message, decryptprogram)
         except:
             # the decryption program sometimes stalls. This try-except block
             # allows to use Ctrl+C to get out of processing this specific mail
             pass
-        print "        Done"
+        print("        Done")
         for labelbox_name in labels:
             # this can be done more efficiently once we are able to find the UID
             # of a message that was just uploaded to the mailbox
             labelbox = ImapMailbox((mailbox_server.clone(), labelbox_name))
-            print "        Putting decrypted text into mailbox %s" % labelbox_name
+            print("        Putting decrypted text into mailbox %s" % labelbox_name)
             labelbox.add(message)
             labelbox.close()
     mailbox.close()

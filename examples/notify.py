@@ -12,10 +12,14 @@ from ProcImap.Utils.Processing import AddressListFile
 from time import time
 import sys
 import os
-import cPickle
 import subprocess
 import re
 import email
+
+if sys.version_info > (3, 0):
+    import pickle
+else:
+    import cPickle as pickle
 
 try:
     inbox = MailboxFactory("/Users/goerz/.procimap/mailboxes.cfg")['Gmail']
@@ -97,7 +101,7 @@ def notify(priority=False):
 # unpickle data from disk
 if os.path.isfile(picklefile):
     input = open(picklefile, 'rb')
-    unread_mails = cPickle.load(input)
+    unread_mails = pickle.load(input)
     input.close()
 
 # clean up
@@ -134,7 +138,7 @@ if len(unseen) > 0:
 
     # pickle data to disk
     output = open(picklefile, 'wb')
-    cPickle.dump(unread_mails, output, protocol=2)
+    pickle.dump(unread_mails, output, protocol=2)
     output.close()
 
 

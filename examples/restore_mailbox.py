@@ -3,8 +3,8 @@
     This example shows how to restore a backup created by backup_mailbox.py"
 """
 from ProcImap.ImapMailbox import ImapMailbox
-from ProcImap.MailboxFactory import MailboxFactory
 from ProcImap.ImapMessage import ImapMessage
+from ProcImap.Utils.MailboxFactory import MailboxFactory
 from mailbox import mbox
 import sys
 

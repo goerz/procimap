@@ -13,14 +13,14 @@ mailbox = mailboxes["Physik"]
 
 def help():
     """ Print help message """
-    print "\nEnter message number to read the message"
-    print "Enter 'd #', with # being a message number to delete a message"
-    print "Press enter to quit\n"
+    print("\nEnter message number to read the message")
+    print("Enter 'd #', with # being a message number to delete a message")
+    print("Press enter to quit\n")
 
 
 unseen = mailbox.get_unseen_uids()
 if len(unseen) == 0:
-    print "No unread messages"
+    print("No unread messages")
     sys.exit(0)
 else:
     if '--check' in sys.argv:
@@ -32,9 +32,9 @@ else:
         sys.exit(1)
 
     # display selector
-    print ""
+    print("")
     summary(mailbox, unseen, printuid=False)
-    print "\nEnter 'h' for help\n"
+    print("\nEnter 'h' for help\n")
     while True:
         # ask for input
         sys.stdout.write("> ")
@@ -49,10 +49,10 @@ else:
                 index_to_delete = int(answer[1:]) -1
                 uid_to_delete = unseen[index_to_delete]
                 mailbox.discard(uid_to_delete)
-                print "Message %s deleted" % (index_to_delete + 1)
+                print("Message %s deleted" % (index_to_delete + 1))
             else:
                 wanted_index = int(answer) - 1
                 wanted_uid = unseen[wanted_index]
                 display(mailbox, wanted_uid)
-        except Exception, data:
-            print "Illegal input: %s" % data
+        except Exception as data:
+            print("Illegal input: %s" % data)
